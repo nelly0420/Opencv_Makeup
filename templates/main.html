@@ -5,30 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap 5 Main Page</title>
     <!-- Bootstrap CSS -->
-    <link href="{{ url_for('static', filename='./css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
+
     <!-- jQuery -->
-    <script src="{{ url_for('static', filename='./js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <!-- Bootstrap Bundle with Popper -->
-    <script src="{{ url_for('static', filename='./js/bootstrap.bundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
     <style>
-        body {
-/*            padding-top: 56px;*/
+        body, html {
+            height: 100%;
+            margin: 0;
         }
-        .carousel-item {
-            height: 65vh;
-            min-height: 350px;
-/*            background: no-repeat center center scroll;
-            background-size: cover;*/
+        .bg {
+            background-image: url("{{ url_for('static', filename='images/main.jpg') }}");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
         }
-        .display-4{
-        	color:black;
+        .collapse {
+        display: flex; /* Flexbox 레이아웃 사용 */
+        justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
+        margin-right: 15px;
+        }
+        .navbar {
+            background-color: #a8c0ff;
+        }
+        .navbar-brand {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 1.8rem;
+
+        }
+        .title {
+        font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
+        /* 추가적인 폰트 스타일, 크기 등을 설정할 수 있습니다 */
+    }
+        .container {
+            max-width: 100%;
         }
     </style>
 
     <!-- jQuery Script for Interaction -->
     <script>
         $(document).ready(function(){
-            //------------------------
             console.log('준비중');
             // Home 메뉴 클릭 이벤트 처리
             $("#homeMenu").click(function(event) {
@@ -42,9 +67,9 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">My Website</a>
+            <a class="navbar-brand" href="#">Augmented Make UP</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -54,10 +79,10 @@
                         <a class="nav-link" href="#" id="homeMenu">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/products">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
@@ -67,95 +92,15 @@
         </div>
     </nav>
 
-    <!-- Header -->
-    <header>
-        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
-                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
-                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner" role="listbox">
-                <div class="carousel-item active" style="background-image: url('https://health.chosun.com/site/data/img_dir/2023/06/23/2023062301899_0.jpg')">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2 class="display-4">First Slide</h2>
-                        <p class="lead">This is a description for the first slide.</p>
-                    </div>
-                </div>
-                <div class="carousel-item" style="background-image: url('https://src.hidoc.co.kr/image/lib/2020/1/30/1580376290115_0.jpg')">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2 class="display-4">Second Slide</h2>
-                        <p class="lead">This is a description for the second slide.</p>
-                    </div>
-                </div>
-                <div class="carousel-item" style="background-image: url('https://www.cosinkorea.com/data/photos/20230936/art_16941582449621_581a55.png')">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2 class="display-4" style="color: white;">Third Slide</h2>
-                        <p class="lead">This is a description for the third slide.</p>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </a>
-        </div>
-    </header>
+    <!-- Background Image Section -->
+    <div class="bg">
+        <div>
+            <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
 
-    <!-- Page Content -->
-    <div class="container">
-        <h1 class="my-4">Welcome to My Website</h1>
-        <div class="row">
-            <div class="col-lg-4 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <a href="#"><img class="card-img-top" src="https://source.unsplash.com/400x300/?tech" alt=""></a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <a href="#">Project One</a>
-                        </h4>
-                        <p class="card-text">Description of project one.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <a href="#"><img class="card-img-top" src="https://source.unsplash.com/400x300/?city" alt=""></a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <a href="#">Project Two</a>
-                        </h4>
-                        <p class="card-text">Description of project two.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <a href="#"><img class="card-img-top" src="https://source.unsplash.com/400x300/?business" alt=""></a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <a href="#">Project Three</a>
-                        </h4>
-                        <p class="card-text">Description of project three.</p>
-                    </div>
-                </div>
-            </div>
+            <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
+            <a class="btn btn-primary" href="#" role="button" style="margin-top: 20px;">시도하러 가기</a>
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container -->
 
-    <!-- Footer -->
-    <footer class="py-5 bg-dark">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; My Website 2024</p>
-        </div>
-        <!-- /.container -->
-    </footer>
-
-    
 </body>
 </html>
