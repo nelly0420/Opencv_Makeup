@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 5 Main Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
+    <!-- 폰트 어썸 CSS 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
+   
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .bg {
+            background-image: url("{{ url_for('static', filename='images/main.jpg') }}");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        .collapse {
+            display: flex; /* Flexbox 레이아웃 사용 */
+            justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
+        }
+        .navbar {
+            background-color: #a8c0ff;
+        }
+        .navbar-brand {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.0rem;
+        }
+        .title {
+            font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
+            font-size: 60px;
+            font-weight: bold;
+            color: #273CAB;
+        }
+        .container {
+            max-width: 100%;
+           
+        }
+        .navbar-nav .nav-link {
+            color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
+        }
+         .product {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .product img {
+            width: 200px; /* 고정된 너비 설정 */
+            height: 200px; /* 고정된 높이 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하며 자르기 */
+            border-radius: 50%; /* 둥근 이미지 */
+        }
+    </style>
+
+    <!-- jQuery Script for Interaction -->
+    <script>
+        $(document).ready(function(){
+            console.log('준비중');
+            // Home 메뉴 클릭 이벤트 처리
+            $("#homeMenu").click(function(event) {
+                event.preventDefault();
+                console.log('홈클릭');
+                alert("준비중입니다.");
+            });
+            
+        });
+    </script>
+
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Augmented Make Up</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#" id="homeMenu">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products" id="productsMenu">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-search"></i></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"><i class="fas fa-heart"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container text-center mt-5">
+        <h1 class="title">Augmented <br>Make up</br></h1>
+        <p class="lead">제품을 선택해주세요.</p>
+
+        <div class="d-flex justify-content-center mb-3">
+            <a href="#" class="btn btn-outline-primary mx-2">SKIN</a>
+            <a href="#" class="btn btn-outline-primary mx-2">EYE</a>
+            <a href="#" class="btn btn-primary mx-2">LIP</a>
+            <a href="#" class="btn btn-outline-primary mx-2">Accessories</a>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 product">
+                <img src="{{ url_for('static', filename='images/lipstick1.jpg') }}" class="img-fluid" alt="Lipstick">
+                 <h5 class="mt-2">매트 타입</h5>
+                 <button class="btn btn-primary">Try Now</button>
+            </div>
+
+            <div class="col-md-4 product">
+                <img src="{{ url_for('static', filename='images/lipstick2.jpg') }}" class="img-fluid" alt="Lip Gloss">
+                <h5 class="mt-2">글로시 타입</h5>
+                <button class="btn btn-primary">Try Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
