@@ -7,11 +7,14 @@
     <!-- Bootstrap CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-
+    <!-- 폰트 어썸 CSS 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
+   
     <!-- jQuery -->
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <!-- Bootstrap Bundle with Popper -->
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+
     <style>
         body, html {
             height: 100%;
@@ -30,24 +33,24 @@
             text-align: center;
         }
         .collapse {
-        display: flex; /* Flexbox 레이아웃 사용 */
-        justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
-        margin-right: 15px;
+            display: flex; /* Flexbox 레이아웃 사용 */
+            justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
         }
         .navbar {
             background-color: #a8c0ff;
         }
         .navbar-brand {
             font-family: 'Brush Script MT', cursive;
-            font-size: 1.8rem;
-
+            font-size: 2.0rem;
         }
         .title {
-        font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
-        /* 추가적인 폰트 스타일, 크기 등을 설정할 수 있습니다 */
-    }
+            font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
+        }
         .container {
             max-width: 100%;
+        }
+        .navbar-nav .nav-link {
+            color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
         }
     </style>
 
@@ -61,6 +64,7 @@
                 console.log('홈클릭');
                 alert("준비중입니다.");
             });
+            
         });
     </script>
 
@@ -79,13 +83,16 @@
                         <a class="nav-link" href="#" id="homeMenu">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/products">Products</a>
+                        <a class="nav-link" href="/products" id="productsMenu">Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="#"><i class="fas fa-search"></i></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"><i class="fas fa-heart"></i></a>
                     </li>
                 </ul>
             </div>
@@ -96,7 +103,6 @@
     <div class="bg">
         <div>
             <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
-
             <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
             <a class="btn btn-primary" href="#" role="button" style="margin-top: 20px;">시도하러 가기</a>
         </div>

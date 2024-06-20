@@ -38,6 +38,10 @@ def handle_image(data):
 @app.route("/")
 def main():
     return render_template("main.html")
+    
+@app.route("/products")
+def products():
+    return render_template("products_lip.html")
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
