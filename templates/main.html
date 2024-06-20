@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 5 Main Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="{{ url_for('static', filename='./css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='./js/jquery-3.6.0.min.js') }}"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="{{ url_for('static', filename='./js/bootstrap.bundle.js') }}"></script>
+    <style>
+        body {
+/*            padding-top: 56px;*/
+        }
+        .carousel-item {
+            height: 65vh;
+            min-height: 350px;
+/*            background: no-repeat center center scroll;
+            background-size: cover;*/
+        }
+        .display-4{
+        	color:black;
+        }
+    </style>
+
+    <!-- jQuery Script for Interaction -->
+    <script>
+        $(document).ready(function(){
+            //------------------------
+            console.log('준비중');
+            // Home 메뉴 클릭 이벤트 처리
+            $("#homeMenu").click(function(event) {
+                event.preventDefault();
+                console.log('홈클릭');
+                alert("준비중입니다.");
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">My Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#" id="homeMenu">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
+                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active" style="background-image: url('https://health.chosun.com/site/data/img_dir/2023/06/23/2023062301899_0.jpg')">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-4">First Slide</h2>
+                        <p class="lead">This is a description for the first slide.</p>
+                    </div>
+                </div>
+                <div class="carousel-item" style="background-image: url('https://src.hidoc.co.kr/image/lib/2020/1/30/1580376290115_0.jpg')">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-4">Second Slide</h2>
+                        <p class="lead">This is a description for the second slide.</p>
+                    </div>
+                </div>
+                <div class="carousel-item" style="background-image: url('https://www.cosinkorea.com/data/photos/20230936/art_16941582449621_581a55.png')">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-4" style="color: white;">Third Slide</h2>
+                        <p class="lead">This is a description for the third slide.</p>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="container">
+        <h1 class="my-4">Welcome to My Website</h1>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <a href="#"><img class="card-img-top" src="https://source.unsplash.com/400x300/?tech" alt=""></a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="#">Project One</a>
+                        </h4>
+                        <p class="card-text">Description of project one.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <a href="#"><img class="card-img-top" src="https://source.unsplash.com/400x300/?city" alt=""></a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="#">Project Two</a>
+                        </h4>
+                        <p class="card-text">Description of project two.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <a href="#"><img class="card-img-top" src="https://source.unsplash.com/400x300/?business" alt=""></a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="#">Project Three</a>
+                        </h4>
+                        <p class="card-text">Description of project three.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; My Website 2024</p>
+        </div>
+        <!-- /.container -->
+    </footer>
+
+    
+</body>
+</html>
