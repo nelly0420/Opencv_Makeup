@@ -4,10 +4,10 @@ import cv2
 import numpy as np
 import dlib
 
-#application 정의
-app = Flask(__name__,static_url_path="/static") 
+# Application 정의
+app = Flask(__name__, static_url_path='/static')
 
-#소켓정의
+# 소켓 정의
 socketio = SocketIO(app)
 
 # Initialize dlib's face detector
@@ -35,11 +35,9 @@ def handle_image(data):
     _, buffer = cv2.imencode('.jpg', img)
     emit('processed_image', buffer.tobytes())
 
-@app.route("/") 
-def hello(): 
-    # return "Hello World!"
-    return render_template("index.html")
+@app.route("/")
+def main():
+    return render_template("main.html")
 
 if __name__ == '__main__':
-    #app.run(port = 5000) #기본형.
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
