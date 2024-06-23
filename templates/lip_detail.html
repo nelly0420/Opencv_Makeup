@@ -6,7 +6,7 @@
     <title>Bootstrap 5 Main Page</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <style>
@@ -63,7 +63,7 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/products">Products</a>
+                        <a class="nav-link" href="/products" style="color:white;">Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
@@ -72,48 +72,51 @@
                         <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/like"><i class="fas fa-heart"></i></a>
+                        <a class="nav-link" href="/like" ><i class="fas fa-heart"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- Content -->
-    <div class="container text-center mt-5">
-        <h1 class="title">Augmented <br>Make up</h1>
-        <p class="lead" style="font-weight: semi-bold;">제품을 선택해주세요.</p>
-
-        <div class="category-buttons d-flex justify-content-center mb-3">
-            <a href="#" class="btn btn-outline-primary">SKIN</a>
-            <a href="#" class="btn btn-outline-primary">EYE</a>
-            <a href="#" class="btn btn-primary">LIP</a>
-            <a href="#" class="btn btn-outline-primary">Accessories</a>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/lipstick1.jpg') }}" class="img-fluid" alt="Lipstick">
-                <h5 class="mt-2">매트한 타입</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
-            </div>
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/lipstick2.jpg') }}" class="img-fluid" alt="Lip Gloss">
-                <h5 class="mt-2">글로시 타입</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
-            </div>
-        </div>
-
+ <!-- Breadcrumb -->
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item "><a href="/products">Lip</a></li>
+                <li class="breadcrumb-item "><a href="/products">립스틱</a></li>
+                <li class="breadcrumb-item " aria-current="page">체험</li>
+            </ol>
+        </nav>
     </div>
 
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="image-area position-relative bg-secondary" style="height: 400px;">
+                    <!-- Image placeholder -->
+                    <div class="brightness-control">
+                        <input type="range" class="form-range" min="0" max="100" value="50">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h5>색상</h5>
+                <div class="d-flex">
+                    <div class="color-circle" style="background-color: #f28a8a;"></div>
+                    <div class="color-circle" style="background-color: #f5b5b5;"></div>
+                    <div class="color-circle" style="background-color: #f56565;"></div>
+                    <div class="color-circle" style="background-color: #f299c8;"></div>
+                    <div class="color-circle" style="background-color: #f7c6c6;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery Script for Interaction -->
     <script>
         $(document).ready(function() {
-            console.log('준비중');
-            $("#homeMenu").click(function(event) {
-                event.preventDefault();
-                console.log('홈클릭');
-                alert("준비중입니다.");
-            });
+            // Add event listeners if necessary
         });
     </script>
 </body>
