@@ -6,7 +6,7 @@
     <title>Bootstrap 5 Main Page</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <style>
@@ -72,7 +72,7 @@
                         <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/like"><i class="fas fa-heart"></i></a>
+                        <a class="nav-link" href="/like" style="color:white;"><i class="fas fa-heart"></i></a>
                     </li>
                 </ul>
             </div>
@@ -82,27 +82,9 @@
     <!-- Content -->
     <div class="container text-center mt-5">
         <h1 class="title">Augmented <br>Make up</h1>
-        <p class="lead" style="font-weight: semi-bold;">제품을 선택해주세요.</p>
+        <p class="lead" style="font-weight: bold;">About</p>
 
-        <div class="category-buttons d-flex justify-content-center mb-3">
-            <a href="#" class="btn btn-outline-primary">SKIN</a>
-            <a href="#" class="btn btn-outline-primary">EYE</a>
-            <a href="#" class="btn btn-primary">LIP</a>
-            <a href="#" class="btn btn-outline-primary">Accessories</a>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/lipstick1.jpg') }}" class="img-fluid" alt="Lipstick">
-                <h5 class="mt-2">매트한 타입</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
-            </div>
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/lipstick2.jpg') }}" class="img-fluid" alt="Lip Gloss">
-                <h5 class="mt-2">글로시 타입</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
-            </div>
-        </div>
+       
 
     </div>
 
