@@ -1,24 +1,34 @@
-{% extends "base2.html" %}
+{% extends "base.html" %}
 {% block content %}
 
     <!-- Content -->
   
+        <h1 class="title">Augmented <br>Make up</h1>
+        <p class="lead" style="font-weight: semi-bold;">제품을 선택해주세요.</p>
+
+        <div class="category-buttons d-flex justify-content-center mb-3">
+            <a href="/products_skin" class="btn custom-btn">SKIN</a>
+            <a href="/products_eye" class="btn custom-outline-btn">EYE</a>
+            <a href="/products_lip" class="btn custom-outline-btn">LIP</a>
+            <a href="/products_jewelry" class="btn custom-outline-btn">Accessories</a>
+        </div>
+
 
         <div class="row justify-content-center">
             <div class="col-md-4 product">
                 <img src="{{ url_for('static', filename='images/foundation.jpg') }}" class="img-fluid" alt="Lipstick">
                 <h5 class="mt-2">파운데이션&쿠션</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
+                <a class="btn custom-btn" href="/lip_detail" role="button">Try Now</a>
             </div>
             <div class="col-md-4 product">
                 <img src="{{ url_for('static', filename='images/contouring.jpg') }}" class="img-fluid" alt="Lip Gloss">
                 <h5 class="mt-2">컨투어</h5> 
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
+                <a class="btn custom-btn" href="/lip_detail" role="button">Try Now</a>
             </div>
             <div class="col-md-4 product">
                 <img src="{{ url_for('static', filename='images/blur.jpg') }}" class="img-fluid" alt="Lip Gloss">
                 <h5 class="mt-2">블러셔</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
+                <a class="btn custom-btn" href="/lip_detail" role="button">Try Now</a>
             </div>
         </div>
 
