@@ -1,0 +1,44 @@
+{% extends "base3.html" %}
+{% block content %}
+ <!-- Breadcrumb -->
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products">Lip</a></li>
+            <li class="breadcrumb-item"><a href="/products">립스틱</a></li>
+            <li class="breadcrumb-item active" aria-current="page">체험</li>
+        </ol>
+    </nav>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="image-area position-relative bg-secondary" style="height: 400px;">
+                <!-- Image placeholder -->
+                <div class="brightness-control">
+                    <input type="range" class="form-range" min="0" max="100" value="50">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5>색상</h5>
+            <div class="d-flex">
+                <div class="color-circle" style="background-color: #f28a8a;"></div>
+                <div class="color-circle" style="background-color: #f5b5b5;"></div>
+                <div class="color-circle" style="background-color: #f56565;"></div>
+                <div class="color-circle" style="background-color: #f299c8;"></div>
+                <div class="color-circle" style="background-color: #f7c6c6;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery Script for Interaction -->
+<script>
+    $(document).ready(function() {
+        // Add event listeners if necessary
+    });
+</script>
+{% endblock %}
