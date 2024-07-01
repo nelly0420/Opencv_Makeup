@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+from flask import Flask, redirect, url_for
+
 import cv2
 import numpy as np
 from util.lipstick import apply_lipstick
