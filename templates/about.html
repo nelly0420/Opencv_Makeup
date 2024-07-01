@@ -1,92 +1,11 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap 5 Main Page</title>
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
-        .navbar {
-            background-color: #a8c0ff;
-        }
-        .navbar-brand {
-            font-family: 'Brush Script MT', cursive;
-            font-size: 2.0rem;
-        }
-        .title {
-            font-family: 'Podkova', sans-serif;
-            font-size: 60px;
-            font-weight: bold;
-            color: #273CAB;
-        }
-        .container {
-            max-width: 100%;
-        }
-        .navbar-nav .nav-link {
-            color: white;
-        }
-        .product {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .product img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .category-buttons .btn {
-            margin: 0 10px;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Augmented Make Up</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/products">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/like" style="color:white;"><i class="fas fa-heart"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Content -->
-    <div class="container text-center mt-5">
         <h1 class="title">Augmented <br>Make up</h1>
         <p class="lead" style="font-weight: bold;">About</p>
 
        
 
-    </div>
 
     <script>
         $(document).ready(function() {
@@ -98,5 +17,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

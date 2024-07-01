@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_socketio import SocketIO, emit
 import cv2
 import numpy as np
@@ -40,9 +40,14 @@ def handle_image(data):
 def main():
     return render_template("main.html")
     
+
+@app.route("/products_skin")
+def products_skin():
+    return render_template("products_skin.html")
+
 @app.route("/products")
 def products():
-    return render_template("products_lip.html")
+    return redirect(url_for('products_skin'))
 
 @app.route("/about")
 def about():
@@ -59,6 +64,27 @@ def like():
 @app.route("/lip_detail")
 def lip_detail():
     return render_template("lip_detail.html")
+
+@app.route("/products_eye")
+def products_eye():
+    return render_template("products_eye.html")
+
+@app.route("/products_lip")
+def products_lip():
+    return render_template("products_lip.html")
+
+@app.route("/products_jewelry")
+def products_jewelry():
+    return render_template("products_jewelry.html")
+
+# @app.route("/test")
+# def test():
+#     return render_template("home.html")
+
+
+# @app.route("/getlip", methods=["GET","POST"])
+# def getlip():
+#     return render_template("test2.html")
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
