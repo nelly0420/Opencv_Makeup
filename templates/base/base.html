@@ -50,13 +50,8 @@
             color: white !important;
         }
     </style>
-    <script>
+     <script>
         $(document).ready(function() {
-            // 현재 페이지의 URL 가져오기
-            var currentPageUrl = window.location.pathname;
-
-            // 네비게이션바에 있는 각 링크 확인
-            $(document).ready(function() {
             // 현재 페이지의 URL 가져오기
             var currentPageUrl = window.location.pathname;
 
@@ -65,13 +60,12 @@
                 // href 속성값 가져오기
                 var linkUrl = $(this).attr('href');
 
-                // 현재 페이지 URL이 링크 URL로 시작하는지 확인
-                if (currentPageUrl.startsWith(linkUrl)) {
+                // 현재 페이지 URL과 href 속성값 비교
+                if (currentPageUrl === linkUrl) {
                     // 링크 색깔 변경
                     $(this).addClass('active');
                 }
             });
-        });
         });
     </script>
 </head>
