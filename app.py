@@ -1,5 +1,8 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO, emit
+from flask import Flask, redirect, url_for
+
 import cv2
 import numpy as np
 from util.lipstick import apply_lipstick
@@ -103,6 +106,16 @@ def products_jewelry():
 # @app.route("/getlip", methods=["GET","POST"])
 # def getlip():
 #     return render_template("test2.html")
+
+@app.route("/productJSON" , methods=["GET"] )
+def test():
+    products_file = os.path.join(os.path.dirname(__file__), 'products.json')
+    with open(products_file, 'r', encoding='utf-8') as f:
+        products = f.read() #파일 전체 
+        # (필터링)...
+        # if lip 에 대해서 내려주면 된다. ................
+        # flask get 방식으로 넘길때 인자값을 어떻게 넘기는 지?
+    return jsonify(products) 
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
