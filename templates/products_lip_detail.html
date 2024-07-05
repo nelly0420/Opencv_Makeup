@@ -185,11 +185,8 @@
     <script>
        $(document).ready(function() {
             // JSON 파일을 로드
-            $.getJSON('products.json', function(data) {
-                // 종류가 lip인 상품 필터링
-                var lipProducts = data.filter(function(item) {
-                    return item.종류 === 'lip';
-                });
+            $.getJSON('/productJSON', function(data) {
+                console.log(data);
 
                 // 필터링된 상품을 HTML로 추가
                 lipProducts.forEach(function(product) { 
@@ -206,7 +203,7 @@
                     $('#products').append(productHtml);
                 });
             });
-            
+
             const video = document.getElementById('video');
             const opacityRange = document.getElementById('opacityRange');
             const socket = io('http://localhost:5000');
