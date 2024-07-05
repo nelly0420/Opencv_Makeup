@@ -15,28 +15,7 @@
    
     <script>
        $(document).ready(function() {
-            // JSON 파일을 로드
-            $.getJSON('products.json', function(data) {
-                // 종류가 lip인 상품 필터링
-                var lipProducts = data.filter(function(item) {
-                    return item.종류 === 'lip';
-                });
-
-                // 필터링된 상품을 HTML로 추가
-                lipProducts.forEach(function(product) { 
-                    var productHtml = `
-                        <div class="product">
-                            <img src="${product.imgsrc}" alt="${product.PrdName}">
-                            <h2>${product.PrdName}</h2>
-                            <p>코드: ${product.prdCode}</p>
-                            <p>제조사: ${product.제조사}</p>
-                            <button class="btn color-btn" style="background-color: ${product.color};"> ${product.PrdName} </button>
-                            <p>가격: ${product.price}</p>
-                        </div>
-                    `;
-                    $('#products').append(productHtml);
-                });
-            });
+            
 
             // 현재 페이지의 URL 가져오기
             var currentPageUrl = window.location.pathname;
