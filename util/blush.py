@@ -9,8 +9,8 @@ predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 # 볼 부분 랜드마크 인덱스 정의
 CHEEK_IDXS = OrderedDict([
-    ("left_cheek", [1, 2, 3, 4, 49, 31]),
-    ("right_cheek", [ 12, 13, 14, 15, 35, 53])
+    ("left_cheek", [1, 2, 3, 4, 5, 48, 49, 31]),
+    ("right_cheek", [11, 12, 13, 14, 15, 35, 53, 54])
 ])
 
 # 블러쉬 색상 및 투명도
@@ -46,9 +46,7 @@ def apply_blush(image):
             blush[:, :, 3] = (mask * blush_alpha * 255).astype(np.uint8)  # 알파 채널 설정
 
             # 가우시안 블러 적용
-            blush[:, :, 3] = cv2.GaussianBlur(blush[:, :, 3], (25, 25), 0)  # 커널 크기 조정
-            # 추가된 미디안 블러 적용
-            blush[:, :, 3] = cv2.medianBlur(blush[:, :, 3], 7)  # 커널 크기 조정
+            blush[:, :, 3] = cv2.GaussianBlur(blush[:, :, 3], (15, 15), 0)
 
             # 알파 채널 고려하여 최종 합성
             alpha_mask = blush[:, :, 3] / 255.0
@@ -56,3 +54,5 @@ def apply_blush(image):
                 image[:, :, c] = image[:, :, c] * (1 - alpha_mask) + blush[:, :, c] * alpha_mask
 
     return image
+
+

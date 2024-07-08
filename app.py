@@ -1,7 +1,6 @@
 import os
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit
-from flask import Flask, redirect, url_for
 
 import cv2
 import numpy as np
@@ -10,6 +9,7 @@ from util.eyeliner import apply_eyeliner
 from util.blush import apply_blush
 from util.eyebrow import apply_eyebrow
 import dlib
+import json
 
 # Application 정의
 app = Flask(__name__, static_url_path="/static")
@@ -60,7 +60,6 @@ def handle_image(data):
 @app.route("/main")
 def main():
     return render_template("main.html")
-    
 
 @app.route("/products_skin")
 def products_skin():
@@ -78,10 +77,6 @@ def about():
 def search():
     return render_template("search.html")
 
-@app.route("/like")
-def like():
-    return render_template("like.html")
-
 @app.route("/products_lip_detail")
 def lip_detail():
     return render_template("products_lip_detail.html")
@@ -98,24 +93,47 @@ def products_lip():
 def products_jewelry():
     return render_template("products_jewelry.html")
 
-# @app.route("/test")
-# def test():
-#     return render_template("home.html")
 
+@app.route("/like")
+def like():
+    return redirect(url_for('like_skin'))
 
-# @app.route("/getlip", methods=["GET","POST"])
-# def getlip():
-#     return render_template("test2.html")
+@app.route("/like_skin")
+def like_skin():
+    return render_template("like_skin.html")
 
-@app.route("/productJSON" , methods=["GET"] )
-def test():
+@app.route("/like_eye")
+def like_eye():
+    return render_template("like_eye.html")
+
+@app.route("/like_lip")
+def like_lip():
+    return render_template("like_lip.html")
+
+@app.route("/like_jewelry")
+def like_jewerly():
+    return render_template("like_jewelry.html")
+
+@app.route("/productJSON", methods=["GET"])
+def get_products():
+    # JSON 파일 경로 설정
     products_file = os.path.join(os.path.dirname(__file__), 'products.json')
+
+    # 파일에서 데이터 읽기
     with open(products_file, 'r', encoding='utf-8') as f:
-        products = f.read() #파일 전체 
-        # (필터링)...
-        # if lip 에 대해서 내려주면 된다. ................
-        # flask get 방식으로 넘길때 인자값을 어떻게 넘기는 지?
-    return jsonify(products) 
+        products_data = json.load(f)  # Parse JSON data
+
+    # 쿼리 스트링 인자 가져오기 (예: /productJSON?category=lipstick)
+    category = request.args.get('category')
+
+    if category:
+        # 필터링된 제품 목록 생성
+        filtered_products = [product for product in products_data if product['category'] == category]
+    else:
+        # 카테고리가 지정되지 않은 경우 모든 제품 반환
+        filtered_products = products_data
+
+    return jsonify(filtered_products)
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

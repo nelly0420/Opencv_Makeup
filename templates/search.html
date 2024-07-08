@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container text-center mt-5">
         <h1 class="title">Augmented <br>Make up</h1>
         <p class="lead" style="font-weight: bold;">Search</p>
-        
-        <!-- 검색창 -->
-        <div class="d-flex justify-content-center">
-            <div class="input-group mb-3" style="max-width: 50%;">
-                <input type="text" class="form-control" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
-                <button class="btn custom-btn" type="button" id="button-search">검색</button>
-            </div>
-        </div>
+
+       
+
     </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 {% endblock %}
