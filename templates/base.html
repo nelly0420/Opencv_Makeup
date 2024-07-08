@@ -14,9 +14,7 @@
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
    
     <script>
-       $(document).ready(function() {
-            
-
+        $(document).ready(function() {
             // 현재 페이지의 URL 가져오기
             var currentPageUrl = window.location.pathname;
 
@@ -34,6 +32,7 @@
                     $(this).addClass('active');
                 }
             });
+
             // 카테고리 버튼에 있는 각 링크 확인
             $('.category-buttons .btn').each(function() {
                 // href 속성값 가져오기
@@ -45,8 +44,22 @@
                     $(this).addClass('active');
                 }
             });
+
+            // Like 버튼에 있는 각 링크 확인
+            $('.like-buttons .btn').each(function() {
+                // href 속성값 가져오기
+                var likeButtonUrl = $(this).attr('href');
+
+                // 현재 페이지 URL과 href 속성값 비교
+                if (currentPageUrl === likeButtonUrl) {
+                    // 버튼 활성화
+                    $(this).addClass('active');
+                }
+            });
         });
-    </script>
+
+    </script> 
+
 </head>
 <body>
 
@@ -60,7 +73,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Home</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/products">Products</a>
@@ -72,30 +85,17 @@
                         <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/like"><i class="fas fa-heart"></i></a>
+                        <a class="nav-link like-button" href="/like"><i class="fas fa-heart"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Title and Description -->
-    <div class="container text-center mt-5">
-        <h1 class="title">Augmented <br>Make up</h1>
-        <p class="lead" style="font-weight: semi-bold;">제품을 선택해주세요.</p>
-    </div>
-
-    <!-- Category Buttons -->
-    <div class="category-buttons d-flex justify-content-center mb-3">
-        <a href="/products_skin" class="btn btn-outline-primary">SKIN</a>
-        <a href="/products_eye" class="btn btn-outline-primary">EYE</a>
-        <a href="/products_lip" class="btn btn-outline-primary">LIP</a>
-        <a href="/products_jewelry" class="btn btn-outline-primary">Accessories</a>
-    </div>
-
     <!-- Content -->
     <div class="container text-center mt-5">
         {% block content %}{% endblock %}
     </div>
+
 </body>
 </html>

@@ -1,11 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
 
-        <h1 class="title">Augmented <br>Make up</h1>
-        <p class="lead" style="font-weight: bold;">About</p>
+    <h1 class="title">Augmented <br>Make up</h1>
+    <p class="lead" style="font-weight: bold;">About</p>
 
-       
+    <style>
+        .poster {
+            text-align: center;
+            margin-top: -20px; /* Adjust this value as needed to move the poster up */
+        }
+        .poster img {
+            max-width: 100%;
+            margin-top: 10px; 
+            height: auto;
+            width: 40%; /* Adjust the width as needed */
+        }
+        .features {
+            text-align: left; /* Aligns the features list to the right */
+            padding: 15px; /* Adds padding around the features section */
+            margin-top: 20px; /* Adds margin to the top of the features section */
+        }
+        .features ul {
+            list-style-type: none;
+            padding-right: 0; /* Removes padding from the right side */
+        }
+        .features ul li {
+            margin-bottom: 0.7rem;
+        }
+    </style>
 
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="features">Virtual Makeup App Using OpenCV And Dlib</h2>
+                <p>This Project Leverages OpenCV And Dlib To Create A Virtual Makeup Application That Allows Users To Apply Lipstick, Blush, Eyeliner, And Eyeshadow To Their Photos. The Application Uses Facial Landmark Detection To Accurately Place Makeup On The Appropriate Facial Regions.</p>
+                <div class="features">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Lipstick Application: Apply Different Shades Of Lipstick.</li>
+                        <li>Blush Application: Add Blush To The Cheeks With Various Colors.</li>
+                        <li>Eyeliner: Customize Eyeliner Styles And Colors.</li>
+                        <li>Eyeshadow: Apply Eyeshadow With Options For Multiple Colors And Gradients.</li>
+                        <li>Real-Time Makeup: Apply Makeup In Real-Time Using A Webcam Feed.</li>
+                        <li>Save Results: Save The Final Makeup-Applied Image.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4 poster">
+                <img src="{{ url_for('static', filename='images/poster.png') }}" alt="Augmented Make Up Poster">
+                <p>Made By. Team [동글레]</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function() {

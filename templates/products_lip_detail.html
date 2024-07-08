@@ -1,233 +1,138 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap 5 Main Page</title>
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
-        .navbar {
-            background-color: #a8c0ff;
-        }
-        .navbar-brand {
-            font-family: 'Brush Script MT', cursive;
-            font-size: 2.0rem;
-        }
-        .title {
-            font-family: 'Podkova', sans-serif;
-            font-size: 60px;
-            font-weight: bold;
-            color: #273CAB;
-        }
-        .container {
-            max-width: 100%;
-        }
-        .navbar-nav .nav-link {
-            color: white;
-        }
-        .product {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .product img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .category-buttons .btn {
-            margin: 0 10px;
-        }
-        .navbar-nav .nav-link.active {
-            color: white !important;
-        }
-        .color-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin: 5px;
-            border: none;
-        }
-        .color-title {
-            font-size: 1.5rem; /* Increase font size */
-            font-weight: bold; /* Make the text bold */
-        }
-        .color-line {
-            border-top: 2px solid #000;
-            margin: 10px 0;
-            width: 60%;
-        }
-        .breadcrumb-item a {
-            font-size: 1.1rem; /* Increase font size */
-            font-weight: bold; /* Make the text bold */
-           
-        }
-        .video-container {
-            position: relative;
-            width: 100%; /* Adjust width of video container */
-            max-width: 640px; /* Max width of video container */
-            height: auto; /* Make height auto to maintain aspect ratio */
-        }
-        #video {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-        .opacity-slider {
-            position: absolute;
-            bottom: 10px; /* Adjust position as needed */
-            left: 50%; /* Center horizontally */
-            transform: translateX(-50%);
-            width: 90%; /* Adjust width of slider */
-            max-width: 400px; /* Max width of slider */
-            background-color: #ffffff;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: flex; /* Use flexbox to align items */
-            align-items: center; /* Center items vertically */
-            margin-top: 20px;
-        }
-
-        .opacity-slider label {
-            margin-right: 10px; /* Right margin between icon and slider */
-            font-size: 24px;
-        }
-
-
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .color-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 5px;
+        border: none;
     }
-    </style>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/main">Augmented Make Up</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/products" style="color: white;">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/like"><i class="fas fa-heart"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+
+    .color-title {
+        font-size: 1.5rem; /* Increase font size */
+        font-weight: bold; /* Make the text bold */
+    }
+
+    .color-line {
+        border-top: 2px solid #000;
+        margin: 10px 0;
+        width: 80%;
+    }
+
+    .breadcrumb-item a {
+        font-size: 1.1rem; /* Increase font size */
+        font-weight: bold; /* Make the text bold */
+        opacity: 0.6;
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%; /* Adjust width of video container */
+        max-width: 640px; /* Max width of video container */
+        height: auto; /* Make height auto to maintain aspect ratio */
+    }
+
+    #video {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .opacity-slider {
+        position: absolute;
+        bottom: 10px; /* Adjust position as needed */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%);
+        width: 90%; /* Adjust width of slider */
+        max-width: 400px; /* Max width of slider */
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex; /* Use flexbox to align items */
+        align-items: center; /* Center items vertically */
+        margin-top: 20px;
+    }
+
+    .opacity-slider label {
+        margin-right: 10px; /* Right margin between icon and slider */
+        font-size: 24px;
+    }
+</style>
+
+<div class="container mt-4">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">립스틱</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
+        </ol>
     </nav>
+</div>
 
-    <div class="container mt-4">
-        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
-                <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">립스틱</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
-
-            </ol>
-        </nav>
-    </div>
-
-   <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="video-container">
-                    <video id="video" autoplay></video>
-                    <div class="opacity-slider">
-                        <label for="opacityRange"><i class="fas fa-sun" ></i></label>
-                        <input type="range" class="form-range" min="0" max="1" step="0.1" value="1" id="opacityRange">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <h5 class="color-title">색상</h5>
-                <hr>
-                <div class="d-flex" id="products">
-                    <!-- <button class="btn color-btn" style="background-color: #f28a8a;"></button>
-                    <button class="btn color-btn" style="background-color: #f5b5b5;"></button>
-                    <button class="btn color-btn" style="background-color: #f56565;"></button>
-                    <button class="btn color-btn" style="background-color: #f299c8;"></button>
-                    <button class="btn color-btn" style="background-color: #f7c6c6;"></button> -->
-                   
-
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="video-container">
+                <video id="video" autoplay></video>
+                <div class="opacity-slider">
+                    <label for="opacityRange"><i class="fas fa-sun"></i></label>
+                    <input type="range" class="form-range" min="0" max="1" step="0.1" value="1" id="opacityRange">
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <h5 class="color-title" style="text-align:left">색상</h5>
+            <hr class="color-line">
+            <div class="d-flex" id="colorButtons">
+                <!-- Color buttons will be dynamically added here -->
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4">
-        <input type="file" name="file" class="form-control">
-        <button type="submit" class="btn btn-primary mt-2">Upload</button>
-    </form> -->
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script>
-       $(document).ready(function() {
-            // JSON 파일을 로드
-            $.getJSON('/productJSON', function(data) {
-                console.log(data);
+<script>
+    $(document).ready(function () {
+        // JSON 파일을 서버에서 가져옵니다.
+        $.getJSON('/productJSON', function (data) {
+            console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
 
-                // 필터링된 상품을 HTML로 추가
-                lipProducts.forEach(function(product) { 
-                    var productHtml = `
-                        <div class="product">
-                            <img src="${product.imgsrc}" alt="${product.PrdName}">
-                            <h2>${product.PrdName}</h2>
-                            <p>코드: ${product.prdCode}</p>
-                            <p>제조사: ${product.제조사}</p>
-                            <button class="btn color-btn" style="background-color: ${product.color};"> ${product.PrdName} </button>
-                            <p>가격: ${product.price}</p>
-                        </div>
-                    `;
-                    $('#products').append(productHtml);
-                });
+            // 색상 버튼을 추가합니다.
+            var colors = ['#f28a8a', '#f5b5b5', '#f56565', '#f299c8', '#f7c6c6'];
+            colors.forEach(function (color) {
+                var colorBtn = `<button class="btn color-btn" style="background-color: ${color};"></button>`;
+                $('#colorButtons').append(colorBtn);
             });
-
-            const video = document.getElementById('video');
-            const opacityRange = document.getElementById('opacityRange');
-            const socket = io('http://localhost:5000');
-
-            // Get access to the camera
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function(err) {
-                    console.log("An error occurred: " + err);
-                });
-
-            // Adjust opacity of video
-            opacityRange.addEventListener('input', function() {
-                applyOpacity();
-            });
-
-            function applyOpacity() {
-                const opacityValue = opacityRange.value;
-                video.style.opacity = opacityValue;
-            }
         });
 
-    </script>
-</body>
-</html>
+        const video = document.getElementById('video');
+        const opacityRange = document.getElementById('opacityRange');
+
+        // 비디오 스트림을 가져옵니다.
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+
+        // 투명도 조절 슬라이더의 변경 이벤트를 처리합니다.
+        opacityRange.addEventListener('input', function () {
+            applyOpacity();
+        });
+
+        function applyOpacity() {
+            const opacityValue = opacityRange.value;
+            video.style.opacity = opacityValue;
+        }
+    });
+</script>
+{% endblock %}
