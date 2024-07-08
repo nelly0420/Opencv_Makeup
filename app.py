@@ -38,7 +38,10 @@ def handle_image(data):
     makeup_type = data.get('type')
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
-        img_with_makeup = apply_lipstick(img)
+        #img_with_makeup = apply_lipstick(img)#, prdCode) to-be json의 key값을 가져오기
+        #test
+        prdCode = "L00001"
+        img_with_makeup = apply_lipstick(img, prdCode) #to-be json의 key값을 가져오기
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
         img_with_makeup = apply_eyeliner(img)
