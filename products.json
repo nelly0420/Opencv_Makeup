@@ -1,16 +1,17 @@
 [
-    {"prdCode": "L00001", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00002", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00003", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00004", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00006", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00007", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00008", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L00009", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L000010", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L000011", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L000012", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L000013", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "L000014", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "lip" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ,{"prdCode": "E00001", "PrdName" : "ㄹㄹㄹㄹㄹ", "제조사" : "리리리", "종류" : "eyeline" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
-    ]
+    {"prdCode": "L00001", "PrdName" : "입생로랑 루쥬 쀠르 꾸뛰르", "Manufacturer" : "로레알브랜드", "category" : "lipstick", "color" : "#f28a8a", "price" : "29,680원", "imgsrc" : "https://shopping-phinf.pstatic.net/main_4683557/46835572618.20240411174812.jpg?type=f640"},
+    {"prdCode": "L00002", "PrdName" : "러브샤인 워터샤인 립스틱 3.2g", "Manufacturer" : "로레알브랜드", "category" : "lipstick", "color" : "#f5b5b5", "price" : "40,000원", "imgsrc" : "https://shop-phinf.pstatic.net/20240528_129/17168882017579CLuB_JPEG/118024090470469655_1900377167.jpg?type=m510"},
+    {"prdCode": "L00003", "PrdName" : "맥 립스틱 매트", "Manufacturer" : "맥", "category" : "lipstick", "color" : "#d00000", "price" : "32,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
+    {"prdCode": "L00004", "PrdName" : "디올 어딕트 립 글로우", "Manufacturer" : "디올", "category" : "lipstick", "color" : "#e57373", "price" : "41,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
+    {"prdCode": "L00005", "PrdName" : "샤넬 루쥬 코코 플래쉬", "Manufacturer" : "샤넬", "category" : "lipstick", "color" : "#f06292", "price" : "45,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
+    {"prdCode": "L00006", "PrdName" : "로레알 파리 컬러리쉬", "Manufacturer" : "로레알", "category" : "lipstick", "color" : "#ba68c8", "price" : "28,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
+    {"prdCode": "L00007", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L00008", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L00009", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L000010", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L000011", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L000012", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L000013", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "L000014", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "lipstick" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"},
+    {"prdCode": "E00001", "PrdName" : "ㄹㄹㄹㄹㄹ", "Manufacturer" : "리리리", "category" : "eyeline" , "color" : "#FF0044", "price" : "10000원", "imgsrc" : "http://wwwwwwwwwwwwwwwwwwwwww"}
+]

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
+
+<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
+
 <style>
     .color-btn {
         width: 50px;
@@ -61,6 +65,43 @@
         margin-right: 10px; /* Right margin between icon and slider */
         font-size: 24px;
     }
+
+    /* add - choi(2024-07-10) */
+    .lipstick-item {
+      padding: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+      text-align: center;
+    }
+    .lipstick-item img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .lipstick-item.selected {
+      background-color: rgba(0, 123, 255, 0.2);
+    }
+   
+    .color-circle {
+      width: 45px;
+      height: 45px;
+      border-radius: 60%;
+      display: inline-block;
+    }
+    
+    .lipstick-item h5 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;      
+      font-size: 0.8rem;
+    }
+
+    .slick-prev:before, .slick-next:before {
+      color: black;
+    }
 </style>
 
 <div class="container mt-4">
@@ -79,42 +120,76 @@
         <div class="col-md-6">
             <div class="video-container">
                 <video id="video" autoplay></video>
-                <div class="opacity-slider">
+                <!-- <div class="opacity-slider">
                     <label for="opacityRange"><i class="fas fa-sun"></i></label>
                     <input type="range" class="form-range" min="0" max="1" step="0.1" value="1" id="opacityRange">
-                </div>
+                </div> -->
             </div>
         </div>
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
             <h5 class="color-title" style="text-align:left">색상</h5>
             <hr class="color-line">
             <div class="d-flex" id="colorButtons">
-                <!-- Color buttons will be dynamically added here -->
+            </div>
+        </div> -->
+
+        <!-- 오른쪽 상품목록 영역 -->
+        <div class="col-md-6" id="right-div">
+            <div class="lipstick-carousel">
+              <!-- Lipstick items will be appended here by JavaScript -->
             </div>
         </div>
+
     </div>
 </div>
 
-<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
 
 <script>
     $(document).ready(function () {
         // JSON 파일을 서버에서 가져옵니다.
-        $.getJSON('/productJSON', function (data) {
+        $.getJSON('/productJSON?category=lipstick', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
 
             // 색상 버튼을 추가합니다.
-            var colors = ['#f28a8a', '#f5b5b5', '#f56565', '#f299c8', '#f7c6c6'];
-            colors.forEach(function (color) {
-                var colorBtn = `<button class="btn color-btn" style="background-color: ${color};"></button>`;
-                $('#colorButtons').append(colorBtn);
+            // var colors = ['#f28a8a', '#f5b5b5', '#f56565', '#f299c8', '#f7c6c6'];
+            // colors.forEach(function (color) {
+            //     var colorBtn = `<button class="btn color-btn" style="background-color: ${color};"></button>`;
+            //     $('#colorButtons').append(colorBtn);
+            // });
+
+            data.forEach(item => {
+                $('.lipstick-carousel').append(`
+                    <div class="lipstick-item" data-color="${item.color}">
+                    <img src="${item.imgsrc}" alt="${item.PrdName}">
+                    <h5>${item.PrdName}</h5>
+                    <p>${item.price}</p>
+                    <div class="color-circle" style="background-color:${item.color};"></div>
+                    <p>${item.prdCode}</p>
+                    </div>
+                `);
+            });
+
+            $('.lipstick-carousel').slick({
+                infinite: true,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true
+            });
+
+            $('.lipstick-item').click(function() {
+                const color = $(this).data('color');
+                // $('#left-div').css('background-color', color);
+                $('.lipstick-item').removeClass('selected');
+                $(this).addClass('selected');
             });
         });
 
         const video = document.getElementById('video');
-        const opacityRange = document.getElementById('opacityRange');
-
+        
         // 비디오 스트림을 가져옵니다.
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
@@ -124,15 +199,17 @@
                 console.log("An error occurred: " + err);
             });
 
-        // 투명도 조절 슬라이더의 변경 이벤트를 처리합니다.
-        opacityRange.addEventListener('input', function () {
-            applyOpacity();
-        });
 
-        function applyOpacity() {
-            const opacityValue = opacityRange.value;
-            video.style.opacity = opacityValue;
-        }
+        // 투명도 조절 슬라이더의 변경 이벤트를 처리합니다.
+        //const opacityRange = document.getElementById('opacityRange');
+        // opacityRange.addEventListener('input', function () {
+        //     applyOpacity();
+        // });
+
+        // function applyOpacity() {
+        //     const opacityValue = opacityRange.value;
+        //     video.style.opacity = opacityValue;
+        // }
     });
 </script>
 {% endblock %}
