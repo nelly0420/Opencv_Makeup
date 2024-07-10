@@ -32,6 +32,21 @@
             color: white;
             text-align: center;
         }
+
+        .bg2{
+            width: 450px;
+            height: 360px;
+            border: 2px solid #ccc;
+            position: relative;
+        }
+
+        .star {
+            color : rgb(236, 44, 108);
+            position: absolute;
+            font-size: 24px;
+            animation: moveStar 4s linear infinite;
+        }
+
         .collapse {
             display: flex; /* Flexbox 레이아웃 사용 */
             justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
@@ -52,17 +67,41 @@
         .navbar-nav .nav-link {
             color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
         }
+
+        
+
+        @keyframes moveStar {
+            0% {
+                top: 0;
+                left: 0;
+            }
+            25% {
+                top: 0;
+                left: calc(100% - 24px); /* 24px is the approximate width of the star */
+            }
+            50% {
+                top: calc(100% - 24px);
+                left: calc(100% - 24px);
+            }
+            75% {
+                top: calc(100% - 24px);
+                left: 0;
+            }
+            100% {
+                top: 0;
+                left: 0;
+            }
+        }
+
     </style>
 
     <!-- jQuery Script for Interaction -->
     <script>
         $(document).ready(function(){
             console.log('준비중');
-            // Home 메뉴 클릭 이벤트 처리
-            $("#homeMenu").click(function(event) {
-                event.preventDefault();
-                console.log('홈클릭');
-                alert("준비중입니다.");
+            // btngoMain 버튼 클릭 이벤트 처리
+            $("#btngoMain").click(function(event) {
+                window.location.href = '/products';
             });
             
         });
@@ -101,10 +140,19 @@
 
     <!-- Background Image Section -->
     <div class="bg">
-        <div>
-            <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
-            <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
-            <a class="btn btn-primary" href="/products" role="button" style="margin-top: 20px;">Try Now</a>
+        <div class="bg2">
+            <div class="star">★</div>
+            <div>
+                <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
+                <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
+                <!-- <a class="btn btn-primary" href="/products" role="button" style="margin-top: 20px;">Try Now</a> -->
+                <button id="btngoMain" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg> Try Now
+                </button>
+            </div>
         </div>
     </div>
 
