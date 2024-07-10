@@ -143,6 +143,11 @@
     </div>
 </div>
 
+<form id="frmSend">
+    <input type="hidden" id="prdCode" />
+    <button type="button" id="btnPlay"> Play </button> 
+    <button type="button" id="btnStop" style="display: none;"> Stop </button>
+</form>
 
 <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
@@ -182,9 +187,11 @@
 
             $('.lipstick-item').click(function() {
                 const color = $(this).data('color');
-                // $('#left-div').css('background-color', color);
                 $('.lipstick-item').removeClass('selected');
                 $(this).addClass('selected');
+
+                var selectedValue = $(this).xxxxxxxxxx ; 
+                $("#prdCode").val(selectedValue);
             });
         });
 
@@ -210,6 +217,37 @@
         //     const opacityValue = opacityRange.value;
         //     video.style.opacity = opacityValue;
         // }
+
+
+        //play 버튼 클릭시 이벤트
+        $('#btnPlay').click(function() {
+            alert('click');
+            //sever send prdCode;
+            //frmSend 객체를 전체를 전송한다. submit 
+            // $.ajax   원형 
+            //1번 방식 form 객체 넘길수 있다. 
+            var params = jQuery("#frmSend").serialize();
+            //2번 방식 json 변경하고 넘기기. (*권장)
+
+            $.ajax({
+                url: '/서버주소....',
+                method: 'post',
+                data : params,
+                //성공시
+                success: function (data, status, xhr) {
+                    //로직.
+                    console.log('success');
+                },
+                //에러시
+                error: function (data, status, err) {
+                    alert('에러');
+                },
+                //종료시
+                complete: function () {
+                    console.log('종료');
+                }
+            });
+        });   
     });
 </script>
 {% endblock %}
