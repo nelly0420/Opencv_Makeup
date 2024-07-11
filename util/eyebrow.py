@@ -55,9 +55,10 @@ def apply_eyebrow(image, prdCode):
         cv2.fillPoly(overlay, [np.array(left_eyebrow_points)], color=bgr_color)
         cv2.fillPoly(overlay, [np.array(right_eyebrow_points)], color=bgr_color)
 
+        # 투명도 조절
         image_with_eyebrow = cv2.addWeighted(image, 0.2, overlay, 0.8, 0)
 
-    
+        # 1) line 형식으로 눈썹에 맞게
         # cv2.polylines(image, [left_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=14)
         # cv2.polylines(image, [left_eyebrow_points[0:4]], isClosed=False, color=bgr_color, thickness=10)
 
@@ -65,6 +66,9 @@ def apply_eyebrow(image, prdCode):
         # cv2.polylines(image, [right_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=4)
         # cv2.polylines(image, [right_eyebrow_points[0:2]], isClosed=False, color=bgr_color, thickness=2)
         # cv2.polylines(image, [right_eyebrow_points[4:]], isClosed=False, color=bgr_color, thickness=2)
+
+        # 2) 점연결하는 방법말고 도형형태입히기도 생각해보기
+        
     return image_with_eyebrow
 
 ## 구현을 위한 main code
