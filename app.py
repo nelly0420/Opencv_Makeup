@@ -35,10 +35,16 @@ def handle_image(data):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     # Apply makeup based on the selected option
-    makeup_type = data.get('type')
+    makeup_type = request.form.get('type')
+    makeup_prdCode = request.form.get('id')
+    
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
-        img_with_makeup = apply_lipstick(img)
+        #img_with_makeup = apply_lipstick(img)#, prdCode) to-be json의 key값을 가져오기
+        #test
+        #prdCode = "L00001"
+        print(f"Received id: {makeup_prdCode}")
+        img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
         img_with_makeup = apply_eyeliner(img)
@@ -135,5 +141,25 @@ def get_products():
 
     return jsonify(filtered_products)
 
+@app.route("/productJSON", methods=["POST"])
+def aaaaa():
+    return "hello"
+
+# @app.route("/productJSON", methods=["POST"])
+# def aaaaa():
+#     if request.method == 'POST':
+#             data = request.form  # 폼 데이터를 가져옴
+#             print(data)  # 콘솔에 출력하여 확인
+#             # 필요한 처리 로직 수행
+#             return 'Success'
+
+# @app.route("/productJSON", methods=["GET"])
+# def get_product_json():
+#     prd_code = request.args.get('prdCode')
+#     # prdCode를 사용하여 필요한 로직 수행
+#     print(f'Product Code: {prd_code}')
+#     # 필요한 처리 로직 수행
+#     return jsonify({'status': 'Success', 'prdCode': prd_code})
+    
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

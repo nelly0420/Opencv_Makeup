@@ -12,7 +12,27 @@
 
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
-   
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .custom-btn {
+        background-color: #a8c0ff; /* 원하는 색상 */
+        border-color: #a8c0ff; /* 경계선 색상 */
+        color: white; /* 버튼 텍스트 색상 */
+        }
+        .custom-outline-btn {
+        background-color: white; /* 원하는 색상 */
+        border-color: #a8c0ff; /* 경계선 색상 */
+        color: #a8c0ff; /* 버튼 텍스트 색상 */
+        }
+        .custom-btn:hover {
+        background-color: #91a4eb; /* 마우스를 올렸을 때 색상 */
+        border-color: #91a4eb; /* 마우스를 올렸을 때 경계선 색상 */
+        }
+    </style>
+    
     <script>
         $(document).ready(function() {
             // 현재 페이지의 URL 가져오기
