@@ -2,6 +2,24 @@ import cv2
 import dlib
 import numpy as np
 import pandas as pd
+from PIL import Image
+
+
+# # Detect faces in the image
+# faces = detector(image, 1)
+
+# for k, d in enumerate(faces):
+#     # Get the landmarks/parts for the face in box d.
+#     shape = predictor(image, d)
+    
+#     # Draw eyebrows landmarks
+#     for i in range(17, 27):  # Indices for the eyebrows
+#         # Draw a circle for each landmark point
+#         cv2.circle(image, (shape.part(i).x, shape.part(i).y), 1, (0, 0, 255), -1)
+
+# # Convert array back to Image and show the result
+# result_image = Image.fromarray(image)
+# result_image.show()
 
 def apply_eyebrow(image, prdCode):
     
@@ -32,6 +50,7 @@ def apply_eyebrow(image, prdCode):
     faces = detector(gray)
 
     # ---- 위는 공통영역 -------- # -> 희선파트
+    
 
     for face in faces:
         shape = predictor(gray, face)
@@ -58,16 +77,17 @@ def apply_eyebrow(image, prdCode):
         # 투명도 조절
         image_with_eyebrow = cv2.addWeighted(image, 0.2, overlay, 0.8, 0)
 
-        # 1) line 형식으로 눈썹에 맞게
-        # cv2.polylines(image, [left_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=14)
-        # cv2.polylines(image, [left_eyebrow_points[0:4]], isClosed=False, color=bgr_color, thickness=10)
+        #1) line 형식으로 눈썹에 맞게
+        cv2.polylines(image, [left_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=14)
+        cv2.polylines(image, [left_eyebrow_points[0:4]], isClosed=False, color=bgr_color, thickness=10)
 
-        # # 오른쪽 눈썹 그리기
-        # cv2.polylines(image, [right_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=4)
-        # cv2.polylines(image, [right_eyebrow_points[0:2]], isClosed=False, color=bgr_color, thickness=2)
-        # cv2.polylines(image, [right_eyebrow_points[4:]], isClosed=False, color=bgr_color, thickness=2)
+        # 오른쪽 눈썹 그리기
+        cv2.polylines(image, [right_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=4)
+        cv2.polylines(image, [right_eyebrow_points[0:2]], isClosed=False, color=bgr_color, thickness=2)
+        cv2.polylines(image, [right_eyebrow_points[4:]], isClosed=False, color=bgr_color, thickness=2)
 
-        # 2) 점연결하는 방법말고 도형형태입히기도 생각해보기
+        #2) 점연결하는 방법말고 도형형태입히기도 생각해보기
+
         
     return image_with_eyebrow
 
@@ -111,3 +131,5 @@ if __name__ == "__main__":
     # # 작업 완료 후 해제
     # cap.release()
     # cv2.destroyAllWindows()
+
+

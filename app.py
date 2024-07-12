@@ -35,13 +35,16 @@ def handle_image(data):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     # Apply makeup based on the selected option
-    makeup_type = data.get('type')
+    makeup_type = request.form.get('type')
+    makeup_prdCode = request.form.get('id')
+    
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
         #img_with_makeup = apply_lipstick(img)#, prdCode) to-be json의 key값을 가져오기
         #test
-        prdCode = "L00001"
-        img_with_makeup = apply_lipstick(img, prdCode) #to-be json의 key값을 가져오기
+        #prdCode = "L00001"
+        print(f"Received id: {makeup_prdCode}")
+        img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
         img_with_makeup = apply_eyeliner(img)
