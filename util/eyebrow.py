@@ -1,79 +1,113 @@
 import cv2
 import dlib
 import numpy as np
+import pandas as pd
 
-# dlib 초기화
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+def apply_eyebrow(image, prdCode):
+    
 
-# 입술 랜드마크 인덱스 정의 (이빨 부분 제외)
-LIPS_IDXS = list(range(48, 60))
+    json_path = 'products.json'
+    df = pd.read_json(json_path)
 
-# 입술 영역 확장을 위한 오프셋
-OFFSET_X = 2  # 좌우 확장 픽셀 단위
-OFFSET_Y = 2  # 상하 확장 픽셀 단위
+    match_row = df[df['prdCode'] == prdCode]
+    if not match_row.empty:
+        info = match_row[['color', 'option1', 'option2']]
+        print(info)
 
-# 립글로스 색상 및 투명도
-lipgloss_color = (255, 51, 153)  # 분홍색 계열 (BGR 포맷)
-lipgloss_alpha = 0.3  # 투명도
+        hex_color = info['color'].values[0].lstrip('#')
+        new_color = tuple(int(hex_color[i:i+2], 16) for i in (0,2,4))
 
-def apply_eyebrow(image):
-    faces = detector(image, 1)
-    if len(faces) == 0:
-        print("No faces detected.")
-    for k, d in enumerate(faces):
-        # 얼굴 랜드마크 예측
-        shape = predictor(image, d)
+    else:
+        print("No Matching prdCode: {prdCode}")
+        new_color = (0,0,0)
+    
+
+    # BGR로 변환
+    bgr_color = (new_color[2], new_color[1], new_color[0])
+
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = detector(gray)
+
+    # ---- 위는 공통영역 -------- # -> 희선파트
+
+    for face in faces:
+        shape = predictor(gray, face)
+
+        left_eyebrow_points = []
+        for i in range(17, 22):  # 입술의 외부의 랜드마크 포인트는 48-60
+            x = shape.part(i).x
+            y = shape.part(i).y
+            left_eyebrow_points.append((x, y))
+
+        right_eyebrow_points = []
+        for i in range(22, 27):  # 입술의 외부의 랜드마크 포인트는 48-60
+            x = shape.part(i).x
+            y = shape.part(i).y
+            right_eyebrow_points.append((x, y))
+
+        right_eyebrow_points = np.array(right_eyebrow_points)
+        left_eyebrow_points = np.array(left_eyebrow_points)
         
-        # 입술 영역 추출 및 확장
-        pts = np.zeros((len(LIPS_IDXS), 2), np.int32)
-        for i, j in enumerate(LIPS_IDXS):
-            x, y = shape.part(j).x, shape.part(j).y
-            if j in range(48, 55):  # 위쪽 입술 포인트 확장
-                y -= OFFSET_Y
-            elif j in range(55, 61):  # 아래쪽 입술 포인트 확장
-                y += OFFSET_Y
-            if j == 48:  # 왼쪽 끝점 확장
-                x -= OFFSET_X
-            if j == 54:  # 오른쪽 끝점 확장
-                x += OFFSET_X
-            pts[i] = [x, y]
+        overlay = image.copy()
+        cv2.fillPoly(overlay, [np.array(left_eyebrow_points)], color=bgr_color)
+        cv2.fillPoly(overlay, [np.array(right_eyebrow_points)], color=bgr_color)
 
-        # 입술 영역 마스크 생성
-        mask = np.zeros(image.shape[:2], dtype=np.uint8)
-        pts = pts.reshape((-1, 1, 2))
-        cv2.fillPoly(mask, [pts], 255)
+        # 투명도 조절
+        image_with_eyebrow = cv2.addWeighted(image, 0.2, overlay, 0.8, 0)
 
-        # 입술 영역 추출
-        lips = cv2.bitwise_and(image, image, mask=mask)
+        # 1) line 형식으로 눈썹에 맞게
+        # cv2.polylines(image, [left_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=14)
+        # cv2.polylines(image, [left_eyebrow_points[0:4]], isClosed=False, color=bgr_color, thickness=10)
 
-        # 입술 영역만 포함하는 이미지로 크롭
-        x, y, w, h = cv2.boundingRect(pts)
-        cropped_lips = lips[y:y+h, x:x+w]
+        # # 오른쪽 눈썹 그리기
+        # cv2.polylines(image, [right_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=4)
+        # cv2.polylines(image, [right_eyebrow_points[0:2]], isClosed=False, color=bgr_color, thickness=2)
+        # cv2.polylines(image, [right_eyebrow_points[4:]], isClosed=False, color=bgr_color, thickness=2)
 
-        # 입술 영역에 색 입히기
-        lips_color = np.zeros_like(image)
-        lips_color[:] = lipgloss_color[::-1]  # BGR -> RGB로 변환
-        lips_colored = cv2.bitwise_and(lips_color, lips_color, mask=mask)
-
-        # 원본 이미지에서 입술 영역만 추출
-        lips_original = cv2.bitwise_and(image, image, mask=mask)
-
-        # 광택 효과 추가
-        lipgloss_mask = np.zeros(image.shape[:2], dtype=np.uint8)
-        cv2.fillPoly(lipgloss_mask, [pts], 255)
-        lipgloss = np.zeros_like(image)
-        lipgloss[lipgloss_mask != 0] = (255, 255, 255)  # 흰색으로 광택 부여
-        lips_with_gloss = cv2.addWeighted(lipgloss, lipgloss_alpha, lips_colored, 1 - lipgloss_alpha, 0)
-
-        # 혼합 이미지 생성
-        blended_lips = cv2.addWeighted(lips_with_gloss, 0.6, lips_original, 0.4, 0)
-
-        # 원본 이미지에 입술 영역만 덮어쓰기
-        mask_inv = cv2.bitwise_not(mask)
-        image_bg = cv2.bitwise_and(image, image, mask=mask_inv)
-        image_with_gloss = cv2.add(image_bg, blended_lips)
+        # 2) 점연결하는 방법말고 도형형태입히기도 생각해보기
         
-        return image_with_gloss
+    return image_with_eyebrow
 
-    return image  # 얼굴을 찾지 못한 경우 원본 이미지 반환
+## 구현을 위한 main code
+if __name__ == "__main__":
+    image_path = "image.jpg"
+    img = cv2.imread(image_path)
+
+    eyebrow_color = (186,144,101)
+    img_with_eyebrow = apply_eyebrow(img, 'EB0001')
+
+    cv2.imshow("Image with Eyebrow", img_with_eyebrow)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+## 구현을 위한 Video On main code
+# if __name__ == "__main__":
+    # cap = cv2.VideoCapture(0)  # 카메라를 열기 (0은 기본 카메라)
+
+    # if not cap.isOpened():
+    #     print("카메라를 열 수 없습니다.")
+    #     exit()
+
+    # while True:
+    #     ret, frame = cap.read()  # 카메라에서 프레임 읽기
+
+    #     if not ret:
+    #         print("카메라에서 프레임을 읽을 수 없습니다.")
+    #         break
+
+    #     # 얼굴에 눈썹 입히기
+    #     frame_with_eyebrow = apply_eyebrow(frame, 'EB0001')
+
+    #     # 결과 표시
+    #     cv2.imshow('Frame with Eyebrow', frame_with_eyebrow)
+
+    #     # 'q' 키를 누르면 종료
+    #     if cv2.waitKey(1) & 0xFF == ord('q'):
+    #         break
+
+    # # 작업 완료 후 해제
+    # cap.release()
+    # cv2.destroyAllWindows()
