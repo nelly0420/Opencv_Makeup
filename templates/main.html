@@ -67,7 +67,21 @@
         .navbar-nav .nav-link {
             color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
         }
-
+        /*0712 yang수정 */
+        .custom-btn {
+        background-color: #a8c0ff; /* 원하는 색상 */
+        border-color: #a8c0ff; /* 경계선 색상 */
+        color: white; /* 버튼 텍스트 색상 */
+        }
+        .custom-outline-btn {
+        background-color: white; /* 원하는 색상 */
+        border-color: #a8c0ff; /* 경계선 색상 */
+        color: #a8c0ff; /* 버튼 텍스트 색상 */
+        }
+        .custom-btn:hover {
+        background-color: #91a4eb; /* 마우스를 올렸을 때 색상 */
+        border-color: #91a4eb; /* 마우스를 올렸을 때 경계선 색상 */
+        }
         
 
         @keyframes moveStar {
@@ -146,7 +160,7 @@
                 <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
                 <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
                 <!-- <a class="btn btn-primary" href="/products" role="button" style="margin-top: 20px;">Try Now</a> -->
-                <button id="btngoMain" class="btn btn-primary">
+                <button id="btngoMain" class="btn custom-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
