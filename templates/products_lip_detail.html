@@ -144,7 +144,7 @@
 </div>
 
 <form id="frmSend">
-    <input type="hidden" id="prdCode" />
+    <input type="hidden" id="prdCode" name="prdCode" />
     <button type="button" id="btnPlay"> Play </button> 
     <button type="button" id="btnStop" style="display: none;"> Stop </button>
 </form>
@@ -154,25 +154,18 @@
 
 <script>
     $(document).ready(function () {
-        // JSON 파일을 서버에서 가져옵니다.
+    // JSON 파일을 서버에서 가져옵니다.
         $.getJSON('/productJSON?category=lipstick', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
-
-            // 색상 버튼을 추가합니다.
-            // var colors = ['#f28a8a', '#f5b5b5', '#f56565', '#f299c8', '#f7c6c6'];
-            // colors.forEach(function (color) {
-            //     var colorBtn = `<button class="btn color-btn" style="background-color: ${color};"></button>`;
-            //     $('#colorButtons').append(colorBtn);
-            // });
 
             data.forEach(item => {
                 $('.lipstick-carousel').append(`
                     <div class="lipstick-item" data-color="${item.color}">
-                    <img src="${item.imgsrc}" alt="${item.PrdName}">
-                    <h5>${item.PrdName}</h5>
-                    <p>${item.price}</p>
-                    <div class="color-circle" style="background-color:${item.color};"></div>
-                    <p>${item.prdCode}</p>
+                        <img src="${item.imgsrc}" alt="${item.PrdName}">
+                        <h5>${item.PrdName}</h5>
+                        <p>${item.price}</p>
+                        <div class="color-circle" style="background-color:${item.color};"></div>
+                        <p>${item.prdCode}</p>
                     </div>
                 `);
             });
@@ -190,11 +183,10 @@
                 $('.lipstick-item').removeClass('selected');
                 $(this).addClass('selected');
 
-                var selectedValue = $(this).xxxxxxxxxx ; 
+                var selectedValue = $(this).find('p').last().text(); 
                 $("#prdCode").val(selectedValue);
             });
         });
-
         const video = document.getElementById('video');
         
         // 비디오 스트림을 가져옵니다.
@@ -217,37 +209,31 @@
         //     const opacityValue = opacityRange.value;
         //     video.style.opacity = opacityValue;
         // }
+  
 
-
-        //play 버튼 클릭시 이벤트
         $('#btnPlay').click(function() {
-            alert('click');
-            //sever send prdCode;
-            //frmSend 객체를 전체를 전송한다. submit 
-            // $.ajax   원형 
-            //1번 방식 form 객체 넘길수 있다. 
-            var params = jQuery("#frmSend").serialize();
-            //2번 방식 json 변경하고 넘기기. (*권장)
+            var formData = new FormData(document.getElementById('frmSend'));
+            var params = new URLSearchParams();
+            formData.forEach((value, key) => {
+                params.append(key, value);
+            });
 
+            // GET 요청을 보냄
             $.ajax({
-                url: '/서버주소....',
-                method: 'post',
-                data : params,
-                //성공시
-                success: function (data, status, xhr) {
-                    //로직.
+                url: '/productJSON?' + params.toString(),  // 서버 URL 및 쿼리 스트링
+                method: 'GET',  // GET 방식으로 전송
+                success: function(data, status, xhr) {
                     console.log('success');
+                    // 성공 시 추가 로직
                 },
-                //에러시
-                error: function (data, status, err) {
+                error: function(data, status, err) {
                     alert('에러');
                 },
-                //종료시
-                complete: function () {
+                complete: function() {
                     console.log('종료');
                 }
             });
-        });   
+        });
     });
 </script>
 {% endblock %}
