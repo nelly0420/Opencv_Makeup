@@ -2,7 +2,7 @@ import cv2
 import dlib
 import numpy as np
 from collections import OrderedDict
-
+#ELflflfllflflfflflflflfl
 # dlib 초기화
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
