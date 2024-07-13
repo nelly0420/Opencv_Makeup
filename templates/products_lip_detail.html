@@ -31,9 +31,41 @@
         opacity: 0.6;
     }
 
-    .video-container,
+    .video-container {
+        position: relative;
+        margin: 10px;
+        width: 640px;
+        float: left;
+    }
+
+    #video {
+        width: 100%;
+        height: auto;
+    }
+
+    #capture {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
     .image-container {
         margin: 10px;
+        width: 640px;
+        float: left;
+    }
+
+    #captured-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
     }
 
     .lipstick-item {
@@ -79,6 +111,8 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        margin-left: 20px;
+        float: left;
     }
 
     .color-button-wrapper {
@@ -87,7 +121,12 @@
         gap: 10px;
     }
 
-    /* Additional styles can be added here */
+    .right-column {
+        float: left;
+        width: calc(100% - 660px); /* Adjust the width based on your needs */
+        margin-left: 20px;
+    }
+
 </style>
 
 <div class="container mt-4">
@@ -110,16 +149,15 @@
         <div class="image-container">
             <img id="captured-image" width="640" height="480" />
         </div>
-    </div>
-    <canvas id="canvas" width="320" height="240"></canvas>
-
-    <!-- Right product list area -->
-    <div class="col-md-6" id="right-div">
-        <h5 class="color-title">색상</h5>
-        <hr class="color-line">
         <div class="color-buttons-container" id="colorButtons">
             <!-- Color buttons will be appended here by JavaScript -->
         </div>
+    </div>
+
+    <!-- Right product list area -->
+    <div class="right-column">
+        <h5 class="color-title">색상</h5>
+        <hr class="color-line">
         <div class="lipstick-carousel mt-3">
             <!-- Lipstick items will be appended here by JavaScript -->
         </div>
@@ -178,8 +216,6 @@
 
         // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
         const socket = io('http://localhost:5000');
         
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -192,6 +228,12 @@
 
              // 사용자가 캡처 버튼을 클릭할 때의 이벤트를 설정합니다.
              $('#capture').click(function () {
+                // Create a canvas element to hold the captured image
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const dataURL = canvas.toDataURL('image/jpeg');
                 const binary = atob(dataURL.split(',')[1]);
@@ -202,7 +244,7 @@
                 const blob = new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
                 socket.emit('image', blob);
 
-                // 캡처된 이미지를 화면에 표시합니다.
+                // Display captured image
                 $('#captured-image').attr('src', dataURL);
             });
 
@@ -211,13 +253,13 @@
                 const img = new Image();
                 const url = URL.createObjectURL(new Blob([data]));
                 img.onload = function () {
-                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    $('#captured-image').attr('src', url);
                     URL.revokeObjectURL(url);
                 };
                 img.src = url;
             });
 
-        // Play 버튼을 클릭했을 때의 이벤트를 설정합니다.
+        // 캐러셀 버튼 눌렀을 때로 수정
         $('#btnPlay').click(function () {
             var formData = new FormData(document.getElementById('frmSend'));
             var params = new URLSearchParams();
