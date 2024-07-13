@@ -11,11 +11,12 @@
         border-radius: 50%;
         margin: 5px;
         border: none;
+        display: inline-block;
     }
 
     .color-title {
-        font-size: 1.5rem; /* Increase font size */
-        font-weight: bold; /* Make the text bold */
+        font-size: 1.5rem;
+        font-weight: bold;
     }
 
     .color-line {
@@ -25,83 +26,68 @@
     }
 
     .breadcrumb-item a {
-        font-size: 1.1rem; /* Increase font size */
-        font-weight: bold; /* Make the text bold */
+        font-size: 1.1rem;
+        font-weight: bold;
         opacity: 0.6;
     }
 
-    .video-container {
-        position: relative;
-        width: 100%; /* Adjust width of video container */
-        max-width: 640px; /* Max width of video container */
-        height: auto; /* Make height auto to maintain aspect ratio */
+    .video-container,
+    .image-container {
+        margin: 10px;
     }
 
-    #video {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
-
-    .opacity-slider {
-        position: absolute;
-        bottom: 10px; /* Adjust position as needed */
-        left: 50%; /* Center horizontally */
-        transform: translateX(-50%);
-        width: 90%; /* Adjust width of slider */
-        max-width: 400px; /* Max width of slider */
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        border-radius: 5px;
-        padding: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: flex; /* Use flexbox to align items */
-        align-items: center; /* Center items vertically */
-        margin-top: 20px;
-    }
-
-    .opacity-slider label {
-        margin-right: 10px; /* Right margin between icon and slider */
-        font-size: 24px;
-    }
-
-    /* add - choi(2024-07-10) */
     .lipstick-item {
-      padding: 15px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background-color: #fff;
-      text-align: center;
-    }
-    .lipstick-item img {
-      max-width: 100%;
-      border-radius: 8px;
-    }
-    .lipstick-item.selected {
-      background-color: rgba(0, 123, 255, 0.2);
-    }
-   
-    .color-circle {
-      width: 45px;
-      height: 45px;
-      border-radius: 60%;
-      display: inline-block;
-    }
-    
-    .lipstick-item h5 {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: 100%;      
-      font-size: 0.8rem;
+        padding: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        text-align: center;
     }
 
-    .slick-prev:before, .slick-next:before {
-      color: black;
+    .lipstick-item img {
+        max-width: 100%;
+        border-radius: 8px;
     }
+
+    .lipstick-item.selected {
+        background-color: rgba(0, 123, 255, 0.2);
+    }
+
+    .color-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .lipstick-item h5 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .slick-prev:before,
+    .slick-next:before {
+        color: black;
+    }
+
+    .color-buttons-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .color-button-wrapper {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Additional styles can be added here */
 </style>
 
 <div class="container mt-4">
@@ -117,35 +103,32 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            <div class="video-container">
-                <video id="video" autoplay></video>
-                <!-- <div class="opacity-slider">
-                    <label for="opacityRange"><i class="fas fa-sun"></i></label>
-                    <input type="range" class="form-range" min="0" max="1" step="0.1" value="1" id="opacityRange">
-                </div> -->
-            </div>
+        <div class="video-container">
+            <video id="video" width="640" height="480" autoplay></video>
+            <button id="capture">Capture</button>
         </div>
-        <!-- <div class="col-md-6">
-            <h5 class="color-title" style="text-align:left">색상</h5>
-            <hr class="color-line">
-            <div class="d-flex" id="colorButtons">
-            </div>
-        </div> -->
-
-        <!-- 오른쪽 상품목록 영역 -->
-        <div class="col-md-6" id="right-div">
-            <div class="lipstick-carousel">
-              <!-- Lipstick items will be appended here by JavaScript -->
-            </div>
+        <div class="image-container">
+            <img id="captured-image" width="640" height="480" />
         </div>
+    </div>
+    <canvas id="canvas" width="320" height="240"></canvas>
 
+    <!-- Right product list area -->
+    <div class="col-md-6" id="right-div">
+        <h5 class="color-title">색상</h5>
+        <hr class="color-line">
+        <div class="color-buttons-container" id="colorButtons">
+            <!-- Color buttons will be appended here by JavaScript -->
+        </div>
+        <div class="lipstick-carousel mt-3">
+            <!-- Lipstick items will be appended here by JavaScript -->
+        </div>
     </div>
 </div>
 
-<form id="frmSend">
+<form id="frmSend" style="display: none;">
     <input type="hidden" id="prdCode" name="prdCode" />
-    <button type="button" id="btnPlay"> Play </button> 
+    <button type="button" id="btnPlay"> Play </button>
     <button type="button" id="btnStop" style="display: none;"> Stop </button>
 </form>
 
@@ -154,22 +137,28 @@
 
 <script>
     $(document).ready(function () {
-    // JSON 파일을 서버에서 가져옵니다.
+        // JSON 데이터를 서버에서 가져옵니다.
         $.getJSON('/productJSON?category=lipstick', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
 
             data.forEach(item => {
+                $('#colorButtons').append(`
+                    <div class="color-button-wrapper">
+                        <button class="color-btn" style="background-color:${item.color};"></button>
+                    </div>
+                `);
+
                 $('.lipstick-carousel').append(`
-                    <div class="lipstick-item" data-color="${item.color}">
+                    <div class="lipstick-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
                         <img src="${item.imgsrc}" alt="${item.PrdName}">
                         <h5>${item.PrdName}</h5>
                         <p>${item.price}</p>
                         <div class="color-circle" style="background-color:${item.color};"></div>
-                        <p>${item.prdCode}</p>
                     </div>
                 `);
             });
 
+            // Slick 라이브러리를 이용해 리본 상품 목록을 설정합니다.
             $('.lipstick-carousel').slick({
                 infinite: true,
                 slidesToShow: 4,
@@ -178,62 +167,81 @@
                 arrows: true
             });
 
-            $('.lipstick-item').click(function() {
-                const color = $(this).data('color');
+            // 사용자가 리본 항목을 클릭할 때의 이벤트를 설정합니다.
+            $('.lipstick-item').click(function () {
                 $('.lipstick-item').removeClass('selected');
                 $(this).addClass('selected');
-
-                var selectedValue = $(this).find('p').last().text(); 
+                var selectedValue = $(this).data('prdcode');
                 $("#prdCode").val(selectedValue);
             });
         });
+
+        // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const socket = io('http://localhost:5000');
         
-        // 비디오 스트림을 가져옵니다.
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err) {
-                console.log("An error occurred: " + err);
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.log("An error occurred: " + err);
+                });
+
+             // 사용자가 캡처 버튼을 클릭할 때의 이벤트를 설정합니다.
+             $('#capture').click(function () {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const dataURL = canvas.toDataURL('image/jpeg');
+                const binary = atob(dataURL.split(',')[1]);
+                const array = [];
+                for (let i = 0; i < binary.length; i++) {
+                    array.push(binary.charCodeAt(i));
+                }
+                const blob = new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+                socket.emit('image', blob);
+
+                // 캡처된 이미지를 화면에 표시합니다.
+                $('#captured-image').attr('src', dataURL);
             });
 
+            // 소켓 이벤트를 통해 처리된 이미지를 받아서 표시합니다.
+            socket.on('processed_image', function (data) {
+                const img = new Image();
+                const url = URL.createObjectURL(new Blob([data]));
+                img.onload = function () {
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    URL.revokeObjectURL(url);
+                };
+                img.src = url;
+            });
 
-        // 투명도 조절 슬라이더의 변경 이벤트를 처리합니다.
-        //const opacityRange = document.getElementById('opacityRange');
-        // opacityRange.addEventListener('input', function () {
-        //     applyOpacity();
-        // });
-
-        // function applyOpacity() {
-        //     const opacityValue = opacityRange.value;
-        //     video.style.opacity = opacityValue;
-        // }
-  
-
-        $('#btnPlay').click(function() {
+        // Play 버튼을 클릭했을 때의 이벤트를 설정합니다.
+        $('#btnPlay').click(function () {
             var formData = new FormData(document.getElementById('frmSend'));
             var params = new URLSearchParams();
             formData.forEach((value, key) => {
                 params.append(key, value);
             });
 
-            // GET 요청을 보냄
+            // AJAX GET 요청을 보냅니다.
             $.ajax({
-                url: '/productJSON?' + params.toString(),  // 서버 URL 및 쿼리 스트링
-                method: 'GET',  // GET 방식으로 전송
-                success: function(data, status, xhr) {
-                    console.log('success');
-                    // 성공 시 추가 로직
+                url: '/productJSON?' + params.toString(),
+                method: 'GET',
+                success: function (data, status, xhr) {
+                    console.log('성공');
+                    // 성공 시 추가 작업을 수행합니다.
                 },
-                error: function(data, status, err) {
+                error: function (data, status, err) {
                     alert('에러');
                 },
-                complete: function() {
-                    console.log('종료');
+                complete: function () {
+                    console.log('완료');
                 }
             });
         });
     });
 </script>
+
 {% endblock %}
