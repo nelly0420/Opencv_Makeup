@@ -123,10 +123,9 @@
 
     .right-column {
         float: left;
-        width: calc(100% - 660px); /* Adjust the width based on your needs */
+        width: calc(100% - 660px);
         margin-left: 20px;
     }
-
 </style>
 
 <div class="container mt-4">
@@ -166,8 +165,6 @@
 
 <form id="frmSend" style="display: none;">
     <input type="hidden" id="prdCode" name="prdCode" />
-    <button type="button" id="btnPlay"> Play </button>
-    <button type="button" id="btnStop" style="display: none;"> Stop </button>
 </form>
 
 <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
@@ -175,17 +172,18 @@
 
 <script>
     $(document).ready(function () {
-        // JSON 데이터를 서버에서 가져옵니다.
+        // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=lipstick', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
-
+    
+            // 각 상품 항목에 대해 반복하여 색상 버튼과 립스틱 항목을 생성합니다.
             data.forEach(item => {
                 $('#colorButtons').append(`
                     <div class="color-button-wrapper">
                         <button class="color-btn" style="background-color:${item.color};"></button>
                     </div>
                 `);
-
+    
                 $('.lipstick-carousel').append(`
                     <div class="lipstick-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
                         <img src="${item.imgsrc}" alt="${item.PrdName}">
@@ -195,8 +193,8 @@
                     </div>
                 `);
             });
-
-            // Slick 라이브러리를 이용해 리본 상품 목록을 설정합니다.
+    
+            // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.lipstick-carousel').slick({
                 infinite: true,
                 slidesToShow: 4,
@@ -204,86 +202,95 @@
                 dots: true,
                 arrows: true
             });
-
-            // 사용자가 리본 항목을 클릭할 때의 이벤트를 설정합니다.
+    
+            // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 상품 코드를 저장합니다.
             $('.lipstick-item').click(function () {
                 $('.lipstick-item').removeClass('selected');
                 $(this).addClass('selected');
                 var selectedValue = $(this).data('prdcode');
                 $("#prdCode").val(selectedValue);
+    
+                console.log('Selected product code:', selectedValue); // 선택된 상품 코드를 콘솔에 출력합니다.
+    
+                // 선택된 항목이 변경될 때마다 AJAX 요청을 보냅니다.
+                sendProductRequest();
             });
         });
-
+    
         // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
         const socket = io('http://localhost:5000');
         
         navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function (err) {
-                    console.log("An error occurred: " + err);
-                });
-
-             // 사용자가 캡처 버튼을 클릭할 때의 이벤트를 설정합니다.
-             $('#capture').click(function () {
-                // Create a canvas element to hold the captured image
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const dataURL = canvas.toDataURL('image/jpeg');
-                const binary = atob(dataURL.split(',')[1]);
-                const array = [];
-                for (let i = 0; i < binary.length; i++) {
-                    array.push(binary.charCodeAt(i));
-                }
-                const blob = new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
-                socket.emit('image', blob);
-
-                // Display captured image
-                $('#captured-image').attr('src', dataURL);
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
             });
-
-            // 소켓 이벤트를 통해 처리된 이미지를 받아서 표시합니다.
-            socket.on('processed_image', function (data) {
-                const img = new Image();
-                const url = URL.createObjectURL(new Blob([data]));
-                img.onload = function () {
-                    $('#captured-image').attr('src', url);
-                    URL.revokeObjectURL(url);
-                };
-                img.src = url;
-            });
-
-        // 캐러셀 버튼 눌렀을 때로 수정
-        $('#btnPlay').click(function () {
+    
+        // 캡처 버튼 클릭 이벤트를 설정하여 비디오에서 이미지를 캡처하고 소켓을 통해 서버로 전송합니다.
+        $('#capture').click(function () {
+            // 캡처된 이미지를 저장할 캔버스 요소를 생성합니다.
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+    
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/jpeg');
+            const binary = atob(dataURL.split(',')[1]);
+            const array = [];
+            for (let i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i));
+            }
+            const blob = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
+            socket.emit('image', blob);
+    
+            // 캡처된 이미지를 화면에 표시합니다.
+            $('#captured-image').attr('src', dataURL);
+        });
+    
+        // 서버로부터 처리된 이미지를 수신하여 화면에 표시합니다.
+        socket.on('processed_image', function (data) {
+            const img = new Image();
+            const url = URL.createObjectURL(new Blob([data]));
+            img.onload = function () {
+                $('#captured-image').attr('src', url);
+                URL.revokeObjectURL(url);
+            };
+            img.src = url;
+        });
+    
+        // 립스틱 캐러셀 항목을 클릭할 때마다 AJAX 요청을 보내는 함수입니다.
+        function sendProductRequest() {
             var formData = new FormData(document.getElementById('frmSend'));
             var params = new URLSearchParams();
             formData.forEach((value, key) => {
                 params.append(key, value);
             });
-
+    
+            console.log('AJAX 요청을 보냅니다: ' + params.toString()); // 요청이 시작될 때 콘솔에 메시지를 출력합니다.
+    
             // AJAX GET 요청을 보냅니다.
             $.ajax({
                 url: '/productJSON?' + params.toString(),
                 method: 'GET',
                 success: function (data, status, xhr) {
-                    console.log('성공');
+                    console.log('성공', data); // 요청이 성공하면 콘솔에 메시지를 출력합니다.
                     // 성공 시 추가 작업을 수행합니다.
                 },
-                error: function (data, status, err) {
-                    alert('에러');
+                error: function (xhr, status, err) {
+                    console.error('에러', err); // 요청이 실패하면 알림을 띄웁니다.
                 },
                 complete: function () {
-                    console.log('완료');
+                    console.log('완료'); // 요청이 완료되면 콘솔에 메시지를 출력합니다.
                 }
             });
-        });
+        }
     });
+    
+    
 </script>
 
 {% endblock %}

@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
+
+<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
+
 <style>
-    #capture_blush {
+    .color-btn {
         width: 50px;
         height: 50px;
-        border-radius: 30px;
-        margin: 0px;
+        border-radius: 50%;
+        margin: 5px;
         border: none;
-        background-color: #f28a8a;
-        cursor: pointer;
+        display: inline-block;
     }
 
     .color-title {
         font-size: 1.5rem;
         font-weight: bold;
-        text-align: left !important;
     }
 
     .color-line {
@@ -31,51 +33,107 @@
 
     .video-container {
         position: relative;
-        width: 100%;
-        max-width: 640px;
-        height: auto;
+        margin: 10px;
+        width: 640px;
+        float: left;
     }
 
     #video {
         width: 100%;
         height: auto;
-        object-fit: cover;
     }
 
-    .opacity-slider {
+    #capture {
         position: absolute;
         bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
-        width: 90%;
-        max-width: 400px;
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        border-radius: 5px;
-        padding: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .image-container {
+        margin: 10px;
+        width: 640px;
+        float: left;
+    }
+
+    #captured-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .lipstick-item {
+        padding: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        text-align: center;
+    }
+
+    .lipstick-item img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .lipstick-item.selected {
+        background-color: rgba(0, 123, 255, 0.2);
+    }
+
+    .color-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .lipstick-item h5 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .slick-prev:before,
+    .slick-next:before {
+        color: black;
+    }
+
+    .color-buttons-container {
         display: flex;
-        align-items: center;
-        margin-top: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-left: 20px;
+        float: left;
     }
 
-    .opacity-slider label {
-        margin-right: 10px;
-        font-size: 24px;
+    .color-button-wrapper {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
-    #canvas {
-        display: none; /* Canvas initially hidden */
+    .right-column {
+        float: left;
+        width: calc(100% - 660px);
+        margin-left: 20px;
     }
 </style>
 
 <div class="container mt-4">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-         aria-label="breadcrumb">
+        aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/products_skin" style="color:black !important;">Skin</a></li>
-            <li class="breadcrumb-item"><a href="/products_skin" style="color:gray !important;">블러셔</a></li>
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">립스틱</a></li>
             <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
         </ol>
     </nav>
@@ -83,46 +141,102 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            <div class="video-container">
-                <video id="video" autoplay></video>
-                <canvas id="canvas" style="display:none;"></canvas> <!-- Canvas for image processing -->
-                <div class="opacity-slider">
-                    <label for="blurRange"><i class="fas fa-sun"></i></label>
-                    <input type="range" class="form-range" min="0" max="10" step="0.5" value="0" id="blurRange">
-                </div>
-            </div>
+        <div class="video-container">
+            <video id="video" width="640" height="480" autoplay></video>
+            <button id="capture">Capture</button>
         </div>
-        <div class="col-md-6">
-            <h5 class="color-title">색상</h5>
-            <hr class="color-line">
-            <button id="capture_blush" class="btn btn-primary"></button> <!-- Button for capturing and applying blush -->
+        <div class="image-container">
+            <img id="captured-image" width="640" height="480" />
+        </div>
+        <div class="color-buttons-container" id="colorButtons">
+            <!-- Color buttons will be appended here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Right product list area -->
+    <div class="right-column">
+        <h5 class="color-title">색상</h5>
+        <hr class="color-line">
+        <div class="lipstick-carousel mt-3">
+            <!-- Lipstick items will be appended here by JavaScript -->
         </div>
     </div>
 </div>
 
-<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<form id="frmSend" style="display: none;">
+    <input type="hidden" id="prdCode" name="prdCode" />
+</form>
+
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
+        $.getJSON('/productJSON?category=lipstick', function (data) {
+            console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
+    
+            // 각 상품 항목에 대해 반복하여 색상 버튼과 립스틱 항목을 생성합니다.
+            data.forEach(item => {
+                $('#colorButtons').append(`
+                    <div class="color-button-wrapper">
+                        <button class="color-btn" style="background-color:${item.color};"></button>
+                    </div>
+                `);
+    
+                $('.lipstick-carousel').append(`
+                    <div class="lipstick-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
+                        <img src="${item.imgsrc}" alt="${item.PrdName}">
+                        <h5>${item.PrdName}</h5>
+                        <p>${item.price}</p>
+                        <div class="color-circle" style="background-color:${item.color};"></div>
+                    </div>
+                `);
+            });
+    
+            // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+            $('.lipstick-carousel').slick({
+                infinite: true,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true
+            });
+    
+            // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 상품 코드를 저장합니다.
+            $('.lipstick-item').click(function () {
+                $('.lipstick-item').removeClass('selected');
+                $(this).addClass('selected');
+                var selectedValue = $(this).data('prdcode');
+                $("#prdCode").val(selectedValue);
+    
+                console.log('Selected product code:', selectedValue); // 선택된 상품 코드를 콘솔에 출력합니다.
+    
+                // 선택된 항목이 변경될 때마다 AJAX 요청을 보냅니다.
+                sendProductRequest();
+            });
+        });
+    
+        // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
         const socket = io('http://localhost:5000');
-
-        // Get user media and stream to video element
+        
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
+            .then(function (stream) {
                 video.srcObject = stream;
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log("An error occurred: " + err);
             });
-
-        // Function to send video frames to Flask backend via SocketIO
-        function captureAndSend(makeupType) {
+    
+        // 캡처 버튼 클릭 이벤트를 설정하여 비디오에서 이미지를 캡처하고 소켓을 통해 서버로 전송합니다.
+        $('#capture').click(function () {
+            // 캡처된 이미지를 저장할 캔버스 요소를 생성합니다.
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
+    
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/jpeg');
             const binary = atob(dataURL.split(',')[1]);
@@ -131,28 +245,52 @@
                 array.push(binary.charCodeAt(i));
             }
             const blob = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
-            socket.emit('video', { video: blob, type: makeupType });
+            socket.emit('image', blob);
+    
+            // 캡처된 이미지를 화면에 표시합니다.
+            $('#captured-image').attr('src', dataURL);
+        });
+    
+        // 서버로부터 처리된 이미지를 수신하여 화면에 표시합니다.
+        socket.on('processed_image', function (data) {
+            const img = new Image();
+            const url = URL.createObjectURL(new Blob([data]));
+            img.onload = function () {
+                $('#captured-image').attr('src', url);
+                URL.revokeObjectURL(url);
+            };
+            img.src = url;
+        });
+    
+        // 립스틱 캐러셀 항목을 클릭할 때마다 AJAX 요청을 보내는 함수입니다.
+        function sendProductRequest() {
+            var formData = new FormData(document.getElementById('frmSend'));
+            var params = new URLSearchParams();
+            formData.forEach((value, key) => {
+                params.append(key, value);
+            });
+    
+            console.log('AJAX 요청을 보냅니다: ' + params.toString()); // 요청이 시작될 때 콘솔에 메시지를 출력합니다.
+    
+            // AJAX GET 요청을 보냅니다.
+            $.ajax({
+                url: '/productJSON?' + params.toString(),
+                method: 'GET',
+                success: function (data, status, xhr) {
+                    console.log('성공', data); // 요청이 성공하면 콘솔에 메시지를 출력합니다.
+                    // 성공 시 추가 작업을 수행합니다.
+                },
+                error: function (xhr, status, err) {
+                    console.error('에러', err); // 요청이 실패하면 알림을 띄웁니다.
+                },
+                complete: function () {
+                    console.log('완료'); // 요청이 완료되면 콘솔에 메시지를 출력합니다.
+                }
+            });
         }
-
-        // SocketIO event listener for processed video response
-        socket.on('processed_video', function(data) {
-            const videoElement = document.createElement('video');
-            const url = URL.createObjectURL(new Blob([data.video]));
-            videoElement.src = url;
-            videoElement.autoplay = true;
-            videoElement.controls = true;
-            videoElement.style.width = '100%';
-            videoElement.style.height = 'auto';
-            document.body.appendChild(videoElement);
-            URL.revokeObjectURL(url);
-        });
-
-        // Click event listener for blush application button
-        $('#capture_blush').click(function() {
-            captureAndSend('blush');
-        });
     });
+    
+    
 </script>
-
 
 {% endblock %}
