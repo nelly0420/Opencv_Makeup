@@ -145,21 +145,13 @@ def get_products():
 def aaaaa():
     return "hello"
 
-# @app.route("/productJSON", methods=["POST"])
-# def aaaaa():
-#     if request.method == 'POST':
-#             data = request.form  # 폼 데이터를 가져옴
-#             print(data)  # 콘솔에 출력하여 확인
-#             # 필요한 처리 로직 수행
-#             return 'Success'
-
-# @app.route("/productJSON", methods=["GET"])
-# def get_product_json():
+# 필요하면 사용
+# @app.route('/select_product', methods=['GET'])
+# def select_product():
 #     prd_code = request.args.get('prdCode')
-#     # prdCode를 사용하여 필요한 로직 수행
-#     print(f'Product Code: {prd_code}')
-#     # 필요한 처리 로직 수행
-#     return jsonify({'status': 'Success', 'prdCode': prd_code})
+#     # prd_code를 사용하여 원하는 작업을 수행합니다.
+#     print(f"Selected product code: {prd_code}")
+#     return jsonify({"status": "success", "prdCode": prd_code})
     
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
