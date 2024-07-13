@@ -50,7 +50,7 @@ def handle_image(data):
         img_with_makeup = apply_eyeliner(img)
     elif makeup_type == 'blush':
         print('Applying blush...')
-        img_with_makeup = apply_blush(img)
+        img_with_makeup = apply_blush(img, makeup_prdCode)
     elif makeup_type == 'eyebrow':
         print('Applying eyebrow...')
         img_with_makeup = apply_eyebrow(img)
@@ -145,17 +145,51 @@ def get_products():
 
     return jsonify(filtered_products)
 
-@app.route("/productJSON", methods=["POST"])
-def aaaaa():
-    return "hello"
+# @app.route("/productJSON", methods=["POST"])
+# def aaaaa():
+#     return "hello"
 
-# 필요하면 사용
-# @app.route('/select_product', methods=['GET'])
-# def select_product():
+# @app.route("/productJSON", methods=["POST"])
+# def aaaaa():
+#     if request.method == 'POST':
+#             data = request.form  # 폼 데이터를 가져옴
+#             print(data)  # 콘솔에 출력하여 확인
+#             # 필요한 처리 로직 수행
+#             return 'Success'
+
+# @app.route("/productJSON", methods=["GET"])
+# def get_product_json():
 #     prd_code = request.args.get('prdCode')
-#     # prd_code를 사용하여 원하는 작업을 수행합니다.
-#     print(f"Selected product code: {prd_code}")
-#     return jsonify({"status": "success", "prdCode": prd_code})
+#     # prdCode를 사용하여 필요한 로직 수행
+#     print(f'Product Code: {prd_code}')
+#     # 필요한 처리 로직 수행
+#     return jsonify({'status': 'Success', 'prdCode': prd_code})
+
+@app.route('/apply_blush', methods=['POST'])
+def apply_blush_endpoint():
+    if request.method == 'POST':
+        # Get the FormData object from the request
+        data = request.form
+
+        # Extract prdCode from the FormData
+        prd_code = data.get('prdCode')
+
+        # Assuming you also want to receive the image data
+        image_data = request.files['image'].read()
+        nparr = np.frombuffer(image_data, np.uint8)
+        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        # Apply blush effect to the image
+        result_image = apply_blush(image_np, prd_code)
+
+        # Encode the processed image to JPEG format
+        _, buffer = cv2.imencode('.jpg', result_image)
+
+        # Return the processed image as bytes with a status code
+        return buffer.tobytes(), 200
+
+    else:
+        return "Method not allowed", 405
     
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

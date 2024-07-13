@@ -46,7 +46,7 @@ def get_cheek_landmarks(shape, offset):
     
     return left_cheek, right_cheek
 
-def apply_blush(image, prdCode = "L00001"):
+def apply_blush(image, prdCode ):
     # 색상 정보를 JSON에서 가져오기
     blush_color = get_color_from_json(prdCode)
 
