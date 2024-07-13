@@ -1,7 +1,26 @@
 import cv2
 import dlib
 import numpy as np
-from collections import OrderedDict
+import pandas as pd
+
+def get_color_from_json(prdCode):
+    # JSON 불러오기
+    json_path = 'products.json'
+    df = pd.read_json(json_path)
+
+    # 색상정보, 옵션 1, 옵션2 가져오기
+    match_row = df[df['prdCode'] == prdCode]
+    if not match_row.empty:
+        info = match_row[['color', 'option1', 'option2']]
+        print(info)
+
+        hex_color = info['color'].values[0].lstrip('#')
+        new_color = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+    else:
+        print(f"No Matching prdCode: {prdCode}")
+        new_color = (0, 0, 0)
+    
+    return (new_color[2], new_color[1], new_color[0])  # BGR로 변환
 
 # dlib 초기화
 detector = dlib.get_frontal_face_detector()
@@ -27,7 +46,10 @@ def get_cheek_landmarks(shape, offset):
     
     return left_cheek, right_cheek
 
-def apply_blush(image):
+def apply_blush(image, prdCode = "L00001"):
+    # 색상 정보를 JSON에서 가져오기
+    blush_color = get_color_from_json(prdCode)
+
     # 이미지 BGRA로 변환
     image_bgra = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
     
@@ -64,7 +86,6 @@ def apply_blush(image):
                 image[:, :, c] = image[:, :, c] * (1 - alpha_mask) + blush[:, :, c] * alpha_mask
 
     return image
-
 # import cv2
 # import dlib
 # import numpy as np
