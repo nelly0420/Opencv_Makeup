@@ -87,6 +87,10 @@ def search():
 def lip_detail():
     return render_template("products_lip_detail.html")
 
+@app.route("/products_blush_detail")
+def blush_detail():
+    return render_template("products_blush_detail.html")
+
 @app.route("/products_eye")
 def products_eye():
     return render_template("products_eye.html")
