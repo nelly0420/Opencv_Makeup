@@ -54,6 +54,7 @@
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
+        z-index: 999; /* Ensure the button is above other elements */
     }
 
     .image-container {
@@ -133,7 +134,7 @@
         aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
-            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">립스틱</a></li>
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">Matte</a></li>
             <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
         </ol>
     </nav>
@@ -143,8 +144,12 @@
     <div class="row">
         <div class="video-container">
             <video id="video" width="640" height="480" autoplay></video>
-            <button id="capture">Capture</button>
+            <!-- Ensure the button is positioned correctly and not obscured -->
+            <button id="capture">
+                Capture
+            </button>
         </div>
+        
         <div class="image-container">
             <img id="captured-image" width="640" height="480" />
         </div>
@@ -164,7 +169,7 @@
 </div>
 
 <form id="frmSend" style="display: none;">
-    <input type="hidden" id="prdCode" name="prdCode" />
+    <input type="hidden" id="prdCode" name="prdCode" value="" />
 </form>
 
 <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
@@ -197,7 +202,7 @@
             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.lipstick-carousel').slick({
                 infinite: true,
-                slidesToShow: 4,
+                slidesToShow: 6,
                 slidesToScroll: 1,
                 dots: true,
                 arrows: true
@@ -208,11 +213,11 @@
                 $('.lipstick-item').removeClass('selected');
                 $(this).addClass('selected');
                 var selectedValue = $(this).data('prdcode');
-                $("#prdCode").val(selectedValue);
+                $("#prdCode").val(selectedValue);  // Update the hidden input field with selected prdCode
     
-                console.log('Selected product code:', selectedValue); // 선택된 상품 코드를 콘솔에 출력합니다.
+                console.log('Selected product code:', selectedValue); // Log the selected product code
     
-                // 선택된 항목이 변경될 때마다 AJAX 요청을 보냅니다.
+                // Send AJAX request to update product information
                 sendProductRequest(selectedValue);
             });
         });
@@ -220,70 +225,83 @@
         // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
         const socket = io('http://localhost:5000');
-        
+    
         navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function (err) {
-                    console.log("An error occurred: " + err);
-                });
-
-             // 사용자가 캡처 버튼을 클릭할 때의 이벤트를 설정합니다.
-             $('#capture').click(function () {
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+    
+            $('#capture').click(function () {
+                console.log('Capture button clicked');
+        
+                // Create a canvas element to hold the captured image
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const video = document.getElementById('video');
+                
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+        
+                // Draw the current video frame onto the canvas
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+                // Convert canvas content to a data URL
                 const dataURL = canvas.toDataURL('image/jpeg');
-                const binary = atob(dataURL.split(',')[1]);
-                const array = [];
-                for (let i = 0; i < binary.length; i++) {
-                    array.push(binary.charCodeAt(i));
+        
+                console.log('Captured data URL:', dataURL);
+        
+                // Convert data URL to Blob object
+                const blob = dataURItoBlob(dataURL);
+        
+                // Get the selected product code
+                const prdCode = $("#prdCode").val();
+        
+                console.log('Selected product code:', prdCode);
+        
+                // Prepare FormData object to send image and product code
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.jpg');
+                formData.append('prdCode', prdCode);
+        
+                console.log('FormData:', formData);
+        
+                // Send POST request to server endpoint
+                fetch('/apply_lip', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Convert received Blob to object URL and set as captured image source
+                    const imgUrl = URL.createObjectURL(blob);
+                    $('#captured-image').attr('src', imgUrl);
+                    console.log('Image applied successfully');
+                })
+                .catch(error => {
+                    console.error('Error applying blush:', error);
+                });
+            });
+        
+            // Function to convert Data URI to Blob
+            function dataURItoBlob(dataURI) {
+                const byteString = atob(dataURI.split(',')[1]);
+                const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
                 }
-                const blob = new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
-                socket.emit('image', blob);
-
-                // 캡처된 이미지를 화면에 표시합니다.
-                $('#captured-image').attr('src', dataURL);
-            });
-
-            // 소켓 이벤트를 통해 처리된 이미지를 받아서 표시합니다.
-            socket.on('processed_image', function (data) {
-                const img = new Image();
-                const url = URL.createObjectURL(new Blob([data]));
-                img.onload = function () {
-                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    URL.revokeObjectURL(url);
-                };
-                img.src = url;
-            });
-
-        // Play 버튼을 클릭했을 때의 이벤트를 설정합니다.
-        $('#btnPlay').click(function () {
-            var formData = new FormData(document.getElementById('frmSend'));
-            var params = new URLSearchParams();
-            params.append('prdCode', selectedValue);
-    
-            console.log('AJAX 요청을 보냅니다: ' + params.toString()); // 요청이 시작될 때 콘솔에 메시지를 출력합니다.
-    
-            // AJAX GET 요청을 보냅니다.
-            $.ajax({
-                url: '/productJSON?' + params.toString(),
-                method: 'GET',
-                success: function (data, status, xhr) {
-                    console.log('성공', data); // 요청이 성공하면 콘솔에 메시지를 출력합니다.
-                    // 성공 시 추가 작업을 수행합니다.
-                },
-                error: function (xhr, status, err) {
-                    console.error('에러', err); // 요청이 실패하면 콘솔에 에러 메시지를 출력합니다.
-                },
-                complete: function () {
-                    console.log('완료'); // 요청이 완료되면 콘솔에 메시지를 출력합니다.
-                }
-            });
-        }
+                return new Blob([ab], { type: mimeString });
+            }
     });
-    
-    
-    
 </script>
 
 {% endblock %}

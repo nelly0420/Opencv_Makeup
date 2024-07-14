@@ -133,8 +133,8 @@
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
         aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
-            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">립스틱</a></li>
+            <li class="breadcrumb-item"><a href="/products_skin" style="color:black !important;">Skin</a></li>
+            <li class="breadcrumb-item"><a href="/products_skin" style="color:gray !important;">블러셔</a></li>
             <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
         </ol>
     </nav>
@@ -178,7 +178,7 @@
 <script>
     $(document).ready(function () {
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
-        $.getJSON('/productJSON?category=lipstick', function (data) {
+        $.getJSON('/productJSON?category=blush', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
     
             // 각 상품 항목에 대해 반복하여 색상 버튼과 립스틱 항목을 생성합니다.
@@ -202,7 +202,7 @@
             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.lipstick-carousel').slick({
                 infinite: true,
-                slidesToShow: 4,
+                slidesToShow: 6,
                 slidesToScroll: 1,
                 dots: true,
                 arrows: true
