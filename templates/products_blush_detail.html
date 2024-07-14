@@ -17,12 +17,13 @@
     .color-title {
         font-size: 1.5rem;
         font-weight: bold;
+        text-align: left;
     }
 
     .color-line {
         border-top: 2px solid #000;
         margin: 10px 0;
-        width: 80%;
+        width: 70%;
     }
 
     .breadcrumb-item a {
@@ -34,7 +35,7 @@
     .video-container {
         position: relative;
         margin: 10px;
-        width: 1000px;
+        width: 640px;
         float: left;
     }
 
@@ -61,7 +62,7 @@
 
     .image-container {
         margin: 10px;
-        width: 1000px;
+        width: 640px;
         float: left;
     }
 
@@ -132,7 +133,7 @@
     /* Reduce the size of the carousel */
     .lipstick-carousel {
         width: 60%;
-        float: left;
+        float: left; 
     }
 
     /* Color buttons section next to carousel */
@@ -158,7 +159,7 @@
 <div class="container">
     <div class="row">
         <div class="video-container">
-            <video id="video" width="1000" height="800" autoplay></video>
+            <video id="video" width="640" height="480" autoplay></video>
             <!-- Ensure the button is positioned correctly and not obscured -->
             <button id="capture">
                 Capture
@@ -166,7 +167,7 @@
         </div>
         
         <div class="image-container">
-            <img id="captured-image" width="1000" height="800" />
+            <img id="captured-image" width="640" height="480" />
         </div>
     </div>
 
@@ -180,7 +181,7 @@
 
             <!-- Color buttons section -->
             <div class="color-buttons-section">
-                <h5 class="color-title">색상</h5>
+                <h5 class="color-title" style = text-align: left>색상</h5>
                 <hr class="color-line">
                 <div class="color-buttons-container" id="colorButtons">
                     <!-- Color buttons will be appended here by JavaScript -->
