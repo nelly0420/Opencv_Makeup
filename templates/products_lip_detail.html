@@ -202,7 +202,7 @@
             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.lipstick-carousel').slick({
                 infinite: true,
-                slidesToShow: 6,
+                slidesToShow: 4 ,
                 slidesToScroll: 1,
                 dots: true,
                 arrows: true
@@ -236,6 +236,13 @@
     
             $('#capture').click(function () {
                 console.log('Capture button clicked');
+        
+                // Check if a product is selected
+                const prdCode = $("#prdCode").val();
+                if (!prdCode) {
+                    alert("제품을 선택해주세요!");
+                    return;
+                }
         
                 // Create a canvas element to hold the captured image
                 const canvas = document.createElement('canvas');
