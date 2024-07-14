@@ -17,12 +17,13 @@
     .color-title {
         font-size: 1.5rem;
         font-weight: bold;
+        text-align: left;
     }
 
     .color-line {
         border-top: 2px solid #000;
         margin: 10px 0;
-        width: 80%;
+        width: 70%;
     }
 
     .breadcrumb-item a {
@@ -40,7 +41,9 @@
 
     #video {
         width: 100%;
-        height: auto;
+        height: 100%; /* Make video or image fill container height */
+        object-fit: cover; /* Cover entire container without stretching */
+
     }
 
     #capture {
@@ -112,8 +115,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-left: 20px;
-        float: left;
+        margin: 10px 0;
     }
 
     .color-button-wrapper {
@@ -126,6 +128,20 @@
         float: left;
         width: calc(100% - 660px);
         margin-left: 20px;
+    }
+
+    /* Reduce the size of the carousel */
+    .lipstick-carousel {
+        width: 60%;
+        float: left; 
+    }
+
+    /* Color buttons section next to carousel */
+    .color-buttons-section {
+        width: 35%;
+        float: left;
+        margin-left: 5%;
+        display: none;
     }
 </style>
 
@@ -153,17 +169,24 @@
         <div class="image-container">
             <img id="captured-image" width="640" height="480" />
         </div>
-        <div class="color-buttons-container" id="colorButtons">
-            <!-- Color buttons will be appended here by JavaScript -->
-        </div>
     </div>
 
     <!-- Right product list area -->
-    <div class="right-column">
-        <h5 class="color-title">색상</h5>
-        <hr class="color-line">
-        <div class="lipstick-carousel mt-3">
-            <!-- Lipstick items will be appended here by JavaScript -->
+    <div class="container">
+        <div class="row">
+            <!-- Lipstick carousel -->
+            <div class="lipstick-carousel mt-3">
+                <!-- Lipstick items will be appended here by JavaScript -->
+            </div>
+
+            <!-- Color buttons section -->
+            <div class="color-buttons-section">
+                <h5 class="color-title" style = text-align: left>색상</h5>
+                <hr class="color-line">
+                <div class="color-buttons-container" id="colorButtons">
+                    <!-- Color buttons will be appended here by JavaScript -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -181,14 +204,8 @@
         $.getJSON('/productJSON?category=blush', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
     
-            // 각 상품 항목에 대해 반복하여 색상 버튼과 립스틱 항목을 생성합니다.
+            // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
             data.forEach(item => {
-                $('#colorButtons').append(`
-                    <div class="color-button-wrapper">
-                        <button class="color-btn" style="background-color:${item.color};"></button>
-                    </div>
-                `);
-    
                 $('.lipstick-carousel').append(`
                     <div class="lipstick-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
                         <img src="${item.imgsrc}" alt="${item.PrdName}">
@@ -202,13 +219,13 @@
             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.lipstick-carousel').slick({
                 infinite: true,
-                slidesToShow: 6,
+                slidesToShow: 4,
                 slidesToScroll: 1,
                 dots: true,
                 arrows: true
             });
     
-            // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 상품 코드를 저장합니다.
+            // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
             $('.lipstick-item').click(function () {
                 $('.lipstick-item').removeClass('selected');
                 $(this).addClass('selected');
@@ -216,6 +233,12 @@
                 $("#prdCode").val(selectedValue);  // Update the hidden input field with selected prdCode
     
                 console.log('Selected product code:', selectedValue); // Log the selected product code
+    
+                // Display color buttons section
+                $('.color-buttons-section').show();
+    
+                // Update color buttons based on the selected product
+                updateColorButtons(selectedValue);
     
                 // Send AJAX request to update product information
                 sendProductRequest(selectedValue);
@@ -234,73 +257,92 @@
                 console.log("An error occurred: " + err);
             });
     
-            $('#capture').click(function () {
-                console.log('Capture button clicked');
-        
-                // Create a canvas element to hold the captured image
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                const video = document.getElementById('video');
-                
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-        
-                // Draw the current video frame onto the canvas
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-                // Convert canvas content to a data URL
-                const dataURL = canvas.toDataURL('image/jpeg');
-        
-                console.log('Captured data URL:', dataURL);
-        
-                // Convert data URL to Blob object
-                const blob = dataURItoBlob(dataURL);
-        
-                // Get the selected product code
-                const prdCode = $("#prdCode").val();
-        
-                console.log('Selected product code:', prdCode);
-        
-                // Prepare FormData object to send image and product code
-                const formData = new FormData();
-                formData.append('image', blob, 'capture.jpg');
-                formData.append('prdCode', prdCode);
-        
-                console.log('FormData:', formData);
-        
-                // Send POST request to server endpoint
-                fetch('/apply_blush', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    // Convert received Blob to object URL and set as captured image source
-                    const imgUrl = URL.createObjectURL(blob);
-                    $('#captured-image').attr('src', imgUrl);
-                    console.log('Image applied successfully');
-                })
-                .catch(error => {
-                    console.error('Error applying blush:', error);
-                });
-            });
-        
-            // Function to convert Data URI to Blob
-            function dataURItoBlob(dataURI) {
-                const byteString = atob(dataURI.split(',')[1]);
-                const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-                const ab = new ArrayBuffer(byteString.length);
-                const ia = new Uint8Array(ab);
-                for (let i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
-                }
-                return new Blob([ab], { type: mimeString });
+        $('#capture').click(function () {
+            console.log('Capture button clicked');
+    
+            // Check if a product is selected
+            const prdCode = $("#prdCode").val();
+            if (!prdCode) {
+                alert("제품을 선택해주세요!");
+                return;
             }
+    
+            // Create a canvas element to hold the captured image
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const video = document.getElementById('video');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+    
+            // Draw the current video frame onto the canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+            // Convert canvas content to a data URL
+            const dataURL = canvas.toDataURL('image/jpeg');
+    
+            console.log('Captured data URL:', dataURL);
+    
+            // Convert data URL to Blob object
+            const blob = dataURItoBlob(dataURL);
+    
+            // Prepare FormData object to send image and product code
+            const formData = new FormData();
+            formData.append('image', blob, 'capture.jpg');
+            formData.append('prdCode', prdCode);
+    
+            console.log('FormData:', formData);
+    
+            // Send POST request to server endpoint
+            fetch('/apply_blush', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Convert received Blob to object URL and set as captured image source
+                const imgUrl = URL.createObjectURL(blob);
+                $('#captured-image').attr('src', imgUrl);
+                console.log('Image applied successfully');
+            })
+            .catch(error => {
+                console.error('Error applying blush:', error);
+            });
+        });
+    
+        // Function to update color buttons based on the selected product
+        function updateColorButtons(selectedValue) {
+            $('#colorButtons').empty(); // Clear previous color buttons
+    
+            // Assuming `data` is accessible here, filter colors based on selected product
+            $.getJSON('/productJSON?category=blush', function (data) {
+                const selectedProduct = data.find(item => item.prdCode === selectedValue);
+                if (selectedProduct) {
+                    $('#colorButtons').append(`
+                        <div class="color-button-wrapper">
+                            <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
+                        </div>
+                    `);
+                }
+            });
+        }
+    
+        // Function to convert Data URI to Blob
+        function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        }
     });
 </script>
 
