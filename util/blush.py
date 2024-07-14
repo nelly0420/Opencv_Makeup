@@ -29,7 +29,7 @@ predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 blush_alpha = 0.3  # 투명도
 blush_offset = -20  # 볼 위치를 위로 이동시키는 오프셋 값 (픽셀 단위)
-x_offset = 5  # 볼 위치를 왼쪽으로 이동시키는 오프셋 값 (픽셀 단위)
+x_offset = 5  # 볼 위치를 왼쪽으로 이동시키는 오프셋 값 (픽셀 단위) 
 
 def get_cheek_landmarks(shape, y_offset, x_offset):
     # 얼굴의 중심을 계산-> 얼굴에 대칭적으로 볼터치를 입히기 위해서 얼굴의 중심을 계산하는거임.

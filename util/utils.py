@@ -3,7 +3,7 @@ import pandas as pd
 def get_color_from_json(prdCode):
     # JSON 불러오기
     json_path = 'products.json'
-    df = pd.read_json(json_path)
+    df = pd.read_json(json_path) 
 
     # 색상정보, 옵션 1, 옵션2 가져오기
     match_row = df[df['prdCode'] == prdCode]

@@ -14,11 +14,11 @@ EYE_IDXS = OrderedDict([
     ("right_eye", list(range(42, 48)))  # 오른쪽 눈의 랜드마크 인덱스
 ])
 
-# 아이라인 색상 및 두께 (브라운색)
+# 아이라인 색상 및 두께 (브라운색) 
 eyeline_thickness = 2  # 선의 두께
 eyeline_alpha = 0.3  # 투명도
 
-def smooth_polyline(image, points, thickness):
+def smooth_polyline(image, points, color, thickness):
     num_points = len(points)
     if num_points < 2:
         return
@@ -26,7 +26,7 @@ def smooth_polyline(image, points, thickness):
     for i in range(num_points - 1):
         p1 = points[i]
         p2 = points[i + 1]
-        cv2.line(image, p1, p2, eyeline_color, thickness)
+        cv2.line(image, p1, p2, color, thickness)
 
 def apply_eyeliner(image, prdCode):
     # 색상 정보를 JSON에서 가져오기
@@ -66,7 +66,7 @@ def apply_eyeliner(image, prdCode):
 
                 if len(upper_points) > 1:
                     # 부드러운 곡선을 그리기 위해 점들을 연결
-                    smooth_polyline(image_copy, upper_points, eyeline_thickness)
+                    smooth_polyline(image_copy, upper_points, eyeline_color, eyeline_thickness)
 
                     # 그라데이션 효과 적용
                     gradient_length = len(upper_points) - 1
