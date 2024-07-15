@@ -1,7 +1,7 @@
 import cv2
 import dlib
 import numpy as np
-from utils import get_color_from_json
+from util.utils import get_color_from_json
 
 upper_lip_idx = list(range(50, 61))
 lower_lip_idx = list(range(61, 68)) + list(range(48, 50))
