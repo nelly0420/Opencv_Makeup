@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Capture and WebSocket</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <video id="video" width="256" height="256" autoplay></video>
+            </div>
+            <div class="col-2">
+                <button id="playButton" class="btn btn-primary mt-3" style="position: absolute;left: 318px;">Play</button>
+            </div>
+            <div class="col-8">
+                <canvas id="canvas" style="display:none;"></canvas>
+                <img id="processedImage" class="mt-3" width="800" height="600" />
+            </div>
+        </div>
+        
+        
+        
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        
+        const processedImage = document.getElementById('processedImage');
+        let streaming = false;
+        let socket;
+
+        // Get user media
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing media devices.', error);
+            });
+
+        $('#playButton').on('click', function() {
+            if (!streaming) {
+                startStreaming();
+            } else {
+                stopStreaming();
+            }
+        });
+
+        function startStreaming() {
+            socket = io.connect('http://localhost:5000');
+            socket.on('connect', function() {
+                alert('WebSocket connection!!!');
+                playButton.textContent = 'Stop';
+                playButton.classList.remove('btn-primary');
+                playButton.classList.add('btn-danger');
+                streaming = true;
+                sendFrames();
+            });
+
+            socket.on('processed_image', function(data) {
+                processedImage.src = 'data:image/jpeg;base64,' + data.image;
+            });
+
+            socket.on('disconnect', function() {
+                alert('WebSocket disconnect !!!');
+                stopStreaming();
+            });
+        }
+
+        function stopStreaming() {
+            if (socket) {
+                socket.disconnect();
+            }
+            playButton.textContent = 'Play';
+            playButton.classList.remove('btn-danger');
+            playButton.classList.add('btn-primary');
+            streaming = false;
+        }
+
+        function sendFrames() {
+            if (streaming) {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob(function(blob) {
+                    socket.emit('samplegray', blob);
+                    setTimeout(sendFrames, 100); //0.1초마다.
+                }, 'image/jpeg');
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+</body>
+</html>

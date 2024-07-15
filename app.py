@@ -33,6 +33,26 @@ def apply_blush_endpoint():
         return buffer.tobytes(), 200
     else:
         return "Method not allowed", 405
+
+@app.route("/sample")
+def sample():
+    return render_template("sample.html")
+@socketio.on('samplegray')
+def handle_image(data):
+    # byte ->  numpy array
+    nparr = np.frombuffer(data, np.uint8)
+    # 버퍼에서 이미지 읽기.
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    ##############################################
+    # Convert image to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # 이미지를 jpeg 로 변환.
+    _, buffer = cv2.imencode('.jpg', gray)
+    ##################################################
+    # base64로 변환.
+    result_image = base64.b64encode(buffer).decode('utf-8')
+    # Emit 전송.
+    emit('processed_image', {'image': result_image})
     
 @socketio.on('connect')
 def handle_connect():
