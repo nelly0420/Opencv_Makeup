@@ -12,7 +12,7 @@ import dlib
 import json
 
 # Application 정의
-app = Flask(__name__, static_url_path="/static")
+app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되어있음.
 
 # Socket 정의
 socketio = SocketIO(app, cors_allowed_origins="*")
