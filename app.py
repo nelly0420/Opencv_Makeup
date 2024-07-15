@@ -20,6 +20,20 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Initialize dlib's face detector
 detector = dlib.get_frontal_face_detector()
 
+
+def apply_blush_endpoint():
+    if request.method == 'POST':
+        data = request.form
+        prd_code = data.get('prdCode')
+        image_data = request.files['image'].read()
+        nparr = np.frombuffer(image_data, np.uint8)
+        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        result_image = apply_blush(image_np, prd_code)
+        _, buffer = cv2.imencode('.jpg', result_image)
+        return buffer.tobytes(), 200
+    else:
+        return "Method not allowed", 405
+    
 @socketio.on('connect')
 def handle_connect():
     print('Client connected')
