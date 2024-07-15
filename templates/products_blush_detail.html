@@ -200,6 +200,7 @@
 
 <script>
     $(document).ready(function () {
+
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=blush', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
@@ -231,6 +232,12 @@
                 $(this).addClass('selected');
                 var selectedValue = $(this).data('prdcode');
                 $("#prdCode").val(selectedValue);  // Update the hidden input field with selected prdCode
+                // Check if a product is selected
+ 
+                if (!selectedValue) {
+                    alert("제품을 선택해주세요!");
+                    return false;
+                }
     
                 console.log('Selected product code:', selectedValue); // Log the selected product code
     
@@ -242,6 +249,10 @@
     
                 // Send AJAX request to update product information
                 sendProductRequest(selectedValue);
+
+                setTimeout(function(){
+                live();
+                }, 100);
             });
         });
     
@@ -257,15 +268,8 @@
                 console.log("An error occurred: " + err);
             });
     
-        $('#capture').click(function () {
-            console.log('Capture button clicked');
-    
-            // Check if a product is selected
-            const prdCode = $("#prdCode").val();
-            if (!prdCode) {
-                alert("제품을 선택해주세요!");
-                return;
-            }
+        // $('#capture').click(function () {
+        function live(){
     
             // Create a canvas element to hold the captured image
             const canvas = document.createElement('canvas');
@@ -313,8 +317,8 @@
             .catch(error => {
                 console.error('Error applying blush:', error);
             });
-        });
-    
+        }
+            
         // Function to update color buttons based on the selected product
         function updateColorButtons(selectedValue) {
             $('#colorButtons').empty(); // Clear previous color buttons
@@ -329,6 +333,38 @@
                         </div>
                     `);
                 }
+            });
+        }
+        function sendProductRequest(selectedValue) {
+            // Prepare the data to be sent in the request
+            const data = { productCode: selectedValue };
+            // Log the data being sent
+            console.log('Sending product request with data:', data);
+            // Send the AJAX request using fetch
+            fetch('/apply_blush', {
+                method: 'POST', // Use POST or the appropriate HTTP method
+                headers: {
+                    'Content-Type': 'application/json', // Specify that we're sending JSON
+                },
+                body: JSON.stringify(data), // Convert the data object to a JSON string
+            })
+            .then(response => {
+                // Check if the response is OK (status in the range 200-299)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Return the response data as JSON
+                return response.json();
+            })
+            .then(data => {
+                // Handle the response data (for example, updating the UI)
+                console.log('Product information updated successfully:', data);
+                // You can add code here to update the UI with the new product information
+            })
+            .catch(error => {
+                // Handle errors (network errors, server errors, etc.)
+                console.error('Error updating product information:', error);
+                // You can add code here to display an error message to the user
             });
         }
     
