@@ -53,7 +53,7 @@ def apply_eyeliner(image, prdCode):
             # 눈의 상부 랜드마크 추출
             upper_points = points[:4]  # 왼쪽, 중앙 왼쪽, 중앙 오른쪽, 오른쪽 상부 점
 
-            if len(upper_points) > 1:
+            if len(upper_points) > 1: 
                 # 베지어 곡선을 생성하기 위해 점들을 연결
                 curve = bezier_curve(upper_points)
 
