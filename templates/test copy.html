@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
+
+<style>
+    .color-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 5px;
+        border: none;
+        display: inline-block;
+    }
+
+    .color-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .color-line {
+        border-top: 2px solid #000;
+        margin: 10px 0;
+        width: 70%;
+    }
+
+    .breadcrumb-item a {
+        font-size: 1.1rem;
+        font-weight: bold;
+        opacity: 0.6;
+    }
+
+    .video-container {
+        position: absolute;
+        width: 280px;
+        height: auto;
+        z-index: 1;
+    }
+
+    #video {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        position: absolute;
+        margin:10px;
+        object-fit: cover; /* Cover entire container without stretching */
+        transform: translateX(-126px);
+
+    }
+
+    #capture {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-395px);
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 2; /* Ensure the button is above the video */
+    }
+
+    .image-container {
+        margin: 10px;
+        width: 640px;
+        float: left;
+    }
+
+    #captured-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .blush-item {
+        padding: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        text-align: center;
+    }
+
+    .blush-item img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .blush-item.selected {
+        background-color: rgba(0, 123, 255, 0.2);
+    }
+
+    .color-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .blush-item h5 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .slick-prev:before,
+    .slick-next:before {
+        color: black;
+    }
+
+    .color-buttons-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 10px 0;
+    }
+
+    .color-button-wrapper {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .right-column {
+        float: left;
+        width: calc(100% - 660px);
+        margin-left: 20px;
+    }
+
+    /* Reduce the size of the carousel */
+    .blush-carousel {
+        width: 60%;
+        float: left; 
+    }
+
+    /* Color buttons section next to carousel */
+    .color-buttons-section {
+        width: 35%;
+        float: left;
+        margin-left: 5%;
+        display: none;
+    }
+</style>
+
+<div class="container mt-4">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products_skin" style="color:black !important;">SKIN</a></li>
+            <li class="breadcrumb-item"><a href="/products_skin" style="color:gray !important;">Blush</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="row"  style="position:relative;">
+        <div class="video-container">
+            <video id="video" width="280" height="280" autoplay ></video>
+            <!-- Ensure the button is positioned correctly and not obscured -->
+           
+        </div>
+        
+        <div class="image-container">
+            <img id="captured-image" width="1080" height="720" />
+            <button id="capture">
+                Capture
+            </button>
+        </div>
+    </div>
+
+    <!-- Right product list area -->
+    <div class="container">
+        <div class="row">
+            <!-- blush carousel -->
+            <div class="blush-carousel mt-3">
+                <!-- Lipstick items will be appended here by JavaScript -->
+            </div>
+
+            <!-- Color buttons section -->
+            <div class="color-buttons-section">
+                <h5 class="color-title" style = text-align:left>색상</h5>
+                <hr class="color-line">
+                <div class="color-buttons-container" id="colorButtons">
+                    <!-- Color buttons will be appended here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="frmSend" style="display: none;">
+    <input type="hidden" id="prdCode" name="prdCode" value="" />
+</form>
+
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        let streaming = false;
+        let video = document.getElementById('video');
+    
+        $('#capture').on('click', function() {
+            if (!streaming) {
+                startCamera();
+            } else {
+                stopCamera();
+            }
+        });
+    
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    streaming = true;
+                    $('#capture').text('Stop');
+                })
+                .catch(function(err) {
+                    console.error('Error accessing media devices:', err);
+                    alert('Error accessing camera. Check browser permissions or console for details.');
+                });
+        }
+    
+        function stopCamera() {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+                video.srcObject = null;
+                $('#capture').text('Capture');
+                streaming = false;
+            }
+        }
+    
+        // Initialize camera on page load
+        startCamera();
+    });
+    
+
+{% endblock %} 

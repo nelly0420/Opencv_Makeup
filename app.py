@@ -141,26 +141,10 @@ def products_lip():
 def products_jewelry():
     return render_template("products_jewelry.html")
 
+@app.route("/test")
+def test():
+    return render_template("test copy.html")
 
-@app.route("/like")
-def like():
-    return redirect(url_for('like_skin'))
-
-@app.route("/like_skin")
-def like_skin():
-    return render_template("like_skin.html")
-
-@app.route("/like_eye")
-def like_eye():
-    return render_template("like_eye.html")
-
-@app.route("/like_lip")
-def like_lip():
-    return render_template("like_lip.html")
-
-@app.route("/like_jewelry")
-def like_jewerly():
-    return render_template("like_jewelry.html")
 
 @app.route("/productJSON", methods=["GET"])
 def get_products():
