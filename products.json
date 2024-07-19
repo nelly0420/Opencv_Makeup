@@ -79,7 +79,6 @@
     "price" : "108,600원", 
     "imgsrc" : "https://sitem.ssgcdn.com/09/30/65/item/1000574653009_i1_750.jpg"},
 
-<<<<<<< HEAD
     {"prdCode": "B00007", 
     "PrdName" : "나스 블러셔 오르가즘 ", 
     "Manufacturer" : "나스", 
@@ -90,7 +89,6 @@
     "price" : "42,200원", 
     "imgsrc" : "https://sitem.ssgcdn.com/57/06/94/item/1000563940657_i1_750.jpg"},
 
-=======
     {"prdCode": "B00007",
     "PrdName" : "나스 블러셔 오르가즘 ",
     "Manufacturer" : "나스",
@@ -131,7 +129,6 @@
     "price" : "139,320원",
     "imgsrc" : "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20231108_64%2F1699411189225ENmcg_PNG%2Fimg_main.png&type=a340"},
 
->>>>>>> 021823a2600af7d5ac0294cc2cd9d64ee941e4e5
     {"prdCode": "L00003", "PrdName" : "맥 립스틱 매트", "Manufacturer" : "맥", "category" : "lipstick", "color" : "#d00000", "option1" : "Matte", "option2" : "None", "price" : "32,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
     {"prdCode": "L00004", "PrdName" : "디올 어딕트 립 글로우", "Manufacturer" : "디올", "category" : "lipstick", "color" : "#e57373", "option1" : "None", "option2" : "None", "price" : "41,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
     {"prdCode": "L00005", "PrdName" : "샤넬 루쥬 코코 플래쉬", "Manufacturer" : "샤넬", "category" : "lipstick", "color" : "#f06292", "option1" : "None", "option2" : "None", "price" : "45,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},

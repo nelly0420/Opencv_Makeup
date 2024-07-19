@@ -113,9 +113,14 @@ def products():
 def about():
     return render_template("about.html")
 
-@app.route("/search")
+
+@app.route('/search', methods=['GET'])
 def search():
-    return render_template("search.html")
+    if 'query' in request.args:
+        query = request.args.get('query', '').lower()
+        return render_template('search.html', query=query)
+    return render_template('search.html')
+
 
 @app.route("/products_lip_detail")
 def lip_detail():
@@ -155,15 +160,19 @@ def get_products():
     with open(products_file, 'r', encoding='utf-8') as f:
         products_data = json.load(f)  # Parse JSON data
 
-    # 쿼리 스트링 인자 가져오기 (예: /productJSON?category=lipstick)
+    # 쿼리 스트링 인자 가져오기
     category = request.args.get('category')
+    query = request.args.get('query', '').lower()
 
+    # 필터링된 제품 목록 생성
+    filtered_products = products_data
     if category:
-        # 필터링된 제품 목록 생성
-        filtered_products = [product for product in products_data if product['category'] == category]
-    else:
-        # 카테고리가 지정되지 않은 경우 모든 제품 반환
-        filtered_products = products_data
+        filtered_products = [product for product in filtered_products if product['category'] == category]
+    if query:
+        filtered_products = [product for product in filtered_products if query in product['PrdName'].lower()]
+    # else:
+    #     # 카테고리가 지정되지 않은 경우 모든 제품 반환
+    #     filtered_products = products_data
 
     return jsonify(filtered_products)
 

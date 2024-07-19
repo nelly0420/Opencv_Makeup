@@ -1,17 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-        <h1 class="title">Augmented <br>Make up</h1>
-        <p class="lead" style="font-weight: bold;">Search</p>
+    <h1 class="title">Augmented <br>Make up</h1>
+    <p class="lead" style="font-weight: bold;">Search</p>
 
-       <!-- 검색창 -->
-       <div class="d-flex justify-content-center">
+    <!-- 검색창 -->
+    <div class="d-flex justify-content-center mb-4">
         <div class="input-group mb-3" style="max-width: 50%;">
-            <input type="text" class="form-control" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
+            <input type="text" class="form-control" id="search-input" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
             <button class="btn custom-btn" type="button" id="button-search">검색</button>
         </div>
     </div>
 
-    </div>
+    <!-- 검색 결과 -->
+    <div id="search-results" class="d-flex flex-wrap justify-content-center"></div>
 
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        document.getElementById('button-search').addEventListener('click', function() {
+            const query = document.getElementById('search-input').value;
+            fetch(`/productJSON?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('search-results');
+                    resultsDiv.innerHTML = '';
+                    data.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        productDiv.className = 'card m-2';
+                        productDiv.style.width = '18rem';
+                        productDiv.innerHTML = `
+                            <img src="${product.imgsrc}" class="card-img-top" alt="${product.PrdName}">
+                            <div class="card-body">
+                                <h5 class="card-title">${product.PrdName}</h5>
+                                <p class="card-text">제조사: ${product.Manufacturer}</p>
+                                <p class="card-text">카테고리: ${product.category}</p>
+                                <p class="card-text">옵션1: ${product.option1}</p>
+                                <p class="card-text">가격: ${product.price}</p>
+                            </div>
+                        `;
+                        resultsDiv.appendChild(productDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
 {% endblock %}
