@@ -232,16 +232,24 @@
                 var selectedValue = $(this).data('prdcode');
                 $("#prdCode").val(selectedValue);  // Update the hidden input field with selected prdCode
     
+                // Check if a product is selected
+                if (!selectedValue) {
+                    alert("제품을 선택해주세요!");
+                    return false;
+                }
+            
                 console.log('Selected product code:', selectedValue); // Log the selected product code
-    
+            
                 // Display color buttons section
                 $('.color-buttons-section').show();
-    
+            
                 // Update color buttons based on the selected product
                 updateColorButtons(selectedValue);
-    
-                // Send AJAX request to update product information
-                sendProductRequest(selectedValue);
+            
+                // Start live video processing
+                setInterval(function() {
+                    live(selectedValue);
+                }, 100);
             });
         });
     
@@ -257,63 +265,59 @@
                 console.log("An error occurred: " + err);
             });
     
-        $('#capture').click(function () {
-            console.log('Capture button clicked');
-    
-            // Check if a product is selected
-            const prdCode = $("#prdCode").val();
-            if (!prdCode) {
-                alert("제품을 선택해주세요!");
-                return;
-            }
-    
-            // Create a canvas element to hold the captured image
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const video = document.getElementById('video');
+            function live(prdCode) {
+                // Create a canvas element to hold the captured image
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const video = document.getElementById('video');
             
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-    
-            // Draw the current video frame onto the canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-            // Convert canvas content to a data URL
-            const dataURL = canvas.toDataURL('image/jpeg');
-    
-            console.log('Captured data URL:', dataURL);
-    
-            // Convert data URL to Blob object
-            const blob = dataURItoBlob(dataURL);
-    
-            // Prepare FormData object to send image and product code
-            const formData = new FormData();
-            formData.append('image', blob, 'capture.jpg');
-            formData.append('prdCode', prdCode);
-    
-            console.log('FormData:', formData);
-    
-            // Send POST request to server endpoint
-            fetch('/apply_lip', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                // Convert received Blob to object URL and set as captured image source
-                const imgUrl = URL.createObjectURL(blob);
-                $('#captured-image').attr('src', imgUrl);
-                console.log('Image applied successfully');
-            })
-            .catch(error => {
-                console.error('Error applying lip:', error);
-            });
-        });
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            
+                // Draw the current video frame onto the canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+                // Convert canvas content to a data URL
+                const dataURL = canvas.toDataURL('image/jpeg');
+            
+                console.log('Captured data URL:', dataURL);
+            
+                // Convert data URL to Blob object
+                const blob = dataURItoBlob(dataURL);
+            
+                // Prepare FormData object to send image and product code
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.jpg');
+                formData.append('prdCode', prdCode);
+            
+                console.log('FormData:', formData);
+            
+                // Send POST request to server endpoint
+                fetch('/apply_blush', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Convert received Blob to object URL and set as captured image source
+                    const imgUrl = URL.createObjectURL(blob);
+                    $('#captured-image').attr('src', imgUrl);
+                    console.log('Image applied successfully');
+                })
+                .catch(error => {
+                    console.error('Error applying blush:', error);
+                    // Handle the error appropriately, e.g., show an alert or log it
+                    alert('Error applying blush: ' + error.message);
+                });
+
+                
+            }
+
     
         // Function to update color buttons based on the selected product
         function updateColorButtons(selectedValue) {
