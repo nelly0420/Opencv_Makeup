@@ -19,7 +19,7 @@
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
         $(document).ready(function() {
-            const video = document.getElementById('video');
+            const video = document.getElementById('video');   // &('#video')
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
             const socket = io('http://localhost:5000');

@@ -33,16 +33,19 @@
     }
 
     .video-container {
-        position: relative;
-        margin: 10px;
-        width: 640px;
-        float: left;
+        position: absolute;
+        width: 280px;
+        height: auto;
+        z-index: 1;
     }
 
     #video {
         width: 100%;
-        height: 100%; /* Make video or image fill container height */
+        height: auto; /* Maintain aspect ratio */
+        position: absolute;
+        margin:10px;
         object-fit: cover; /* Cover entire container without stretching */
+        transform: translateX(-126px);
 
     }
 
@@ -50,14 +53,14 @@
         position: absolute;
         bottom: 10px;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-395px);
         background-color: #007bff;
         color: #fff;
         border: none;
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
-        z-index: 999; /* Ensure the button is above other elements */
+        z-index: 2; /* Ensure the button is above the video */
     }
 
     .image-container {
@@ -157,17 +160,18 @@
 </div>
 
 <div class="container">
-    <div class="row">
+    <div class="row"  style="position:relative;">
         <div class="video-container">
-            <video id="video" width="640" height="480" autoplay></video>
+            <video id="video" width="280" height="280" autoplay ></video>
             <!-- Ensure the button is positioned correctly and not obscured -->
-            <button id="capture">
-                Capture
-            </button>
+           
         </div>
         
         <div class="image-container">
-            <img id="captured-image" width="640" height="480" />
+            <img id="captured-image" width="1080" height="720" />
+            <button id="capture">
+                Capture
+            </button>
         </div>
     </div>
 
@@ -204,6 +208,9 @@
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=blush', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
+
+            
+           
     
             // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
             data.forEach(item => {
@@ -228,34 +235,42 @@
     
             // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
             $('.blush-item').click(function () {
+                // Remove selected class from all blush items
                 $('.blush-item').removeClass('selected');
+                
+                // Add selected class to the clicked item
                 $(this).addClass('selected');
+                
+                // Get the product code (prdCode) from the data attribute of the clicked item
                 var selectedValue = $(this).data('prdcode');
-                $("#prdCode").val(selectedValue);  // Update the hidden input field with selected prdCode
+                
+                // Update the hidden input field with the selected prdCode
+                $("#prdCode").val(selectedValue);
+            
                 // Check if a product is selected
- 
                 if (!selectedValue) {
                     alert("제품을 선택해주세요!");
                     return false;
                 }
-    
+            
                 console.log('Selected product code:', selectedValue); // Log the selected product code
-    
+            
                 // Display color buttons section
                 $('.color-buttons-section').show();
-    
+            
                 // Update color buttons based on the selected product
                 updateColorButtons(selectedValue);
-    
-                // Send AJAX request to update product information
-                sendProductRequest(selectedValue);
-
-                setTimeout(function(){
-                live();
+            
+                // Start live video processing
+                setInterval(function() {
+                    live(selectedValue);
                 }, 100);
             });
+            
+            
         });
     
+        
         // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
         const socket = io('http://localhost:5000');
@@ -268,56 +283,60 @@
                 console.log("An error occurred: " + err);
             });
     
-        // $('#capture').click(function () {
-        function live(){
-    
-            // Create a canvas element to hold the captured image
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const video = document.getElementById('video');
+        
+            function live(prdCode) {
+                // Create a canvas element to hold the captured image
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const video = document.getElementById('video');
             
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-    
-            // Draw the current video frame onto the canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-            // Convert canvas content to a data URL
-            const dataURL = canvas.toDataURL('image/jpeg');
-    
-            console.log('Captured data URL:', dataURL);
-    
-            // Convert data URL to Blob object
-            const blob = dataURItoBlob(dataURL);
-    
-            // Prepare FormData object to send image and product code
-            const formData = new FormData();
-            formData.append('image', blob, 'capture.jpg');
-            formData.append('prdCode', prdCode);
-    
-            console.log('FormData:', formData);
-    
-            // Send POST request to server endpoint
-            fetch('/apply_blush', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                // Convert received Blob to object URL and set as captured image source
-                const imgUrl = URL.createObjectURL(blob);
-                $('#captured-image').attr('src', imgUrl);
-                console.log('Image applied successfully');
-            })
-            .catch(error => {
-                console.error('Error applying blush:', error);
-            });
-        }
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            
+                // Draw the current video frame onto the canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+                // Convert canvas content to a data URL
+                const dataURL = canvas.toDataURL('image/jpeg');
+            
+                console.log('Captured data URL:', dataURL);
+            
+                // Convert data URL to Blob object
+                const blob = dataURItoBlob(dataURL);
+            
+                // Prepare FormData object to send image and product code
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.jpg');
+                formData.append('prdCode', prdCode);
+            
+                console.log('FormData:', formData);
+            
+                // Send POST request to server endpoint
+                fetch('/apply_blush', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Convert received Blob to object URL and set as captured image source
+                    const imgUrl = URL.createObjectURL(blob);
+                    $('#captured-image').attr('src', imgUrl);
+                    console.log('Image applied successfully');
+                })
+                .catch(error => {
+                    console.error('Error applying blush:', error);
+                    // Handle the error appropriately, e.g., show an alert or log it
+                    alert('Error applying blush: ' + error.message);
+                });
+
+                
+            }
+            
             
         // Function to update color buttons based on the selected product
         function updateColorButtons(selectedValue) {
@@ -335,39 +354,8 @@
                 }
             });
         }
-        function sendProductRequest(selectedValue) {
-            // Prepare the data to be sent in the request
-            const data = { productCode: selectedValue };
-            // Log the data being sent
-            console.log('Sending product request with data:', data);
-            // Send the AJAX request using fetch
-            fetch('/apply_blush', {
-                method: 'POST', // Use POST or the appropriate HTTP method
-                headers: {
-                    'Content-Type': 'application/json', // Specify that we're sending JSON
-                },
-                body: JSON.stringify(data), // Convert the data object to a JSON string
-            })
-            .then(response => {
-                // Check if the response is OK (status in the range 200-299)
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Return the response data as JSON
-                return response.json();
-            })
-            .then(data => {
-                // Handle the response data (for example, updating the UI)
-                console.log('Product information updated successfully:', data);
-                // You can add code here to update the UI with the new product information
-            })
-            .catch(error => {
-                // Handle errors (network errors, server errors, etc.)
-                console.error('Error updating product information:', error);
-                // You can add code here to display an error message to the user
-            });
-        }
-    
+        
+               
         // Function to convert Data URI to Blob
         function dataURItoBlob(dataURI) {
             const byteString = atob(dataURI.split(',')[1]);
@@ -382,4 +370,4 @@
     });
 </script>
 
-{% endblock %}
+{% endblock %} 
