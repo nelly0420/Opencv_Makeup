@@ -34,7 +34,7 @@ def bezier_curve(points, n=100):
 
 def apply_eyeliner(image, prdCode):
     # 색상 정보를 JSON에서 가져오기
-    eyeline_color = get_color_from_json(prdCode)
+    eyeline_color,option = get_color_from_json(prdCode)
 
     image_copy = image.copy()  # 이미지의 복사본 생성
     gray = cv2.cvtColor(image_copy, cv2.COLOR_BGR2GRAY)
