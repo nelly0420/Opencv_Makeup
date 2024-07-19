@@ -1,6 +1,6 @@
 import os
 from flask import Flask, jsonify, render_template, request, redirect, url_for
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit # framework -> Flask, Django, FastAPI
 
 import cv2
 import numpy as np
@@ -10,6 +10,7 @@ from util.blush import apply_blush
 from util.eyebrow import apply_eyebrow
 import dlib
 import json
+import base64
 
 # Application 정의
 app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되어있음.
@@ -37,6 +38,7 @@ def apply_blush_endpoint():
 @app.route("/sample")
 def sample():
     return render_template("sample.html")
+
 @socketio.on('samplegray')
 def handle_image(data):
     # byte ->  numpy array
@@ -94,7 +96,9 @@ def handle_image(data):
 
     # Encode image back to bytes and send back to client
     _, buffer = cv2.imencode('.jpg', img_with_makeup)
-    emit('processed_image', {'image': buffer.tobytes()})
+    # base64로 변환.
+    img_with_makeup = base64.b64encode(buffer).decode('utf-8')
+    emit('processed_image', {'image': img_with_makeup})
 
 @app.route("/")
 @app.route("/main")
