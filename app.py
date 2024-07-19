@@ -12,7 +12,7 @@ import dlib
 import json
 
 # Application 정의
-app = Flask(__name__, static_url_path="/static")
+app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되어있음.
 
 # Socket 정의
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -33,6 +33,26 @@ def apply_blush_endpoint():
         return buffer.tobytes(), 200
     else:
         return "Method not allowed", 405
+
+@app.route("/sample")
+def sample():
+    return render_template("sample.html")
+@socketio.on('samplegray')
+def handle_image(data):
+    # byte ->  numpy array
+    nparr = np.frombuffer(data, np.uint8)
+    # 버퍼에서 이미지 읽기.
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    ##############################################
+    # Convert image to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # 이미지를 jpeg 로 변환.
+    _, buffer = cv2.imencode('.jpg', gray)
+    ##################################################
+    # base64로 변환.
+    result_image = base64.b64encode(buffer).decode('utf-8')
+    # Emit 전송.
+    emit('processed_image', {'image': result_image})
     
 @socketio.on('connect')
 def handle_connect():
@@ -93,9 +113,14 @@ def products():
 def about():
     return render_template("about.html")
 
-@app.route("/search")
+
+@app.route('/search', methods=['GET'])
 def search():
-    return render_template("search.html")
+    if 'query' in request.args:
+        query = request.args.get('query', '').lower()
+        return render_template('search.html', query=query)
+    return render_template('search.html')
+
 
 @app.route("/products_lip_detail")
 def lip_detail():
@@ -121,26 +146,10 @@ def products_lip():
 def products_jewelry():
     return render_template("products_jewelry.html")
 
+@app.route("/test")
+def test():
+    return render_template("test copy.html")
 
-@app.route("/like")
-def like():
-    return redirect(url_for('like_skin'))
-
-@app.route("/like_skin")
-def like_skin():
-    return render_template("like_skin.html")
-
-@app.route("/like_eye")
-def like_eye():
-    return render_template("like_eye.html")
-
-@app.route("/like_lip")
-def like_lip():
-    return render_template("like_lip.html")
-
-@app.route("/like_jewelry")
-def like_jewerly():
-    return render_template("like_jewelry.html")
 
 @app.route("/productJSON", methods=["GET"])
 def get_products():
@@ -151,15 +160,19 @@ def get_products():
     with open(products_file, 'r', encoding='utf-8') as f:
         products_data = json.load(f)  # Parse JSON data
 
-    # 쿼리 스트링 인자 가져오기 (예: /productJSON?category=lipstick)
+    # 쿼리 스트링 인자 가져오기
     category = request.args.get('category')
+    query = request.args.get('query', '').lower()
 
+    # 필터링된 제품 목록 생성
+    filtered_products = products_data
     if category:
-        # 필터링된 제품 목록 생성
-        filtered_products = [product for product in products_data if product['category'] == category]
-    else:
-        # 카테고리가 지정되지 않은 경우 모든 제품 반환
-        filtered_products = products_data
+        filtered_products = [product for product in filtered_products if product['category'] == category]
+    if query:
+        filtered_products = [product for product in filtered_products if query in product['PrdName'].lower()]
+    # else:
+    #     # 카테고리가 지정되지 않은 경우 모든 제품 반환
+    #     filtered_products = products_data
 
     return jsonify(filtered_products)
 
