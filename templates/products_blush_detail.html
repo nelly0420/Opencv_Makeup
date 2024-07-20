@@ -156,7 +156,7 @@
         <div class="image-container">
             <img id="captured-image" width="1080" height="720" />
             <button id="capture">
-                Capture
+                Play
             </button>
         </div>
     </div>
@@ -262,6 +262,7 @@
                 clearInterval(intervalId); // Clear the interval if streaming
                 intervalId = null; // Reset the intervalId
                 streaming = false; // Set streaming to false
+                capture.textContent = 'Play';
             } else {
                 if (intervalId !== null) {
                     clearInterval(intervalId); // Clear any existing interval
@@ -270,6 +271,7 @@
                     live($("#prdCode").val()); // Use the product code from the hidden input field
                 }, 100);
                 streaming = true; // Set streaming to true
+                capture.textContent = 'Stop';
             }
         });
     

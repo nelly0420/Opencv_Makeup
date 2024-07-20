@@ -75,7 +75,7 @@
         border-radius: 8px;
     }
 
-    .blush-item {
+    .lipstick-item {
         padding: 15px;
         cursor: pointer;
         transition: background-color 0.3s;
@@ -91,7 +91,7 @@
         justify-content: center;
     }
 
-    .blush-item img {
+    .lipstick-item img {
         max-width: 100%; 
         max-height: 150px; /* Ensures the image fits within the item */
         border-radius: 8px;
@@ -101,7 +101,7 @@
         margin-right: auto;
     }
 
-    .blush-item h5 {
+    .lipstick-item h5 {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -110,7 +110,7 @@
         text-align: center;
     }
 
-    .blush-item.selected {
+    .lipstick-item.selected {
         background-color: rgba(0, 123, 255, 0.2);
     }
 
@@ -119,7 +119,7 @@
         color: black;
     }
 
-    .blush-carousel {
+    .lipstick-carousel {
         width: 60%;
         float: left; 
         margin-left: 1.5%; /* Move the carousel slightly to the right */
@@ -156,7 +156,7 @@
         <div class="image-container">
             <img id="captured-image" width="1080" height="720" />
             <button id="capture">
-                Capture
+                Play
             </button>
         </div>
     </div>
@@ -165,7 +165,7 @@
     <div class="container">
         <div class="row">
             <!-- blush carousel -->
-            <div class="blush-carousel mt-3">
+            <div class="lipstick-carousel mt-3">
                 <!-- Lipstick items will be appended here by JavaScript -->
             </div>
 
@@ -190,6 +190,8 @@
 
 <script>
     $(document).ready(function () {
+        let intervalId = null; // intervalId를 전역에서 정의
+        let streaming = false; // streaming 상태를 초기화
 
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=lipstick', function (data) {
@@ -200,8 +202,8 @@
     
             // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
             data.forEach(item => {
-                $('.blush-carousel').append(`
-                    <div class="blush-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
+                $('.lipstick-carousel').append(`
+                    <div class="lipstick-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
                         <img src="${item.imgsrc}" alt="${item.PrdName}">
                         <h5>${item.PrdName}</h5>
                         <p>${item.price}</p>
@@ -211,7 +213,7 @@
             });
     
             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
-            $('.blush-carousel').slick({
+            $('.lipstick-carousel').slick({
                 infinite: true,
                 slidesToShow: 3,
                 slidesToScroll: 1,
@@ -220,9 +222,9 @@
             });
     
             // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
-            $('.blush-item').click(function () {
+            $('.lipstick-item').click(function () {
                 // Remove selected class from all blush items
-                $('.blush-item').removeClass('selected');
+                $('.lipstick-item').removeClass('selected');
                 
                 // Add selected class to the clicked item
                 $(this).addClass('selected');
@@ -248,15 +250,36 @@
                 updateColorButtons(selectedValue);
             
                 // Start live video processing
-                setInterval(function() {
+                if (intervalId !== null) {
+                    clearInterval(intervalId); // Clear any existing interval
+                }
+                intervalId = setInterval(function() {
                     live(selectedValue);
                 }, 100);
+                streaming = true; // Set streaming to true
             });
             
             
         });
     
-        
+        $('#capture').on('click', function() {
+            if (streaming) {
+                clearInterval(intervalId); // Clear the interval if streaming
+                intervalId = null; // Reset the intervalId
+                streaming = false; // Set streaming to false
+                capture.textContent = 'Play';
+            } else {
+                if (intervalId !== null) {
+                    clearInterval(intervalId); // Clear any existing interval
+                }
+                intervalId = setInterval(function() {
+                    live($("#prdCode").val()); // Use the product code from the hidden input field
+                }, 100);
+                streaming = true; // Set streaming to true
+                capture.textContent = 'Stop';
+            }
+        });
+
         // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
         const video = document.getElementById('video');
         const socket = io('http://localhost:5000');
@@ -315,7 +338,7 @@
                     console.log('Image applied successfully');
                 })
                 .catch(error => {
-                    console.error('Error applying blush:', error);
+                    console.error('Error applying lipstick:', error);
                     // Handle the error appropriately, e.g., show an alert or log it
                    // alert('Error applying blush: ' + error.message);
                 });
