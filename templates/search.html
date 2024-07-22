@@ -1,23 +1,140 @@
 {% extends "base.html" %}
 {% block content %}
     <h1 class="title">Augmented <br>Make up</h1>
-    <p class="lead" style="font-weight: bold;">Search</p>
 
     <!-- 검색창 -->
     <div class="d-flex justify-content-center mb-4">
-        <div class="input-group mb-3" style="max-width: 50%;">
-            <input type="text" class="form-control" id="search-input" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
-            <button class="btn custom-btn" type="button" id="button-search">검색</button>
+        <div class="input-group mb-3 search-group" style="max-width: 50%;">
+            <input type="text" class="form-control search-input" id="search-input" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
+            <button class="btn custom-btn search-btn" type="button" id="button-search">검색</button>
         </div>
     </div>
 
     <!-- 검색 결과 -->
-    <div id="search-results" class="d-flex flex-wrap justify-content-center"></div>
+    <div id="search-results" class="d-flex flex-nowrap overflow-auto align-items-center"></div>
 
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <style>
+        /* 검색창 주변 그림자 제거 */
+        .search-group {
+            box-shadow: none !important;
+            border: 1px solid #ced4da;
+        }
+
+        /* 검색창 입력 필드 스타일 */
+        .search-input {
+            border-radius: 0;
+            box-shadow: none !important;
+            border: 1px solid #ced4da;
+        }
+
+        /* 검색 버튼 스타일 */
+        .search-btn {
+            box-shadow: none !important;
+            border: 1px solid #ced4da;
+        }
+
+        /* 카드 스타일 유지 및 조정 */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+            margin: 0.5rem; /* 카드 사이 간격 조정 */
+            width: 14rem; /* 카드의 너비 설정 */
+            height: 20rem; /* 카드의 높이 설정 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* 내용이 카드 하단에 위치하도록 설정 */
+            overflow: hidden; /* 카드의 경계를 넘어서는 콘텐츠 숨기기 */
+            scroll-snap-align: start; /* 스크롤 시 카드가 정렬되도록 설정 */
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 40%; /* 이미지가 카드의 40%를 차지하도록 설정 */
+            object-fit: contain; /* 이미지 비율 유지 */
+        }
+
+        .card-body {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* 내용과 버튼이 카드 안에서 올바르게 배치되도록 설정 */
+            flex-grow: 1; /* 카드 내용이 남은 공간을 차지하도록 설정 */
+        }
+
+        .card-title {
+            font-size: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal; /* 줄 바꿈 허용 */
+            margin: 0; /* 상하 여백 제거 */
+        }
+
+        .card-text {
+            font-size: 0.875rem;
+            margin: 0.25rem 0; /* 상하 여백 조정 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal; /* 줄 바꿈 허용 */
+        }
+
+        .btn-try-now {
+            align-self: center; /* 버튼이 카드의 하단 중앙에 위치하도록 설정 */
+            margin-top: auto; /* 버튼이 카드 하단에 위치하도록 설정 */
+            font-size: 0.75rem; 
+            padding: 0.25rem 0.5rem; 
+        }
+
+        /* 검색 결과 영역 스타일 */
+        #search-results {
+        display: flex;
+        flex-wrap: nowrap; /* 카드들이 한 줄로 표시되도록 설정 */
+        overflow-x: auto; /* 가로 스크롤 가능하도록 설정 */
+        overflow-y: hidden; /* 세로 스크롤 제거 */
+        max-width: 100%; /* 최대 너비 설정 */
+        padding: 0.5rem; /* 내부 여백 조정 */
+        box-sizing: border-box; /* 패딩과 보더가 카드의 너비에 포함되도록 설정 */
+        scroll-snap-type: x mandatory; /* 스크롤 시 카드가 정렬되도록 설정 */
+        scroll-behavior: smooth; /* 스크롤 시 부드럽게 이동하도록 설정 */
+        }
+
+        /* 스크롤바 스타일 (선택 사항) */
+        #search-results::-webkit-scrollbar {
+            height: 12px; /* 스크롤바 높이 조정 */
+        }
+
+        #search-results::-webkit-scrollbar-track {
+            background: #ffffff; /* 스크롤바 트랙 배경색을 하얀색으로 설정 */
+            border-radius: 10px; /* 스크롤바 트랙의 둥근 모서리 */
+        }
+
+        #search-results::-webkit-scrollbar-thumb {
+            background: #888; /* 스크롤바 막대 색상 */
+            border-radius: 10px; /* 스크롤바 막대의 둥근 모서리 */
+        }
+
+        #search-results::-webkit-scrollbar-thumb:hover {
+            background: #555; /* 스크롤바 막대 호버 색상 */
+        }
+        .center-cards {
+        justify-content: center; /* 카드를 가운데 정렬 */
+        flex-wrap: wrap; /* 여러 줄로 감싸기 */
+        }
+    </style>
+
     <script>
         document.getElementById('button-search').addEventListener('click', function() {
+            performSearch();
+        });
+
+        document.getElementById('search-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                performSearch();
+            }
+        });
+
+        function performSearch() {
             const query = document.getElementById('search-input').value;
             fetch(`/productJSON?query=${query}`)
                 .then(response => response.json())
@@ -26,8 +143,8 @@
                     resultsDiv.innerHTML = '';
                     data.forEach(product => {
                         const productDiv = document.createElement('div');
-                        productDiv.className = 'card m-2';
-                        productDiv.style.width = '18rem';
+                        productDiv.className = 'card';
+                        productDiv.style.flex = '0 0 auto'; // 카드가 고정된 너비를 가지도록 설정
                         productDiv.innerHTML = `
                             <img src="${product.imgsrc}" class="card-img-top" alt="${product.PrdName}">
                             <div class="card-body">
@@ -36,14 +153,35 @@
                                 <p class="card-text">카테고리: ${product.category}</p>
                                 <p class="card-text">옵션1: ${product.option1}</p>
                                 <p class="card-text">가격: ${product.price}</p>
+                                <button class="btn btn-primary btn-try-now" data-category="${product.category}">Try Now</button>
                             </div>
                         `;
                         resultsDiv.appendChild(productDiv);
+                    });
+
+                    // 카드 개수에 따라 가운데 정렬
+                    if (data.length <= 6) {
+                        resultsDiv.classList.add('center-cards');
+                    } else {
+                        resultsDiv.classList.remove('center-cards');
+                    }
+
+                    // Add event listener for "Try Now" buttons
+                    document.querySelectorAll('.btn-try-now').forEach(button => {
+                        button.addEventListener('click', function() {
+                            let category = this.getAttribute('data-category').toLowerCase();
+                            if (category === 'lipstick') {
+                                category = 'lip';
+                            }
+                            const encodedCategory = encodeURIComponent(category);
+                            const prdCode = this.getAttribute('data-prdcode');
+                            window.location.href = `http://127.0.0.1:5000/products_${encodedCategory}_detail?prdCode=${prdCode}`;
+                        });
                     });
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        });
+        }
     </script>
 {% endblock %}

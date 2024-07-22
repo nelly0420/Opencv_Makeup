@@ -192,6 +192,9 @@
     $(document).ready(function () {
         let intervalId = null; // intervalId를 전역에서 정의
         let streaming = false; // streaming 상태를 초기화
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const prd = urlParams.get('prdCode');
     
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=blush', function (data) {
