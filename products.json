@@ -1,24 +1,4 @@
 [
-    {"prdCode": "L00001", 
-    "PrdName" : "입생로랑 루쥬 쀠르 꾸뛰르", 
-    "Manufacturer" : "로레알브랜드", 
-    "category" : "lipstick", 
-    "color" : "#f28a8a", 
-    "option1" : "Matte", 
-    "option2" : "None", 
-    "price" : "29,680원", 
-    "imgsrc" : "https://shopping-phinf.pstatic.net/main_4683557/46835572618.20240411174812.jpg?type=f640"},
-    
-    {"prdCode": "L00002", 
-    "PrdName" : "러브샤인 워터샤인 립스틱 3.2g", 
-    "Manufacturer" : "로레알브랜드", 
-    "category" : "lipstick", 
-    "color" : "#f5b5b5", 
-    "option1" : "Glossy", 
-    "option2" : "None", 
-    "price" : "40,000원", 
-    "imgsrc" : "https://shop-phinf.pstatic.net/20240528_129/17168882017579CLuB_JPEG/118024090470469655_1900377167.jpg?type=m510"},
-
     {"prdCode": "B00001", 
     "PrdName" : "릴리바이레드 러브 타로 블러셔 팔레트", 
     "Manufacturer" : "릴리바이레드", 
@@ -89,16 +69,6 @@
     "price" : "42,200원", 
     "imgsrc" : "https://sitem.ssgcdn.com/57/06/94/item/1000563940657_i1_750.jpg"},
 
-    {"prdCode": "B00007",
-    "PrdName" : "나스 블러셔 오르가즘 ",
-    "Manufacturer" : "나스",
-    "category" : "blush",
-    "color" : "#FF8995",
-    "option1" : "liquid",
-    "option2" : "None",
-    "price" : "42,200원",
-    "imgsrc" : "https://sitem.ssgcdn.com/57/06/94/item/1000563940657_i1_750.jpg"},
-
     {"prdCode": "B00008",
     "PrdName" : "나스 블러셔 지나 ",
     "Manufacturer" : "나스",
@@ -129,18 +99,30 @@
     "price" : "139,320원",
     "imgsrc" : "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20231108_64%2F1699411189225ENmcg_PNG%2Fimg_main.png&type=a340"},
 
-    {"prdCode": "L00003", "PrdName" : "맥 립스틱 매트", "Manufacturer" : "맥", "category" : "lipstick", "color" : "#d00000", "option1" : "Matte", "option2" : "None", "price" : "32,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
-    {"prdCode": "L00004", "PrdName" : "디올 어딕트 립 글로우", "Manufacturer" : "디올", "category" : "lipstick", "color" : "#e57373", "option1" : "None", "option2" : "None", "price" : "41,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
-    {"prdCode": "L00005", "PrdName" : "샤넬 루쥬 코코 플래쉬", "Manufacturer" : "샤넬", "category" : "lipstick", "color" : "#f06292", "option1" : "None", "option2" : "None", "price" : "45,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
-    {"prdCode": "L00006", "PrdName" : "로레알 파리 컬러리쉬", "Manufacturer" : "로레알", "category" : "lipstick", "color" : "#ba68c8", "option1" : "None", "option2" : "None", "price" : "28,000원", "imgsrc" : "https://sdcdn.io/mac/kr/mac_sku_M3LNHP_1x1_0.png?width=1080&height=1080"},
-    {"prdCode": "L00007", "PrdName" : "디올 어딕트 립스틱 422 ", "Manufacturer" : "디올", "category" : "lipstick" , "color" : "#C76766", "option1" : "None", "option2" : "None", "price" : "84,930원", "imgsrc" : "https://sitem.ssgcdn.com/42/76/45/item/1000542457642_i1_750.jpg"},
-    {"prdCode": "L00008", "PrdName" : "콰티 마이무드 매트 립스틱", "Manufacturer" : "콰티", "category" : "lipstick" , "color" : "#FD7356", "option1" : "None", "option2" : "None", "price" : "25,000원", "imgsrc" : "https://thumbnail8.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2023/06/26/10/4/d10de722-808b-4c3e-8d28-0ac6ae5fe58f.jpg"},
-    {"prdCode": "L00009", "PrdName" : "파워 매트 립스틱", "Manufacturer" : "나스", "category" : "lipstick" , "color" : "#F26689", "option1" : "None", "option2" : "None", "price" : "40,500원", "imgsrc" : "https://dillymall.com/web/product/big/202310/6287d9e68da0e6e933f9e2cb5623186f.jpg"},
-    {"prdCode": "L000010", "PrdName" : "3CE 블러매트 립스틱", "Manufacturer" : "3CE", "category" : "lipstick" , "color" : "#913331", "option1" : "None", "option2" : "None", "price" : "39,000원", "imgsrc" : "https://img.danawa.com/prod_img/500000/566/181/img/20181566_1.jpg?_v=20230516105355"},
-    {"prdCode": "L000011", "PrdName" : "롬앤 제로 매트 립스틱", "Manufacturer" : "롬앤", "category" : "lipstick" , "color" : "#DB322E", "option1" : "None", "option2" : "None", "price" : "15,000원", "imgsrc" : "https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/product/image/vendoritem/2018/11/01/3638459456/0533b70e-f5cc-4456-b0c5-7515ea12d475.jpg"},
-    {"prdCode": "L000012", "PrdName" : "CANDY YUM-YUM", "Manufacturer" : "맥", "category" : "lipstick" , "color" : "#F34473", "option1" : "None", "option2" : "None", "price" : "62,100원", "imgsrc" : "https://mblogthumb-phinf.pstatic.net/MjAxODAzMjBfMTUz/MDAxNTIxNTIxODAzNjI3.L1bisGaiImnE8H37354Qt8qm3r1iG9lJhh4vfu1m9Zkg.hHH1cMMkemddsMUTWBDQlHehWKm2dF1RelMZHCOUfwQg.JPEG.bsdutyfree/IMG_7919.JPG?type=w800"},
-    {"prdCode": "L000013", "PrdName" : "루쥬 볼립떼 샤인", "Manufacturer" : "입생로랑", "category" : "lipstick" , "color" : "#D92B50", "option1" : "None", "option2" : "None", "price" : "67,200원", "imgsrc" : "https://qi-o.qoo10cdn.com/goods_image_big/7/5/9/2/10246897592_l.jpg"},
-    {"prdCode": "L000014", "PrdName" : "럭스 립 칼라 히비스커스", "Manufacturer" : "바비브라운", "category" : "lipstick" , "color" : "#7F1F1B", "option1" : "None", "option2" : "None", "price" : "41,000원", "imgsrc" : "https://photo.jtbc.co.kr/news/2016/11/08/20161108074900235.jpg"},
+    {"prdCode": "LM0001", "PrdName" : "입생로랑 루쥬 쀠르 꾸뛰르 핑크 턱시도", "Manufacturer" : "입생로랑", "category" : "lipstick", "color" : "#dc1e2a", "option1" : "Matte", "option2" : "None", "price" : "55,000원", "imgsrc" : "https://shopping-phinf.pstatic.net/main_4683557/46835572618.20240411174812.jpg?type=f640"},
+    {"prdCode": "LM0002", "PrdName" : "에스쁘아 노웨어 립스틱 볼륨매트 로지퍼지", "Manufacturer" : "에스쁘아", "category" : "lipstick", "color" : "#ee6368", "option1" : "Matte", "option2" : "None", "price" : "25,000원", "imgsrc" : "https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2024/06/21/12/8/86901447-f75d-4c22-92f3-bb60d46174fe.jpg"},
+    {"prdCode": "LM0003", "PrdName" : "콰티 마이무드 매트 립스틱 2호", "Manufacturer" : "콰티", "category" : "lipstick" , "color" : "#FD7356", "option1" : "Matte", "option2" : "None", "price" : "35,000원", "imgsrc" : "https://thumbnail8.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2023/06/26/10/4/d10de722-808b-4c3e-8d28-0ac6ae5fe58f.jpg"},
+    {"prdCode": "LM0004", "PrdName" : "파워 매트 립스틱 로켓 퀸", "Manufacturer" : "나스", "category" : "lipstick" , "color" : "#ca2d1e", "option1" : "Matte", "option2" : "None", "price" : "47,000원", "imgsrc" : "https://image.galleria.co.kr/C00001/goods/org/756/230515040153756.jpg"},
+    {"prdCode": "LM0005", "PrdName" : "3CE 블러매트 립스틱 MISTY DAY", "Manufacturer" : "3CE", "category" : "lipstick", "color" : "#913331", "option1" : "Matte", "option2" : "None", "price" : "22,000원", "imgsrc" : "https://image.sivillage.com/upload/C00001/s3/goods/org/736/240721025031736.jpg"},
+    {"prdCode": "LM0006", "PrdName" : "롬앤 제로 매트 립스틱 17 레드히트", "Manufacturer" : "롬앤", "category" : "lipstick" , "color" : "#be2335", "option1" : "Matte", "option2" : "None", "price" : "12,000원", "imgsrc" : "https://thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2020/07/09/18/2/2859a1c4-585e-43c0-9a9a-f2249c1faab5.jpg"},
+    {"prdCode": "LM0007", "PrdName" : "맥 매트 립스틱 CANDY YUM-YUM", "Manufacturer" : "맥", "category" : "lipstick" , "color" : "#F34473", "option1" : "Matte", "option2" : "None", "price" : "62,100원", "imgsrc" : "https://mblogthumb-phinf.pstatic.net/MjAxODAzMjBfMTUz/MDAxNTIxNTIxODAzNjI3.L1bisGaiImnE8H37354Qt8qm3r1iG9lJhh4vfu1m9Zkg.hHH1cMMkemddsMUTWBDQlHehWKm2dF1RelMZHCOUfwQg.JPEG.bsdutyfree/IMG_7919.JPG?type=w800"},
+    {"prdCode": "LM0008", "PrdName" : "루즈 디올 포에버 스틱 625 미차", "Manufacturer" : "디올", "category" : "lipstick" , "color" : "#c45e6c", "option1" : "Matte", "option2" : "None", "price" : "57,000원", "imgsrc" : "https://shop.dior.co.kr/cdn/shop/products/3348901695374_0.jpg?v=1693456800&crop=center&height=800&width=800"},
+    {"prdCode": "LM0009", "PrdName" : "루즈 아 레브르 매트 립스틱 208 데이 멧 인 아르젠티나", "Manufacturer" : "GUCCI", "category" : "lipstick" , "color" : "#ad5350", "option1" : "Matte", "option2" : "None", "price" : "63,000원", "imgsrc" : "https://media.gucci.com/style/DarkGray_Center_0_0_490x490/1570454105/611234_9PL12_9208_001_100_0000_Light-208.jpg"},
+    {"prdCode": "LM0010", "PrdName" : "얼티매트 립스틱 499 더스티로즈", "Manufacturer" : "메이블린", "category" : "lipstick" , "color" : "#e37276", "option1" : "Matte", "option2" : "None", "price" : "14,000원", "imgsrc" : "https://www.maybelline.co.kr/-/media/project/loreal/brand-sites/mny/apac/kr/local-products/lips/lip-stick/ultimatte-lipstick/230116_ultimatte-lipstick-dusty_sub.jpg?rev=5a70dff41b7d4b5d8a1d35e9478d834c&cx=0&cy=0&cw=380&ch=565&hash=4E7D8CC0E8690BBC80AA857EA9C82641"},
+    
+
+    {"prdCode": "LG0001", "PrdName" : "러브샤인 워터샤인 립스틱 211 알덴트 카민", "Manufacturer" : "입생로랑", "category" : "lipstick", "color" : "#f5b5b5", "option1" : "Glossy", "option2" : "None", "price" : "55,000원", "imgsrc" : "https://shop-phinf.pstatic.net/20240528_129/17168882017579CLuB_JPEG/118024090470469655_1900377167.jpg?type=m510"},
+    {"prdCode": "LG0002", "PrdName" : "디올 어딕트 립 글로우 031 스트로베리", "Manufacturer" : "디올", "category" : "lipstick", "color" : "#d42331", "option1" : "Glossy", "option2" : "None", "price" : "50,000원", "imgsrc" : "https://shop.dior.co.kr/cdn/shop/products/3348901651141_0.jpg?crop=center&height=800&v=1717556890&width=800"},
+    {"prdCode": "LG0003", "PrdName" : "샤넬 루쥬 알뤼르 렉스트레 818", "Manufacturer" : "샤넬", "category" : "lipstick", "color" : "#db6665", "option1" : "Glossy", "option2" : "None", "price" : "69,000원", "imgsrc" : "https://www.chanel.com/images//t_one//w_0.38,h_0.38,c_crop/q_auto:good,f_autoplus,fl_lossy,dpr_1.1/w_840/high-intensity-lip-colour-br-concentrated-radiance-and-care-br-refillable-818-rose-independant-0-07oz--packshot-default-163818-8851340853278.jpg"},
+    {"prdCode": "LG0004", "PrdName" : "데이지크 무드 글로우 립스틱 크림샌드", "Manufacturer" : "데이지크", "category" : "lipstick", "color" : "#d1655b", "option1" : "Glossy", "option2" : "None", "price" : "17,000원", "imgsrc" : "https://product-image.wconcept.co.kr/productimg/image/img0/21/301707421_add1_EI36929.jpg?thumbnail=60x80"},
+    {"prdCode": "LG0005", "PrdName" : "디올 어딕트 립스틱 422", "Manufacturer" : "디올", "category" : "lipstick", "color" : "#C76766", "option1" : "Glossy", "option2" : "None", "price" : "57,000원", "imgsrc" : "https://sitem.ssgcdn.com/42/76/45/item/1000542457642_i1_750.jpg"},
+    {"prdCode": "LG0006", "PrdName" : "캔디 글레이즈 컬러밤 13 플래싱 로제", "Manufacturer" : "입생로랑", "category" : "lipstick" , "color" : "#ca495e", "option1" : "Glossy", "option2" : "None", "price" : "49,000원", "imgsrc" : "https://www.yslbeautykr.com/dw/image/v2/AARM_PRD/on/demandware.static/-/Sites-ysl-master-catalog/default/dw30cac72d/images/best-seller/WW-50915YSL/WW-50915YSL-4936968817847-ROUGE_VOLUPTE_CANDY_GLAZE_13-IMAGE1.jpg?sw=405&sh=405&sm=cut&sfrm=png&q=85"},
+    {"prdCode": "LG0007", "PrdName" : "럭스 샤인 인텐스 립스틱 클라렛", "Manufacturer" : "바비브라운", "category" : "lipstick" , "color" : "#a84a3e", "option1" : "Glossy", "option2" : "None", "price" : "52,000원", "imgsrc" : "https://www.bobbibrown.co.kr/media/export/cms/products/responsive/bb_sku_EM4704_1x1_0.png?width=440&height=440"},
+    {"prdCode": "LG0008", "PrdName" : "립 파라다이스 컬러 밤 지젤", "Manufacturer" : "디어달리아", "category" : "lipstick" , "color" : "#c66964", "option1" : "Glossy", "option2" : "None", "price" : "26,000원", "imgsrc" : "https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/b415/c9223ed00146b6f75a2d444f1643e3bae762f83f30e0d046398fae3cf0e7.png"},
+    {"prdCode": "LG0009", "PrdName" : "에프터글로우 센슈얼 샤인 립스틱 아이돌라이즈드", "Manufacturer" : "나스", "category" : "lipstick" , "color" : "#b14248", "option1" : "Glossy", "option2" : "None", "price" : "43,000원", "imgsrc" : "https://www.narscosmetics.co.kr/dw/image/v2/BCSK_PRD/on/demandware.static/-/Sites-itemmaster_NARS/default/dw0c520d11/hi-res/NARS_SP24_SweetSensationsCollection_PDPCrops_SoldierSwatch_AfterglowLipstick_Idolized_GLBL_2000x2000.jpg?sw=856&sh=750&sm=fit"},
+    {"prdCode": "LG0010", "PrdName" : "무드인핸서 립 글로우 6 렛미듀", "Manufacturer" : "힌스", "category" : "lipstick" , "color" : "#d26a71", "option1" : "Glossy", "option2" : "https://hince.co.kr/surl/P/907", "price" : "17,000원", "imgsrc" : "https://thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/4d4f/76407dd08dc244f2f926a7e28a93b187b07f8fb3789aa91b18da720a5839.jpg"},
+
+
     {"prdCode": "E00001", "PrdName" : "키스미 히로인 메이크 스무스 리퀴드 아이라이너", "Manufacturer" : "키스미", "category" : "eyeliner" , "color" : "#3D261D", "option1" : "None", "option2" : "None", "price" : "12,000원", "imgsrc" : "https://img.danawa.com/prod_img/500000/280/210/img/4210280_1.jpg?_v=20200813143446"},
     {"prdCode": "E00002", "PrdName" : "클리오 샤프 쏘 심플 워터프루프 펜슬 라이너 02 브라운", "Manufacturer" : "클리오", "category" : "eyeliner" , "color" : "#604031", "option1" : "None", "option2" : "None", "price" : "11,000원", "imgsrc" : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDA3MDNfMjY2%2FMDAxNTkzNzMzNjg5Mjg0.3v6owKwHnQcjBOB70d_p8CZiUdRhYE5Y7jeZLnzNH3Qg.gttBgXS0C0jNKYc-ghSxmNcEYGA5K1z1tzUS_P06Ud8g.PNG.liachu2%2Fimage.png&type=sc960_832"},
     {"prdCode": "E00003", "PrdName" : "에뛰드하우스 드로잉쇼 브러쉬 아이라이너 BK801 흑심 블랙 ", "Manufacturer" : "에뛰드하우스", "category" : "eyeliner" , "color" : "#303030", "option1" : "None", "option2" : "None", "price" : "10,900원", "imgsrc" : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20160331_90%2Fduqrltkrhk_1459409813182vhboe_PNG%2F222.png&type=a340"},
@@ -151,5 +133,7 @@
     {"prdCode": "E00008", "PrdName" : "삐아 라스트 오토 젤 아이라이너 0.3g 05 소울브라운", "Manufacturer" : "삐아", "category" : "eyeliner" , "color" : "#744D39", "option1" : "None", "option2" : "None", "price" : "9,300원", "imgsrc" : "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20221118_56%2F1668747798026d0Q4U_PNG%2F69883577752329600_117849285.png&type=a340"},
     {"prdCode": "E00009", "PrdName" : "삐아 라스트 오토 젤 아이라이너 0.3g 02 재즈", "Manufacturer" : "삐아", "category" : "eyeliner" , "color" : "#442B1E", "option1" : "None", "option2" : "None", "price" : "9,300원", "imgsrc" : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAyMDdfNDcg%2FMDAxNTgxMDIxMDQ0NDMw.9QxEwLovANWWaT1gvEBEe4awCTQxwTFrCXIXGCG1TWMg.Mr4FjOnXZso3bVMwgpvzvHT9Lkq5Y3MAMYc8gR2k2kog.JPEG.cjstkunzzi1%2F5e60dfff-d138-49c4-9b4d-5bff12696509.jpg&type=a340"},
     {"prdCode": "E00010", "PrdName" : "샤넬 스틸로 이으 워터프루프", "Manufacturer" : "샤넬", "category" : "eyeliner" , "color" : "#454545", "option1" : "None", "option2" : "None", "price" : "42,000원", "imgsrc" : "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fcontents.lotteon.com%2Fitemimage%2F20240201000757%2FLE%2F12%2F07%2F55%2F20%2F32%2F_1%2F24%2F12%2F41%2F93%2F9%2FLE1207552032_1241241939_1.jpg&type=a340"},
+
+    
     {"prdCode": "EB0001", "PrdName": "메이블린뉴욕 울트라플러피 아이브로우 펜슬", "Manufacturer": "메이블린", "category": "eyebrow", "color": "#ba9065", "option1": "None", "option2": "None", "price":"16,000", "imgsrc": "https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000015648/202406270927/crop3/image.oliveyoung.co.kr/uploads/images/editor/QuickUpload/C00106/image/20230627145718/qc00_20230627145718.jpg?created=202407092113"}
 ]
