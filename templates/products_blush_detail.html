@@ -220,6 +220,16 @@
                 dots: true,
                 arrows: true
             });
+
+            // Slick 초기화 후 자동으로 prdCode에 맞는 블러쉬 항목을 선택하고 클릭합니다.
+            if (prd) {
+                setTimeout(function() {
+                    const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
+                    if (selectedItem.length > 0) {
+                        selectedItem.click();
+                    }
+                }, 500); // 0.5초 지연 후 클릭 이벤트 트리거
+            }
     
             // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
             $('.blush-item').click(function () {
