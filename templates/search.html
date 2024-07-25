@@ -3,8 +3,8 @@
     <h1 class="title">Augmented <br>Make up</h1>
 
     <!-- 검색창 -->
-    <div class="d-flex justify-content-center mb-4">
-        <div class="input-group mb-3 search-group" style="max-width: 50%;">
+    <div class="d-flex justify-content-center mb-1">
+        <div class="input-group mb-1 search-group" style="max-width: 50%;">
             <input type="text" class="form-control search-input" id="search-input" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
             <button class="btn custom-btn search-btn" type="button" id="button-search">검색</button>
         </div>
@@ -96,6 +96,7 @@
         box-sizing: border-box; /* 패딩과 보더가 카드의 너비에 포함되도록 설정 */
         scroll-snap-type: x mandatory; /* 스크롤 시 카드가 정렬되도록 설정 */
         scroll-behavior: smooth; /* 스크롤 시 부드럽게 이동하도록 설정 */
+        margin-top: 0; /* 상단 마진 제거 */
         }
 
         /* 스크롤바 스타일 (선택 사항) */
@@ -153,7 +154,7 @@
                                 <p class="card-text">카테고리: ${product.category}</p>
                                 <p class="card-text">옵션1: ${product.option1}</p>
                                 <p class="card-text">가격: ${product.price}</p>
-                                <button class="btn btn-primary btn-try-now" data-category="${product.category}">Try Now</button>
+                                <button class="btn btn-primary btn-try-now" data-category="${product.category}" data-prdcode="${product.prdCode}">Try Now</button>
                             </div>
                         `;
                         resultsDiv.appendChild(productDiv);

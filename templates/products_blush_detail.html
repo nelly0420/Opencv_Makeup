@@ -195,6 +195,11 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const prd = urlParams.get('prdCode');
+        if (prd) {
+            console.log('prdCode:', prd); // prdCode가 있을 경우 출력
+        } else {
+            console.log('prdCode가 URL에 없습니다.');
+        }
     
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=blush', function (data) {
@@ -214,25 +219,32 @@
     
             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.blush-carousel').slick({
-                infinite: true,
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                dots: true,
-                arrows: true
-            });
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            dots: true,
+            arrows: true
+            }).on('init', function() {
+                console.log('Slick initialized'); // Slick 초기화 확인
 
-            // Slick 초기화 후 자동으로 prdCode에 맞는 블러쉬 항목을 선택하고 클릭합니다.
-            if (prd) {
-                setTimeout(function() {
-                    const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
-                    if (selectedItem.length > 0) {
-                        selectedItem.click();
-                    }
-                }, 500); // 0.5초 지연 후 클릭 이벤트 트리거
-            }
+                if (prd) {
+                    setTimeout(function() {
+                        const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
+                        if (selectedItem.length > 0) {
+                            const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
+                            console.log('SlickGoTo index:', slickIndex);
+                            $('.blush-carousel').slick('slickGoTo', slickIndex, true);
+                            setTimeout(function() {
+                                console.log('Triggering click on:', selectedItem); // 클릭을 트리거하려는 항목 확인
+                                selectedItem.trigger('click'); // 클릭 이벤트 강제 발생
+                            }, 1000); // 1초 지연 후 클릭
+                        }
+                    }, 1000); // 1초 지연 후 선택
+                }
+            });
     
             // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
-            $('.blush-item').click(function () {
+            $(document).on('click', '.blush-item', function () {
                 // Remove selected class from all blush items
                 $('.blush-item').removeClass('selected');
                 
