@@ -1,135 +1,75 @@
 import cv2
 import dlib
 import numpy as np
-import pandas as pd
-from PIL import Image
+from util.utils import get_color_from_json
+
+def add_intermediate_points(points):
+    detailed_points = []
+    for i in range(len(points) - 1):
+        detailed_points.append(points[i])
+        # 중간점 추가
+        mid_point = ((points[i][0] + points[i + 1][0]) // 2, (points[i][1] + points[i + 1][1]) // 2)
+        detailed_points.append(mid_point)
+    detailed_points.append(points[-1])
 
 
-# # Detect faces in the image
-# faces = detector(image, 1)
+    return np.array(detailed_points, dtype=np.int32)
 
-# for k, d in enumerate(faces):
-#     # Get the landmarks/parts for the face in box d.
-#     shape = predictor(image, d)
+def transform_to_right_angle_trapezoid(points):
+    # y 값을 오른쪽 끝에서 왼쪽 끝으로 선형적으로 감소시키되, 중간에서 원래 값으로 돌아옴
+    x_coords = points[:, 0]
+    y_coords = points[:, 1]
+    n = len(y_coords)
     
-#     # Draw eyebrows landmarks
-#     for i in range(17, 27):  # Indices for the eyebrows
-#         # Draw a circle for each landmark point
-#         cv2.circle(image, (shape.part(i).x, shape.part(i).y), 1, (0, 0, 255), -1)
-
-# # Convert array back to Image and show the result
-# result_image = Image.fromarray(image)
-# result_image.show()
+    # 선형적으로 감소시키되 끝부분에서 원래 값으로 돌아오게 함
+    y_coords_trapezoid = np.copy(y_coords)
+    mid_index = n // 2
+    for i in range(mid_index):
+        y_coords_trapezoid[i] = y_coords[i] - (y_coords[i] - y_coords[-1]) * (i / mid_index)
+    
+    transformed_points = np.vstack((x_coords, y_coords_trapezoid)).T
+    return transformed_points.astype(np.int32)
 
 def apply_eyebrow(image, prdCode):
-    
+    bgr_color, option1 = get_color_from_json(prdCode)
 
-    json_path = 'products.json'
-    df = pd.read_json(json_path)
-
-    match_row = df[df['prdCode'] == prdCode]
-    if not match_row.empty:
-        info = match_row[['color', 'option1', 'option2']]
-        print(info)
-
-        hex_color = info['color'].values[0].lstrip('#')
-        new_color = tuple(int(hex_color[i:i+2], 16) for i in (0,2,4))
-
-    else:
-        print("No Matching prdCode: {prdCode}")
-        new_color = (0,0,0)
-    
-
-    # BGR로 변환
-    bgr_color = (new_color[2], new_color[1], new_color[0])
-
-    detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    detector = dlib.get_frontal_face_detector()    
     faces = detector(gray)
-
-    # ---- 위는 공통영역 -------- # -> 희선파트
-    
 
     for face in faces:
         shape = predictor(gray, face)
-
+        
         left_eyebrow_points = []
-        for i in range(17, 22):  # 입술의 외부의 랜드마크 포인트는 48-60
+        for i in range(17, 22): 
             x = shape.part(i).x
             y = shape.part(i).y
             left_eyebrow_points.append((x, y))
 
         right_eyebrow_points = []
-        for i in range(22, 27):  # 입술의 외부의 랜드마크 포인트는 48-60
+        for i in range(22, 27):
             x = shape.part(i).x
             y = shape.part(i).y
             right_eyebrow_points.append((x, y))
 
         right_eyebrow_points = np.array(right_eyebrow_points)
         left_eyebrow_points = np.array(left_eyebrow_points)
+
+        move_up = np.array([0, -5])
+        left_eyebrow_points += move_up
+        right_eyebrow_points += move_up
+
+        left_eyebrow_points = add_intermediate_points(left_eyebrow_points)
+        cv2.fillPoly(image, [right_eyebrow_points], bgr_color)
+        right_eyebrow_points = add_intermediate_points(right_eyebrow_points)
+        right_eyebrow_points = transform_to_right_angle_trapezoid(right_eyebrow_points)
+
+        cv2.fillPoly(image, [left_eyebrow_points], bgr_color)
+
+        cv2.fillPoly(image, [right_eyebrow_points], bgr_color)
         
-        overlay = image.copy()
-        cv2.fillPoly(overlay, [np.array(left_eyebrow_points)], color=bgr_color)
-        cv2.fillPoly(overlay, [np.array(right_eyebrow_points)], color=bgr_color)
-
-        # 투명도 조절
-        image_with_eyebrow = cv2.addWeighted(image, 0.2, overlay, 0.8, 0)
-
-        #1) line 형식으로 눈썹에 맞게
-        cv2.polylines(image, [left_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=14)
-        cv2.polylines(image, [left_eyebrow_points[0:4]], isClosed=False, color=bgr_color, thickness=10)
-
-        # 오른쪽 눈썹 그리기
-        cv2.polylines(image, [right_eyebrow_points[2:4]], isClosed=False, color=bgr_color, thickness=4)
-        cv2.polylines(image, [right_eyebrow_points[0:2]], isClosed=False, color=bgr_color, thickness=2)
-        cv2.polylines(image, [right_eyebrow_points[4:]], isClosed=False, color=bgr_color, thickness=2)
-
-        #2) 점연결하는 방법말고 도형형태입히기도 생각해보기
-
-        
-    return image_with_eyebrow
-
-## 구현을 위한 main code
-if __name__ == "__main__":
-    image_path = "image.jpg"
-    img = cv2.imread(image_path)
-
-    eyebrow_color = (186,144,101)
-    img_with_eyebrow = apply_eyebrow(img, 'EB0001')
-
-    cv2.imshow("Image with Eyebrow", img_with_eyebrow)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-## 구현을 위한 Video On main code
-# if __name__ == "__main__":
-    # cap = cv2.VideoCapture(0)  # 카메라를 열기 (0은 기본 카메라)
-
-    # if not cap.isOpened():
-    #     print("카메라를 열 수 없습니다.")
-    #     exit()
-
-    # while True:
-    #     ret, frame = cap.read()  # 카메라에서 프레임 읽기
-
-    #     if not ret:
-    #         print("카메라에서 프레임을 읽을 수 없습니다.")
-    #         break
-
-    #     # 얼굴에 눈썹 입히기
-    #     frame_with_eyebrow = apply_eyebrow(frame, 'EB0001')
-
-    #     # 결과 표시
-    #     cv2.imshow('Frame with Eyebrow', frame_with_eyebrow)
-
-    #     # 'q' 키를 누르면 종료
-    #     if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
-
-    # # 작업 완료 후 해제
-    # cap.release()
-    # cv2.destroyAllWindows()
+    return image
 
 
