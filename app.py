@@ -20,41 +20,12 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Initialize dlib's face detector
 detector = dlib.get_frontal_face_detector()
-
-
-def apply_blush_endpoint():
-    if request.method == 'POST':
-        data = request.form
-        prd_code = data.get('prdCode')
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        result_image = apply_blush(image_np, prd_code)
-        _, buffer = cv2.imencode('.jpg', result_image)
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
-
+    
 @app.route("/sample")
 def sample():
     return render_template("sample.html")
 
-@socketio.on('samplegray')
-def handle_image(data):
-    # byte ->  numpy array
-    nparr = np.frombuffer(data, np.uint8)
-    # 버퍼에서 이미지 읽기.
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    ##############################################
-    # Convert image to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # 이미지를 jpeg 로 변환.
-    _, buffer = cv2.imencode('.jpg', gray)
-    ##################################################
-    # base64로 변환.
-    result_image = base64.b64encode(buffer).decode('utf-8')
-    # Emit 전송.
-    emit('processed_image', {'image': result_image})
+
     
 @socketio.on('connect')
 def handle_connect():
@@ -64,6 +35,23 @@ def handle_connect():
 def handle_disconnect():
     print('Client disconnected')
 
+# @socketio.on('samplegray')
+# def handle_image_sample(data):
+#     # byte ->  numpy array
+#     nparr = np.frombuffer(data, np.uint8)
+#     # 버퍼에서 이미지 읽기.
+#     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#     ##############################################
+#     # Convert image to grayscale
+#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#     # 이미지를 jpeg 로 변환.
+#     _, buffer = cv2.imencode('.jpg', gray)
+#     ##################################################
+#     # base64로 변환.
+#     result_image = base64.b64encode(buffer).decode('utf-8')
+#     # Emit 전송.
+#     emit('processed_image', {'image': result_image})
+
 @socketio.on('image')
 def handle_image(data):
     # Decode image from bytes
@@ -71,25 +59,25 @@ def handle_image(data):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     # Apply makeup based on the selected option
-    makeup_type = request.form.get('type')
-    makeup_prdCode = request.form.get('id')
+    makeup_type = data.get('type')
+    makeup_prdCode = data.get('id')
     
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
         #img_with_makeup = apply_lipstick(img)#, prdCode) to-be json의 key값을 가져오기
         #test
         #prdCode = "L00001"
-        print(f"Received id: {makeup_prdCode}")
+        #print("Received id: {makeup_prdCode}")
         img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
-        img_with_makeup = apply_eyeliner(img)
+        img_with_makeup = apply_eyeliner(img, makeup_prdCode)
     elif makeup_type == 'blush':
         print('Applying blush...')
         img_with_makeup = apply_blush(img, makeup_prdCode)
     elif makeup_type == 'eyebrow':
         print('Applying eyebrow...')
-        img_with_makeup = apply_eyebrow(img)
+        img_with_makeup = apply_eyebrow(img, makeup_prdCode)
     else:
         print(f'Unknown makeup type: {makeup_type}')
         return
@@ -97,8 +85,8 @@ def handle_image(data):
     # Encode image back to bytes and send back to client
     _, buffer = cv2.imencode('.jpg', img_with_makeup)
     # base64로 변환.
-    img_with_makeup = base64.b64encode(buffer).decode('utf-8')
-    emit('processed_image', {'image': img_with_makeup})
+    img_rslt = base64.b64encode(buffer).decode('utf-8')
+    emit('processed_image', {'image': img_rslt})
 
 @app.route("/")
 @app.route("/main")
@@ -226,7 +214,7 @@ def apply_blush_endpoint():
     else:
         return "Method not allowed", 405
     
-@app.route('/apply_lip', methods=['POST'])
+@app.route('/apply_lipstick', methods=['POST'])
 def apply_lip_endpoint():
     if request.method == 'POST':
         # Get the FormData object from the request
