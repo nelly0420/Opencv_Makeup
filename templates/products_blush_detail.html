@@ -217,32 +217,35 @@
                 `);
             });
     
-            // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
-            $('.blush-carousel').slick({
-            infinite: true,
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            dots: true,
-            arrows: true
-            }).on('init', function() {
+             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+            $('.blush-carousel').on('init', function() {
                 console.log('Slick initialized'); // Slick 초기화 확인
 
                 if (prd) {
-                    setTimeout(function() {
-                        const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
-                        if (selectedItem.length > 0) {
-                            const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
-                            console.log('SlickGoTo index:', slickIndex);
-                            $('.blush-carousel').slick('slickGoTo', slickIndex, true);
-                            setTimeout(function() {
-                                console.log('Triggering click on:', selectedItem); // 클릭을 트리거하려는 항목 확인
-                                selectedItem.trigger('click'); // 클릭 이벤트 강제 발생
-                            }, 1000); // 1초 지연 후 클릭
-                        }
-                    }, 1000); // 1초 지연 후 선택
-                }
-            });
-    
+                setTimeout(function() {
+                    const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
+                    if (selectedItem.length > 0) {
+                        const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
+                        console.log('SlickGoTo index:', slickIndex);
+                        $('.blush-carousel').slick('slickGoTo', slickIndex, true);
+                        console.log('Triggering click on:', selectedItem); // 클릭을 트리거하려는 항목 확인
+                        selectedItem.trigger('click'); // 클릭 이벤트 강제 발생
+                        // 선택된 항목에 .selected 클래스 추가
+                        $('.blush-item').removeClass('selected'); // 모든 항목의 선택 해제
+                        selectedItem.addClass('selected'); // 클릭된 항목에 선택 추가
+                    }
+                 }, 1000); // 1초 지연 후 선택
+            }
+
+            }).slick({
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true
+            }); });
+
+
             // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
             $(document).on('click', '.blush-item', function () {
                 // Remove selected class from all blush items
@@ -266,6 +269,7 @@
                 console.log('Selected product code:', selectedValue); // Log the selected product code
             
                 // Display color buttons section
+                console.log('상세정보 출력');
                 $('.color-buttons-section').show();
             
                 // Update color buttons based on the selected product
@@ -280,7 +284,6 @@
                 }, 100);
                 streaming = true; // Set streaming to true
             });
-        });
     
         $('#capture').on('click', function() {
             if (streaming) {
