@@ -99,9 +99,16 @@ def search():
 @app.route("/products_lip_detail")
 def lip_detail():
     return render_template("products_lip_detail.html")
-@app.route("/products_blush_detail")
-def blush_detail():
-    return render_template("products_blush_detail.html")
+
+## ex : /products_blush_detail/B00003
+@app.route("/products_blush_detail/", defaults={'prdCode': None})
+@app.route("/products_blush_detail/<prdCode>")
+def blush_detail(prdCode):
+    if prdCode is None:
+        return render_template("products_blush_detail.html")
+    return render_template("products_blush_detail.html", category='blush', prdCode=prdCode)
+
+
 @app.route("/products_eyeliner_detail")
 def eyeliner_detail():
     return render_template("products_eyeliner_detail.html")
