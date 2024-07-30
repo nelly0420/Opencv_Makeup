@@ -134,10 +134,10 @@
                 performSearch();
             }
         });
-
+        
         function performSearch() {
-            const query = document.getElementById('search-input').value;
-            fetch(`/productJSON?query=${query}`)
+            var query = $('#search-input').val();
+            fetch(`/productJSON?query=` + query)
                 .then(response => response.json())
                 .then(data => {
                     const resultsDiv = document.getElementById('search-results');
@@ -148,7 +148,7 @@
                         productDiv.style.flex = '0 0 auto'; // 카드가 고정된 너비를 가지도록 설정
                         productDiv.innerHTML = `
                             <img src="${product.imgsrc}" class="card-img-top" alt="${product.PrdName}">
-                            <div class="card-body">
+                            <div id="trycards" class="card-body">
                                 <h5 class="card-title">${product.PrdName}</h5>
                                 <p class="card-text">제조사: ${product.Manufacturer}</p>
                                 <p class="card-text">카테고리: ${product.category}</p>
@@ -168,17 +168,19 @@
                     }
 
                     // Add event listener for "Try Now" buttons
-                    document.querySelectorAll('.btn-try-now').forEach(button => {
-                        button.addEventListener('click', function() {
+                    $('#trycards button').each(function() {
+                        $(this).on('click', function() {
                             let category = this.getAttribute('data-category').toLowerCase();
                             if (category === 'lipstick') {
                                 category = 'lip';
                             }
-                            const encodedCategory = encodeURIComponent(category);
+                            // const encodedCategory = encodeURIComponent(category);
                             const prdCode = this.getAttribute('data-prdcode');
-                            window.location.href = `http://127.0.0.1:5000/products_${encodedCategory}_detail?prdCode=${prdCode}`;
+                            window.location.href = `/products_${category}_detail/${prdCode}`;
                         });
                     });
+
+                    
                 })
                 .catch(error => {
                     console.error('Error:', error);
