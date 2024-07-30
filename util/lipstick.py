@@ -49,7 +49,7 @@ def apply_lipstick(image, prdCode):
         image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
 
         lips_only = np.zeros_like(image)
-        #lips_only = cv2.fillPoly(lips_only, [lip_points], (255, 255, 255))
+        #lips_only = cv2.fillPoly(lips_only, [lip_points], (180, 229, 255))
         
         if option == "Glossy":
             corrected_lips = gamma_correction(image_with_lipstick, gamma=1.2)
