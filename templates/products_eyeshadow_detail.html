@@ -126,8 +126,8 @@
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
         aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/products_skin" style="color:black !important;">SKIN</a></li>
-            <li class="breadcrumb-item"><a href="/products_skin" style="color:gray !important;">Blush/a></li>
+            <li class="breadcrumb-item"><a href="/products_eye" style="color:black !important;">EYE</a></li>
+            <li class="breadcrumb-item"><a href="/products_eye" style="color:gray !important;">Eyeshadow</a></li>
             <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
         </ol>
     </nav>
@@ -147,7 +147,7 @@
         <div class="row">
             <div class="blush-carousel mt-3"></div>
             <div class="color-buttons-section">
-                <h5 class="color-title">상세정보</h5> 
+                <h5 class="color-title">상세정보</h5>
                 <hr class="color-line">
                 <div class="color-buttons-container" id="colorButtons"></div>
             </div>
@@ -166,7 +166,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const prd = urlParams.get('prdCode');
         // Load and initialize carousel items
-        $.getJSON('/productJSON?category=blush', function (data) {
+        $.getJSON('/productJSON?category=eyeshadow', function (data) {
             console.log("Loaded data:", data);
             // Append carousel items
             data.forEach(item => {
@@ -187,7 +187,7 @@
                 dots: true,
                 arrows: true
             });
-            // If a product code is present, select and highlight it    수정을 위한
+            // If a product code is present, select and highlight it
             if (prd) {
                 const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
                 if (selectedItem.length > 0) {
@@ -250,7 +250,7 @@
             formData.append('image', blob, 'capture.jpg');
             formData.append('prdCode', prdCode);
             console.log('FormData:', formData);
-            fetch('/apply_blush', {
+            fetch('/apply_eyeshadow', {
                 method: 'POST',
                 body: formData
             })
@@ -272,7 +272,7 @@
         // Update color buttons based on selected product
         function updateColorButtons(selectedValue) {
             $('#colorButtons').empty();
-            $.getJSON('/productJSON?category=blush', function (data) {
+            $.getJSON('/productJSON?category=eyeshadow', function (data) {
                 const selectedProduct = data.find(item => item.prdCode === selectedValue);
                 if (selectedProduct) {
                     $('#colorButtons').append(`
