@@ -95,3 +95,4 @@ def apply_eyeshadow(image, prdCode):
                 image[:, :, c] = (1.0 - alpha_mask) * image[:, :, c] + alpha_mask * eyeshadow[:, :, c]
 
     return image
+

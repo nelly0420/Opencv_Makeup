@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-
     <h1 class="title">Augmented <br>Make up</h1>
     <p class="lead" style="font-weight: bold;">About</p>
-
     <style>
         .poster {
             text-align: center;
@@ -11,7 +9,7 @@
         }
         .poster img {
             max-width: 100%;
-            margin-top: 10px; 
+            margin-top: 10px;
             height: auto;
             width: 40%; /* Adjust the width as needed */
         }
@@ -27,13 +25,25 @@
         .features ul li {
             margin-bottom: 0.7rem;
         }
+        .project-description {
+            text-align: left;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            padding-left: 15px;
+        }
     </style>
-
     <div class="content container">
         <div class="row">
             <div class="col-md-8">
                 <h2 class="features">Virtual Makeup App Using OpenCV And Dlib</h2>
-                <p>This Project Leverages OpenCV And Dlib To Create A Virtual Makeup Application That Allows Users To Apply Lipstick, Blush, Eyeliner, And Eyeshadow To Their Photos. The Application Uses Facial Landmark Detection To Accurately Place Makeup On The Appropriate Facial Regions.</p>
+                <div class="description-container">
+                    <p class="project-description">
+                        This project leverages OpenCV and Dlib to create a virtual makeup application that allows users to apply lipstick, blush, eyeliner, and eyeshadow to their photos.
+                    </p>
+                    <p class="project-description">
+                        The application uses facial landmark detection to accurately place makeup on the appropriate facial regions.
+                    </p>
+                </div>
                 <div class="features">
                     <h3>Features</h3>
                     <ul>
@@ -52,7 +62,6 @@
             </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function() {
             console.log('준비중');
@@ -64,3 +73,9 @@
         });
     </script>
 {% endblock %}
+
+
+
+
+
+
