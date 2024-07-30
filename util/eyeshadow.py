@@ -7,7 +7,10 @@ from util.utils import get_color_from_json
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
-eyeshadow_alpha = 0.5  # 투명도 (조정 가능)
+eyeshadow_alpha = 0.4  # 연하게 조정된 투명도 (0.0 ~ 1.0)
+
+def get_midpoint(point1, point2):
+    return ((point1[0] + point2[0]) // 2, (point1[1] + point2[1]) // 2)
 
 def add_intermediate_points(points):
     detailed_points = []
@@ -17,31 +20,6 @@ def add_intermediate_points(points):
         detailed_points.append(mid_point)
     detailed_points.append(points[-1])
     return np.array(detailed_points, dtype=np.int32)
-
-def transform_to_right_angle_trapezoid(points):
-    x_coords = points[:, 0]
-    y_coords = points[:, 1]
-    n = len(y_coords)
-    y_coords_trapezoid = np.copy(y_coords)
-    mid_index = n // 2
-    for i in range(mid_index):
-        y_coords_trapezoid[i] = y_coords[i] - (y_coords[i] - y_coords[-1]) * (i / mid_index)
-    transformed_points = np.vstack((x_coords, y_coords_trapezoid)).T
-    return transformed_points.astype(np.int32)
-
-def get_eye_brow_midpoints(shape, eye_points, brow_points):
-    if len(brow_points) < len(eye_points):
-        eye_points = eye_points[:len(brow_points)]
-    elif len(brow_points) > len(eye_points):
-        brow_points = brow_points[:len(eye_points)]
-
-    midpoints = []
-    for i in range(len(eye_points)):
-        eye_point = np.array([shape.part(eye_points[i]).x, shape.part(eye_points[i]).y])
-        brow_point = np.array([shape.part(brow_points[i]).x, shape.part(brow_points[i]).y])
-        midpoint = ((eye_point[0] + brow_point[0]) // 2, (eye_point[1] + brow_point[1]) // 2)
-        midpoints.append(midpoint)
-    return np.array(midpoints, dtype=np.int32)
 
 def apply_eyeshadow(image, prdCode):
     bgr_color, option1 = get_color_from_json(prdCode)
@@ -56,33 +34,43 @@ def apply_eyeshadow(image, prdCode):
     for face in faces:
         shape = predictor(gray, face)
 
-        left_eye_points = [36, 37, 38, 39, 40, 41]
-        right_eye_points = [42, 43, 44, 45, 46, 47]
-        left_brow_points = [17, 18, 19, 20, 21]
-        right_brow_points = [22, 23, 24, 25, 26]
+        left_eye_points = [(shape.part(i).x, shape.part(i).y) for i in range(36, 42)]
+        right_eye_points = [(shape.part(i).x, shape.part(i).y) for i in range(42, 48)]
+        left_brow_points = [(shape.part(i).x, shape.part(i).y) for i in range(17, 22)]
+        right_brow_points = [(shape.part(i).x, shape.part(i).y) for i in range(22, 27)]
 
-        left_midpoints = get_eye_brow_midpoints(shape, left_eye_points, left_brow_points)
-        right_midpoints = get_eye_brow_midpoints(shape, right_eye_points, right_brow_points)
+        left_eye_points = np.array(left_eye_points)
+        right_eye_points = np.array(right_eye_points)
+        left_brow_points = np.array(left_brow_points)
+        right_brow_points = np.array(right_brow_points)
 
-        left_eye_points = [(shape.part(point).x, shape.part(point).y) for point in left_eye_points]
-        right_eye_points = [(shape.part(point).x, shape.part(point).y) for point in right_eye_points]
+        # Calculate midpoints
+        left_midpoints = [get_midpoint(left_eye_points[i % len(left_eye_points)], left_brow_points[i % len(left_brow_points)]) for i in range(len(left_eye_points))]
+        right_midpoints = [get_midpoint(right_eye_points[i % len(right_eye_points)], right_brow_points[i % len(right_brow_points)]) for i in range(len(right_eye_points))]
 
-        left_eye_points = np.array(left_eye_points + left_midpoints.tolist())
-        right_eye_points = np.array(right_eye_points + right_midpoints.tolist())
-
-        left_eye_points = add_intermediate_points(left_eye_points)
-        right_eye_points = add_intermediate_points(right_eye_points)
-
-        left_eye_points = transform_to_right_angle_trapezoid(left_eye_points)
-        right_eye_points = transform_to_right_angle_trapezoid(right_eye_points)
+        # Ensure the points for eyes and brows are ordered correctly
+        left_eye_area = np.vstack((left_eye_points, left_midpoints[::-1]))
+        right_eye_area = np.vstack((right_eye_points, right_midpoints[::-1]))
 
         image_bgra = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
 
-        for eye_points in [left_eye_points, right_eye_points]:
+        for eye_area, eye_points in zip([left_eye_area, right_eye_area], [left_eye_points, right_eye_points]):
             mask = np.zeros((image.shape[0], image.shape[1]), dtype=np.float32)
-            cv2.fillPoly(mask, [eye_points], (1))
+            cv2.fillPoly(mask, [eye_area], (1))
+
+            # Exclude pupil area
+            eye_hull = cv2.convexHull(eye_points)
+            cv2.fillPoly(mask, [eye_hull], (0))
 
             alpha_channel = (mask * eyeshadow_alpha * 255).astype(np.uint8)
+
+            # Gradient effect with symmetry adjustment
+            for i in range(len(eye_points) - 1):
+                x1, y1 = eye_points[i]
+                x2, y2 = eye_points[i + 1]
+                gradient_strength = (i / len(eye_points)) * 0.5 + 0.5
+                cv2.line(alpha_channel, (x1, y1), (x2, y2), (255 * gradient_strength), 2)
+
             alpha_channel = cv2.GaussianBlur(alpha_channel, (45, 45), 0)
             alpha_channel = cv2.medianBlur(alpha_channel, 21)
 
@@ -95,4 +83,3 @@ def apply_eyeshadow(image, prdCode):
                 image[:, :, c] = (1.0 - alpha_mask) * image[:, :, c] + alpha_mask * eyeshadow[:, :, c]
 
     return image
-
