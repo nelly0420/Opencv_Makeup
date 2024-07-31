@@ -8,7 +8,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 
-def gamma_correction(src: np.ndarray, gamma: float, coefficient: int = 1):
+def gamma_correction(src: np.ndarray, gamma: float, coefficient: int = 1.2):
     dst = src.copy()
     dst = dst / 255.
     dst = coefficient * np.power(dst, gamma)
@@ -44,19 +44,35 @@ def apply_lipstick(image, prdCode):
 
         mask = np.zeros_like(image)
         mask = cv2.fillPoly(mask, [lip_points], lip_color)
-        mask = cv2.GaussianBlur(mask, (7, 7), 5)
+        #mask = cv2.GaussianBlur(mask, (7, 7), 5)
 
-        image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
+        # image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
 
-        lips_only = np.zeros_like(image)
-        #lips_only = cv2.fillPoly(lips_only, [lip_points], (180, 229, 255))
+        # lips_only = np.zeros_like(image)
+        # #lips_only = cv2.fillPoly(lips_only, [lip_points], (180, 229, 255))
+        
+        # if option == "Glossy":
+        #     corrected_lips = gamma_correction(image_with_lipstick, gamma=1.2)
+        #     corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 3)
+        # elif option == "Matte":
+        #     #corrected_lips = gamma_correction(image_with_lipstick, gamma=1.5)
+        #     corrected_lips = cv2.GaussianBlur(lips_only, (5, 5), 0)
+            
+        # final_image = np.where(lips_only == np.array([255, 255, 255]), corrected_lips, image_with_lipstick)
         
         if option == "Glossy":
+            mask = cv2.GaussianBlur(mask, (7, 7), 5)
+            image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
             corrected_lips = gamma_correction(image_with_lipstick, gamma=1.2)
-            corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 2)
+            corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 3)
         elif option == "Matte":
+            image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
             corrected_lips = gamma_correction(image_with_lipstick, gamma=1.5)
-            corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 2)
+            corrected_lips = cv2.addWeighted(corrected_lips, 1.5, corrected_lips, -0.5, 0)
+
+        lips_only = np.zeros_like(image)
+        lips_only = cv2.fillPoly(lips_only, [lip_points], (255, 255, 255))
+
         final_image = np.where(lips_only == np.array([255, 255, 255]), corrected_lips, image_with_lipstick)
         
         return final_image
