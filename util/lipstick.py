@@ -60,11 +60,29 @@ def apply_lipstick(image, prdCode):
             
         # final_image = np.where(lips_only == np.array([255, 255, 255]), corrected_lips, image_with_lipstick)
         
+        # (오리지날)
+        # if option == "Glossy":
+        #     mask = cv2.GaussianBlur(mask, (7, 7), 5)
+        #     image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
+        #     corrected_lips = gamma_correction(image_with_lipstick, gamma=1.2)
+        #     corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 3)
+        
+        # (수정된소스 : 립스틱 윤각을 더 강조하고 블러효과를 좀 감소시킴.)
         if option == "Glossy":
-            mask = cv2.GaussianBlur(mask, (7, 7), 5)
-            image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
+            # 마스크에 경계 강조 적용 (경계 검출)
+            edges = cv2.Canny(mask, 100, 200)  # Canny edge detector로 경계 강조
+            edges = cv2.dilate(edges, None)  # 경계 확대
+
+            # 경계 강조된 마스크를 원래 마스크와 결합
+            mask = cv2.bitwise_or(mask, edges)
+
+            # 마스크를 더 적게 블러링 (윤곽을 더 진하게)
+            mask = cv2.GaussianBlur(mask, (5, 5), 3)
+
+            # 이미지와 마스크 결합
+            image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.5, 0.0)  # 가중치를 높임0.4 -> 0.5
             corrected_lips = gamma_correction(image_with_lipstick, gamma=1.2)
-            corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 3)
+
         elif option == "Matte":
             image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)
             corrected_lips = gamma_correction(image_with_lipstick, gamma=1.5)
