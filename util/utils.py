@@ -12,11 +12,11 @@ def get_color_from_json(prdCode):
         print(info)
 
         hex_color = info['color'].values[0].lstrip('#')
-        new_color = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        new_color = tuple(int(hex_color[i:i+2], 16) for i in (4, 2, 0)) # BGR로 변환
         option1 = info['option1'].values[0]
     else:
         print(f"No Matching prdCode: {prdCode}")
         new_color = (0, 0, 0)
         option1 = None
     
-    return (new_color[2], new_color[1], new_color[0]), option1  # BGR로 변환
+    return new_color, option1 
