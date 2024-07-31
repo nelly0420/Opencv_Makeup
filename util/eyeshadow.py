@@ -8,6 +8,7 @@ detector = dlib.get_frontal_face_detector()  # 얼굴 감지기 초기화
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")  # 얼굴 랜드마크 예측기 초기화
 
 eyeshadow_alpha = 0.3  # 아이섀도우의 투명도 설정 (0.0 ~ 1.0)
+inner_alpha_factor = 0.8 # 내부 영역의 투명도
 
 def get_midpoint(point1, point2):
     """
@@ -89,6 +90,13 @@ def apply_eyeshadow(image, prdCode):
                 x2, y2 = eye_points[i + 1]
                 gradient_strength = (i / len(eye_points)) * 0.5 + 0.5  # 그라데이션 강도 설정
                 cv2.line(alpha_channel, (x1, y1), (x2, y2), (255 * gradient_strength), 2)
+
+            # 내부 영역의 중간점 추가
+            inner_midpoints = add_intermediate_points(left_midpoints, num_points=1)
+            for i in range(len(inner_midpoints) - 1):
+                x1, y1 = inner_midpoints[i]
+                x2, y2 = inner_midpoints[i + 1]
+                cv2.line(alpha_channel, (x1, y1), (x2, y2), (255 * inner_alpha_factor), 1)
 
             # Alpha 채널의 블러링
             alpha_channel = cv2.GaussianBlur(alpha_channel, (45, 45), 0)
