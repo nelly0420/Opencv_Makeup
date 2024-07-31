@@ -15,15 +15,19 @@ def get_midpoint(point1, point2):
     """
     return ((point1[0] + point2[0]) // 2, (point1[1] + point2[1]) // 2)
 
-def add_intermediate_points(points):
+def add_intermediate_points(points, num_points=5):
     """
-    각 점 사이에 중간 점을 추가하여 점의 수를 증가시킵니다.
+    각 점 사이에 지정된 수의 중간 점을 추가하여 점의 수를 증가시킵니다.
     """
     detailed_points = []
     for i in range(len(points) - 1):
         detailed_points.append(points[i])
-        mid_point = ((points[i][0] + points[i + 1][0]) // 2, (points[i][1] + points[i + 1][1]) // 2)
-        detailed_points.append(mid_point)
+        for j in range(1, num_points + 1):
+            mid_point = (
+                points[i][0] + (points[i + 1][0] - points[i][0]) * j // (num_points + 1),
+                points[i][1] + (points[i + 1][1] - points[i][1]) * j // (num_points + 1),
+            )
+            detailed_points.append(mid_point)
     detailed_points.append(points[-1])
     return np.array(detailed_points, dtype=np.int32)
 
@@ -51,10 +55,11 @@ def apply_eyeshadow(image, prdCode):
         left_brow_points = [(shape.part(i).x, shape.part(i).y) for i in range(17, 22)]
         right_brow_points = [(shape.part(i).x, shape.part(i).y) for i in range(22, 27)]
 
-        left_eye_points = np.array(left_eye_points)
-        right_eye_points = np.array(right_eye_points)
-        left_brow_points = np.array(left_brow_points)
-        right_brow_points = np.array(right_brow_points)
+        # 추가할 점의 수를 늘려서 아이섀도우 영역을 확장
+        left_eye_points = add_intermediate_points(left_eye_points, num_points=3)
+        right_eye_points = add_intermediate_points(right_eye_points, num_points=3)
+        left_brow_points = add_intermediate_points(left_brow_points, num_points=3)
+        right_brow_points = add_intermediate_points(right_brow_points, num_points=3)
 
         # 눈과 눈썹 사이의 중간 점 계산
         left_midpoints = [get_midpoint(left_eye_points[i % len(left_eye_points)], left_brow_points[i % len(left_brow_points)]) for i in range(len(left_eye_points))]
