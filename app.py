@@ -131,9 +131,15 @@ def lip_detail_matte():
 @app.route("/products_lip_detail_glossy")
 def lip_detail_glossy():
     return render_template("products_lip_detail_glossy.html")
-@app.route("/products_jewelry")
-def products_jewelry():
-    return render_template("products_jewelry.html")
+@app.route("/products_fashion")
+def products_fashion():
+    return render_template("products_fashion.html")
+@app.route("/products_sunglasses")
+def products_sunglasses():
+    return render_template("products_sunglasses.html")
+@app.route("/products_lens")
+def products_lens():
+    return render_template("products_lens.html")
 @app.route("/test")
 def test():
     return render_template("test copy.html")
