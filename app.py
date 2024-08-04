@@ -90,15 +90,16 @@ def products():
 @app.route("/about")
 def about():
     return render_template("about.html")
+@app.route("/wish")
+def wish():
+    return render_template("wish.html")
 @app.route('/search', methods=['GET'])
 def search():
     if 'query' in request.args:
         query = request.args.get('query', '').lower()
         return render_template('search.html', query=query)
     return render_template('search.html')
-@app.route("/products_lip_detail")
-def lip_detail():
-    return render_template("products_lip_detail.html")
+
 
 ## ex : /products_blush_detail/B00003
 @app.route("/products_blush_detail/", defaults={'prdCode': None})
@@ -124,9 +125,21 @@ def products_eye():
 @app.route("/products_lip")
 def products_lip():
     return render_template("products_lip.html")
-@app.route("/products_jewelry")
-def products_jewelry():
-    return render_template("products_jewelry.html")
+@app.route("/products_lip_detail_matte")
+def lip_detail_matte():
+    return render_template("products_lip_detail_matte.html")
+@app.route("/products_lip_detail_glossy")
+def lip_detail_glossy():
+    return render_template("products_lip_detail_glossy.html")
+@app.route("/products_fashion")
+def products_fashion():
+    return render_template("products_fashion.html")
+@app.route("/products_sunglasses")
+def products_sunglasses():
+    return render_template("products_sunglasses.html")
+@app.route("/products_lens")
+def products_lens():
+    return render_template("products_lens.html")
 @app.route("/test")
 def test():
     return render_template("test copy.html")
@@ -139,11 +152,14 @@ def get_products():
         products_data = json.load(f)  # Parse JSON data
     # 쿼리 스트링 인자 가져오기
     category = request.args.get('category')
+    option1 = request.args.get('option1')
     query = request.args.get('query', '').lower()
     # 필터링된 제품 목록 생성
     filtered_products = products_data
     if category:
         filtered_products = [product for product in filtered_products if product['category'] == category]
+    if option1:
+        filtered_products = [product for product in filtered_products if product['option1'] == option1]
     if query:
         filtered_products = [product for product in filtered_products if query in product['PrdName'].lower()]
     # else:

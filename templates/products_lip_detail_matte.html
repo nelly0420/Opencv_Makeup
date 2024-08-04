@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
+
+<style>
+    .color-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 5px;
+        border: none;
+        display: inline-block;
+    }
+
+    .color-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .color-line {
+        border-top: 2px solid #000;
+        margin: 10px 0;
+        width: 70%;
+    }
+
+    .breadcrumb-item a {
+        font-size: 1.1rem;
+        font-weight: bold;
+        opacity: 0.6;
+    }
+
+    .video-container {
+        position: absolute;
+        width: 280px;
+        height: auto;
+        z-index: 1;
+    }
+
+    #video {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        position: absolute;
+        margin:10px;
+        object-fit: cover; /* Cover entire container without stretching */
+        transform: translateX(-126px);
+
+    }
+
+    #capture {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-460px);
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 2; /* Ensure the button is above the video */
+    }
+
+    .image-container {
+        margin: 10px;
+        width: 640px;
+        float: left;
+    }
+
+    #captured-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .lipstick-item {
+        padding: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        text-align: center;
+        width: 200px; /* Uniform width for each carousel item */
+        height: 250px; /* Uniform height for each carousel item */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .lipstick-item img {
+        max-width: 100%; 
+        max-height: 150px; /* Ensures the image fits within the item */
+        border-radius: 8px;
+        margin-bottom: 10px; /* Space between image and text */
+        display: block; /* Ensures the image is a block element */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .lipstick-item h5 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .lipstick-item.selected {
+        background-color: rgba(0, 123, 255, 0.2);
+    }
+
+    .slick-prev:before,
+    .slick-next:before {
+        color: black;
+    }
+
+    .lipstick-carousel {
+        width: 60%;
+        float: left; 
+        margin-left: 1.5%; /* Move the carousel slightly to the right */
+    }
+
+    .color-buttons-section {
+        width: 35%;
+        float: left;
+        margin-left: 2%;
+        display: none;
+    }
+
+</style>
+
+<div class="container mt-4">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">Matte</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="row"  style="position:relative;">
+        <div class="video-container">
+            <video id="video" width="280" height="280" autoplay ></video>
+            <!-- Ensure the button is positioned correctly and not obscured -->
+           
+        </div>
+        
+        <div class="image-container">
+            <img id="captured-image" width="1080" height="720" />
+            <button id="capture">
+                Play
+            </button>
+        </div>
+    </div>
+
+    <!-- Right product list area -->
+    <div class="container">
+        <div class="row">
+            <!-- blush carousel -->
+            <div class="lipstick-carousel mt-3">
+                <!-- Lipstick items will be appended here by JavaScript -->
+            </div>
+
+            <!-- Color buttons section -->
+            <div class="color-buttons-section">
+                <h5 class="color-title" style = text-align:left>상세 정보</h5>
+                <hr class="color-line">
+                <div class="color-buttons-container" id="colorButtons">
+                    <!-- Color buttons will be appended here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="frmSend" style="display: none;">
+    <input type="hidden" id="prdCode" name="prdCode" value="" />
+</form>
+
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        let intervalId = null; // intervalId를 전역에서 정의
+        let streaming = false; // streaming 상태를 초기화
+
+        // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
+        $.getJSON('/productJSON?category=lipstick&option1=Matte', function (data) {
+            console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
+
+            
+           
+    
+            // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
+            data.forEach(item => {
+                $('.lipstick-carousel').append(`
+                    <div class="lipstick-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
+                        <img src="${item.imgsrc}" alt="${item.PrdName}">
+                        <h5>${item.PrdName}</h5>
+                        <p>${item.price}</p>
+                        <div class="color-circle" style="background-color:${item.color};"></div>
+                    </div>
+                `);
+            });
+    
+            // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+            $('.lipstick-carousel').slick({
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true
+            });
+    
+            // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
+            $('.lipstick-item').click(function () {
+                // Remove selected class from all blush items
+                $('.lipstick-item').removeClass('selected');
+                
+                // Add selected class to the clicked item
+                $(this).addClass('selected');
+                
+                // Get the product code (prdCode) from the data attribute of the clicked item
+                var selectedValue = $(this).data('prdcode');
+                
+                // Update the hidden input field with the selected prdCode
+                $("#prdCode").val(selectedValue);
+            
+                // Check if a product is selected
+                if (!selectedValue) {
+                    alert("제품을 선택해주세요!");
+                    return false;
+                }
+            
+                console.log('Selected product code:', selectedValue); // Log the selected product code
+            
+                // Display color buttons section
+                $('.color-buttons-section').show();
+            
+                // Update color buttons based on the selected product
+                updateColorButtons(selectedValue);
+            
+                // Start live video processing
+                if (intervalId !== null) {
+                    clearInterval(intervalId); // Clear any existing interval
+                }
+                intervalId = setInterval(function() {
+                    live(selectedValue);
+                }, 100);
+                streaming = true; // Set streaming to true
+            });
+            
+            
+        });
+    
+        $('#capture').on('click', function() {
+            if (streaming) {
+                clearInterval(intervalId); // Clear the interval if streaming
+                intervalId = null; // Reset the intervalId
+                streaming = false; // Set streaming to false
+                capture.textContent = 'Play';
+            } else {
+                if (intervalId !== null) {
+                    clearInterval(intervalId); // Clear any existing interval
+                }
+                intervalId = setInterval(function() {
+                    live($("#prdCode").val()); // Use the product code from the hidden input field
+                }, 100);
+                streaming = true; // Set streaming to true
+                capture.textContent = 'Stop';
+            }
+        });
+
+        // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
+        const video = document.getElementById('video');
+        const socket = io('http://localhost:5000');
+    
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+    
+        
+            function live(prdCode) {
+                // Create a canvas element to hold the captured image
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const video = document.getElementById('video');
+            
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            
+                // Draw the current video frame onto the canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+                // Convert canvas content to a data URL
+                const dataURL = canvas.toDataURL('image/jpeg');
+            
+                console.log('Captured data URL:', dataURL);
+            
+                // Convert data URL to Blob object
+                const blob = dataURItoBlob(dataURL);
+            
+                // Prepare FormData object to send image and product code
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.jpg');
+                formData.append('prdCode', prdCode);
+            
+                console.log('FormData:', formData);
+            
+                // Send POST request to server endpoint
+                fetch('/apply_lipstick', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Convert received Blob to object URL and set as captured image source
+                    const imgUrl = URL.createObjectURL(blob);
+                    $('#captured-image').attr('src', imgUrl);
+                    console.log('Image applied successfully');
+                })
+                .catch(error => {
+                    console.error('Error applying lipstick:', error);
+                    // Handle the error appropriately, e.g., show an alert or log it
+                   // alert('Error applying blush: ' + error.message);
+                });
+
+                
+            }
+            
+            
+        // Function to update color buttons based on the selected product
+        function updateColorButtons(selectedValue) {
+            $('#colorButtons').empty(); // Clear previous color buttons
+    
+            // Assuming `data` is accessible here, filter colors based on selected product
+            $.getJSON('/productJSON?category=lipstick&option1=Matte', function (data) {
+                const selectedProduct = data.find(item => item.prdCode === selectedValue);
+                if (selectedProduct) {
+                    $('#colorButtons').append(`
+                        <div class="color-button-wrapper">
+                            <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
+                        </div>
+                    `);
+                }
+            });
+        }
+        
+               
+        // Function to convert Data URI to Blob
+        function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        }
+    });
+</script>
+
+{% endblock %} 

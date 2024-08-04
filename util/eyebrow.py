@@ -30,6 +30,8 @@ def transform_to_right_angle_trapezoid(points):
     transformed_points = np.vstack((x_coords, y_coords_trapezoid)).T
     return transformed_points.astype(np.int32)
 
+
+transparency = 0.5
 def apply_eyebrow(image, prdCode):
     bgr_color, option1 = get_color_from_json(prdCode)
 
@@ -37,6 +39,8 @@ def apply_eyebrow(image, prdCode):
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     detector = dlib.get_frontal_face_detector()    
+    # 우리만의 행렬 곱하기
+    
     faces = detector(gray)
 
     for face in faces:
@@ -61,15 +65,17 @@ def apply_eyebrow(image, prdCode):
         left_eyebrow_points += move_up
         right_eyebrow_points += move_up
 
-        left_eyebrow_points = add_intermediate_points(left_eyebrow_points)
-        cv2.fillPoly(image, [right_eyebrow_points], bgr_color)
-        right_eyebrow_points = add_intermediate_points(right_eyebrow_points)
+        #left_eyebrow_points = add_intermediate_points(left_eyebrow_points)
+        #right_eyebrow_points = add_intermediate_points(right_eyebrow_points)
         right_eyebrow_points = transform_to_right_angle_trapezoid(right_eyebrow_points)
 
-        cv2.fillPoly(image, [left_eyebrow_points], bgr_color)
+        mask = np.zeros_like(image)
+        cv2.fillPoly(mask, [left_eyebrow_points], bgr_color)
+        cv2.fillPoly(mask, [right_eyebrow_points], bgr_color)
 
-        cv2.fillPoly(image, [right_eyebrow_points], bgr_color)
-        
-    return image
+        # 투명도 조절
+        image_with_eyebrows = cv2.addWeighted(image, 1.0, mask, transparency, 0.0)
+    
+    return image_with_eyebrows
 
 
