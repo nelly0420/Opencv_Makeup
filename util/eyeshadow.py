@@ -8,7 +8,7 @@ detector = dlib.get_frontal_face_detector()  # 얼굴 감지기 초기화
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")  # 얼굴 랜드마크 예측기 초기화
 
 eyeshadow_alpha = 0.3  # 아이섀도우의 투명도 설정 (0.0 ~ 1.0)
-inner_alpha_factor = 0.8 # 내부 영역의 투명도
+inner_alpha_factor = 0.8  # 내부 영역의 투명도
 
 def get_midpoint(point1, point2):
     """
@@ -38,7 +38,16 @@ def apply_eyeshadow(image, prdCode):
     """
     # 색상 정보 얻기
     bgr_color, option1 = get_color_from_json(prdCode)
-
+    print(f"Primary color (BGR): {bgr_color}, Option1 color (Hex): {option1}")  # 디버깅 출력문 추가
+    
+    bgr_color2 = None
+    if option1 != "None":
+        # '#' 문자를 제거하고 변환
+        option1 = option1.lstrip('#')
+        rgb_color2 = tuple(int(option1[i:i+2], 16) for i in (0, 2, 4))  # Hex to RGB
+        bgr_color2 = (rgb_color2[2], rgb_color2[1], rgb_color2[0])  # RGB to BGR
+        print(f"Option1 color (BGR): {bgr_color2}")  # 디버깅 출력문 추가
+    
     # 이미지 그레이스케일로 변환
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)  # 얼굴 감지
@@ -73,12 +82,12 @@ def apply_eyeshadow(image, prdCode):
         # BGRA 형식으로 이미지 변환 (Alpha 채널 추가)
         image_bgra = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
 
-        for eye_area, eye_points in zip([left_eye_area, right_eye_area], [left_eye_points, right_eye_points]):
+        for eye_area, eye_points, midpoints in zip([left_eye_area, right_eye_area], [left_eye_points, right_eye_points], [left_midpoints, right_midpoints]):
             mask = np.zeros((image.shape[0], image.shape[1]), dtype=np.float32)
             cv2.fillPoly(mask, [eye_area], (1))  # 아이섀도우 적용할 영역을 마스크로 생성
 
-            # 동공 영역 제외 (눈동자)
-            eye_hull = cv2.convexHull(eye_points)
+            # 동공 영역 전체 제외
+            eye_hull = cv2.convexHull(np.array(eye_points))
             cv2.fillPoly(mask, [eye_hull], (0))
 
             # Alpha 채널 생성
@@ -92,7 +101,7 @@ def apply_eyeshadow(image, prdCode):
                 cv2.line(alpha_channel, (x1, y1), (x2, y2), (255 * gradient_strength), 2)
 
             # 내부 영역의 중간점 추가
-            inner_midpoints = add_intermediate_points(left_midpoints, num_points=1)
+            inner_midpoints = add_intermediate_points(midpoints, num_points=1)
             for i in range(len(inner_midpoints) - 1):
                 x1, y1 = inner_midpoints[i]
                 x2, y2 = inner_midpoints[i + 1]
@@ -104,11 +113,20 @@ def apply_eyeshadow(image, prdCode):
 
             # 아이섀도우 생성
             eyeshadow = np.zeros_like(image_bgra, dtype=np.uint8)
-            eyeshadow[:, :, :3] = bgr_color
+            if bgr_color2:
+                for midpoint in midpoints:
+                    eyeshadow[:midpoint[1], :, :3] = bgr_color2
+                eyeshadow[midpoints[-1][1]:, :, :3] = bgr_color
+            else:
+                eyeshadow[:, :, :3] = bgr_color
             eyeshadow[:, :, 3] = alpha_channel
 
+            # Alpha 채널의 블러링 추가
+            blurred_alpha_channel = cv2.GaussianBlur(alpha_channel, (45, 45), 0)
+            eyeshadow[:, :, 3] = blurred_alpha_channel
+
             # 최종 이미지에 아이섀도우 적용
-            alpha_mask = alpha_channel / 255.0
+            alpha_mask = blurred_alpha_channel / 255.0
             for c in range(0, 3):
                 image[:, :, c] = (1.0 - alpha_mask) * image[:, :, c] + alpha_mask * eyeshadow[:, :, c]
 
