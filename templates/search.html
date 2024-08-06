@@ -3,188 +3,243 @@
     <h1 class="title">Augmented <br>Make up</h1>
     <p class="lead" style="font-weight: bold;">Search</p>
 
-    <!-- 검색창 -->
+    <!-- Search Bar -->
     <div class="d-flex justify-content-center mb-1">
-        <div class="input-group mb-1 search-group" style="max-width: 50%;">
+        <div class="input-group search-group">
             <input type="text" class="form-control search-input" id="search-input" placeholder="검색어를 입력하세요" aria-label="Search" aria-describedby="button-search">
             <button class="btn custom-btn search-btn" type="button" id="button-search">검색</button>
         </div>
     </div>
 
-    <!-- 검색 결과 -->
-    <div id="search-results" class="d-flex flex-nowrap overflow-auto align-items-center"></div>
+    <!-- Search Results -->
+    <div id="search-results" class="search-results">
+        <!-- Slick slider will be added here dynamically -->
+    </div>
 
     <style>
-        /* 검색창 주변 그림자 제거 */
+        /* Search Bar Styles */
         .search-group {
             box-shadow: none !important;
             border: 1px solid #ced4da;
+            max-width: 50%;
+            margin-top: 2rem; /* 추가된 코드: 검색어창 위쪽 공백 조정 */
+            margin-bottom: 2rem; /* 적당한 크기로 조정 */
         }
 
-        /* 검색창 입력 필드 스타일 */
         .search-input {
             border-radius: 0;
-            box-shadow: none !important;
             border: 1px solid #ced4da;
         }
-
-        /* 검색 버튼 스타일 */
         .search-btn {
             box-shadow: none !important;
             border: 1px solid #ced4da;
         }
-
-        /* 카드 스타일 유지 및 조정 */
+    
+        /* Card Styles */
         .card {
             border: 1px solid #ddd;
             border-radius: 0.25rem;
-            box-shadow: 0 0 0 rgba(0,0,0,0);
-            margin: 0.5rem; /* 카드 사이 간격 조정 */
-            width: 14rem; /* 카드의 너비 설정 */
-            height: 20rem; /* 카드의 높이 설정 */
+            box-shadow: none;
+            margin: 0.5rem;
+            width: 10rem;
+            height: 18rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* 내용이 카드 하단에 위치하도록 설정 */
-            overflow: hidden; /* 카드의 경계를 넘어서는 콘텐츠 숨기기 */
-            scroll-snap-align: start; /* 스크롤 시 카드가 정렬되도록 설정 */
+            justify-content: space-between;
+            overflow: hidden;
         }
-
         .card-img-top {
             width: 100%;
-            height: 40%; /* 이미지가 카드의 40%를 차지하도록 설정 */
-            object-fit: contain; /* 이미지 비율 유지 */
+            height: 8rem;
+            object-fit: contain;
         }
-
         .card-body {
             padding: 0.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* 내용과 버튼이 카드 안에서 올바르게 배치되도록 설정 */
-            flex-grow: 1; /* 카드 내용이 남은 공간을 차지하도록 설정 */
+            justify-content: space-between;
         }
-
         .card-title {
             font-size: 1rem;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal; /* 줄 바꿈 허용 */
-            margin: 0; /* 상하 여백 제거 */
+            white-space: nowrap;
+            margin: 0;
         }
-
         .card-text {
-            font-size: 0.875rem;
-            margin: 0.25rem 0; /* 상하 여백 조정 */
+            font-size: 0.9rem;
+            margin: 0.25rem 0;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal; /* 줄 바꿈 허용 */
+            white-space: nowrap;
         }
-
         .btn-try-now {
-            align-self: center; /* 버튼이 카드의 하단 중앙에 위치하도록 설정 */
-            margin-top: auto; /* 버튼이 카드 하단에 위치하도록 설정 */
-            font-size: 0.75rem; 
-            padding: 0.25rem 0.5rem; 
+            align-self: center;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.4rem;
         }
-
-        /* 검색 결과 영역 스타일 */
+    
+        /* Color Button Styles */
+        .color-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            margin: 0.4rem auto;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.3s;
+        }
+        .color-circle:hover {
+            border-color: #888;
+        }
+    
+        /* Slick Slider Styles */
+        .slick-slider {
+            width: 60%;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 50px;
+            box-sizing: border-box;
+        }
+        .slick-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 12rem;
+        }
+        .slick-prev,
+        .slick-next {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            z-index: 1; /* Set z-index to a high value */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .slick-prev {
+            left: 10px;
+        }
+        .slick-next {
+            right: 10px;
+        }
+        .slick-prev:before {
+            content: '←'; /* Left Arrow */
+            color: black;
+        }
+        .slick-next:before {
+            content: '→'; /* Right Arrow */
+            color: black;
+        }
+        /* Adjust margin-top for search results */
         #search-results {
-        display: flex;
-        flex-wrap: nowrap; /* 카드들이 한 줄로 표시되도록 설정 */
-        overflow-x: auto; /* 가로 스크롤 가능하도록 설정 */
-        overflow-y: hidden; /* 세로 스크롤 제거 */
-        max-width: 100%; /* 최대 너비 설정 */
-        padding: 0.5rem; /* 내부 여백 조정 */
-        box-sizing: border-box; /* 패딩과 보더가 카드의 너비에 포함되도록 설정 */
-        scroll-snap-type: x mandatory; /* 스크롤 시 카드가 정렬되도록 설정 */
-        scroll-behavior: smooth; /* 스크롤 시 부드럽게 이동하도록 설정 */
-        margin-top: 0; /* 상단 마진 제거 */
+            margin-top: 5rem;
         }
 
-        /* 스크롤바 스타일 (선택 사항) */
-        #search-results::-webkit-scrollbar {
-            height: 12px; /* 스크롤바 높이 조정 */
-        }
-
-        #search-results::-webkit-scrollbar-track {
-            background: #ffffff; /* 스크롤바 트랙 배경색을 하얀색으로 설정 */
-            border-radius: 10px; /* 스크롤바 트랙의 둥근 모서리 */
-        }
-
-        #search-results::-webkit-scrollbar-thumb {
-            background: #888; /* 스크롤바 막대 색상 */
-            border-radius: 10px; /* 스크롤바 막대의 둥근 모서리 */
-        }
-
-        #search-results::-webkit-scrollbar-thumb:hover {
-            background: #555; /* 스크롤바 막대 호버 색상 */
-        }
-        .center-cards {
-        justify-content: center; /* 카드를 가운데 정렬 */
-        flex-wrap: wrap; /* 여러 줄로 감싸기 */
-        }
+    
     </style>
+    
+    <!-- Slick CSS -->
+    <link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
 
+    <!-- Slick JS -->
+    <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
     <script>
-        document.getElementById('button-search').addEventListener('click', function() {
-            performSearch();
-        });
-
+        document.getElementById('button-search').addEventListener('click', performSearch);
         document.getElementById('search-input').addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 performSearch();
             }
         });
-        
+
         function performSearch() {
-            var query = $('#search-input').val();
-            fetch(`/productJSON?query=` + query)
-                .then(response => response.json())
+            const query = encodeURIComponent(document.getElementById('search-input').value.trim());
+            if (!query) {
+                alert('검색어를 입력하세요.');
+                return;
+            }
+
+            console.log('Performing search for query:', query);
+
+            fetch(`/productJSON?query=${query}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Search results:', data);
                     const resultsDiv = document.getElementById('search-results');
                     resultsDiv.innerHTML = '';
-                    data.forEach(product => {
-                        const productDiv = document.createElement('div');
-                        productDiv.className = 'card';
-                        productDiv.style.flex = '0 0 auto'; // 카드가 고정된 너비를 가지도록 설정
-                        productDiv.innerHTML = `
-                            <img src="${product.imgsrc}" class="card-img-top" alt="${product.PrdName}">
-                            <div id="trycards" class="card-body">
-                                <h5 class="card-title">${product.PrdName}</h5>
-                                <p class="card-text">제조사: ${product.Manufacturer}</p>
-                                <p class="card-text">카테고리: ${product.category}</p>
-                                <p class="card-text">옵션1: ${product.option1}</p>
-                                <p class="card-text">가격: ${product.price}</p>
-                                <button class="btn btn-primary btn-try-now" data-category="${product.category}" data-prdcode="${product.prdCode}">Try Now</button>
-                            </div>
-                        `;
-                        resultsDiv.appendChild(productDiv);
-                    });
 
-                    // 카드 개수에 따라 가운데 정렬
-                    if (data.length <= 6) {
-                        resultsDiv.classList.add('center-cards');
-                    } else {
-                        resultsDiv.classList.remove('center-cards');
-                    }
-
-                    // Add event listener for "Try Now" buttons
-                    $('#trycards button').each(function() {
-                        $(this).on('click', function() {
-                            let category = this.getAttribute('data-category').toLowerCase();
-                            if (category === 'lipstick') {
-                                category = 'lip';
-                            }
-                            // const encodedCategory = encodeURIComponent(category);
-                            const prdCode = this.getAttribute('data-prdcode');
-                            window.location.href = `/products_${category}_detail/${prdCode}`;
+                    if (data.length > 0) {
+                        const slickDiv = document.createElement('div');
+                        slickDiv.className = 'slick-slider';
+                        data.forEach(product => {
+                            const productDiv = document.createElement('div');
+                            productDiv.className = 'card';
+                            productDiv.innerHTML = `
+                                <img src="${product.imgsrc}" class="card-img-top" alt="${product.PrdName}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${product.PrdName}</h5>
+                                    <p class="card-text">제조사: ${product.Manufacturer}</p>
+                                    <p class="card-text">카테고리: ${product.category}</p>
+                                    <p class="card-text">옵션1: ${product.option1}</p>
+                                    <p class="card-text">가격: ${product.price}</p>
+                                    <button class="color-circle" style="background-color:${product.color};" aria-label="${product.color}"></button>
+                                    <button class="btn btn-primary btn-try-now" data-category="${product.category}" data-prdcode="${product.prdCode}">Try Now</button>
+                                </div>
+                            `;
+                            slickDiv.appendChild(productDiv);
                         });
-                    });
 
-                    
+                        resultsDiv.appendChild(slickDiv);
+                        $('.slick-slider').slick({
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            infinite: true,
+                            dots: true,
+                            arrows: true,
+                            responsive: [
+                                {
+                                    breakpoint: 768,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 480,
+                                    settings: {
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                }
+                            ]
+                        });
+
+                        document.querySelectorAll('.btn-try-now').forEach(button => {
+                            button.addEventListener('click', function(event) {
+                                event.stopPropagation();
+                                const category = this.getAttribute('data-category').toLowerCase() === 'lipstick' ? 'lip' : this.getAttribute('data-category').toLowerCase();
+                                const prdCode = this.getAttribute('data-prdcode');
+                                console.log(`Redirecting to: /products_${category}_detail/${prdCode}`);
+                                window.location.href = `/products_${category}_detail/${prdCode}`;
+                            });
+                        });
+                    } else {
+                        resultsDiv.innerHTML = '<p>검색 결과가 없습니다.</p>';
+                    }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Fetch error:', error);
                 });
         }
     </script>
