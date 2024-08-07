@@ -29,12 +29,24 @@
         .search-input {
             border-radius: 0;
             border: 1px solid #ced4da;
+            outline: none; /* 파란색 그림자 제거 */
+            box-shadow: none !important; /* 파란색 그림자 제거 */
         }
         .search-btn {
             box-shadow: none !important;
             border: 1px solid #ced4da;
+            outline: none; /* 파란색 그림자 제거 */
         }
-    
+        
+        .search-input:focus {
+            outline: none; /* 파란색 그림자 제거 */
+            box-shadow: none !important; /* 파란색 그림자 제거 */
+        }
+
+        .search-btn:focus {
+            outline: none; /* 파란색 그림자 제거 */
+            box-shadow: none !important; /* 파란색 그림자 제거 */
+        }
         /* Card Styles */
         .card {
             border: 1px solid #ddd;
@@ -194,7 +206,7 @@
                                     <p class="card-text">옵션1: ${product.option1}</p>
                                     <p class="card-text">가격: ${product.price}</p>
                                     <button class="color-circle" style="background-color:${product.color};" aria-label="${product.color}"></button>
-                                    <button class="btn btn-primary btn-try-now" data-category="${product.category}" data-prdcode="${product.prdCode}">Try Now</button>
+                                    <button class="btn btn-primary btn-try-now" data-category="${product.category}" data-prdcode="${product.prdCode}" data-option1="${product.option1.toLowerCase()}">Try Now</button>
                                 </div>
                             `;
                             slickDiv.appendChild(productDiv);
@@ -224,14 +236,26 @@
                                 }
                             ]
                         });
+                        
 
                         document.querySelectorAll('.btn-try-now').forEach(button => {
                             button.addEventListener('click', function(event) {
                                 event.stopPropagation();
-                                const category = this.getAttribute('data-category').toLowerCase() === 'lipstick' ? 'lip' : this.getAttribute('data-category').toLowerCase();
+                                const category = this.getAttribute('data-category').toLowerCase();
                                 const prdCode = this.getAttribute('data-prdcode');
-                                console.log(`Redirecting to: /products_${category}_detail/${prdCode}`);
-                                window.location.href = `/products_${category}_detail/${prdCode}`;
+                                const option1 = this.getAttribute('data-option1').toLowerCase(); // 소문자로 변환
+                                
+                                if (category === 'lipstick') {
+                                    if (option1 === 'matte') {
+                                        window.location.href = `/products_lip_detail_matte/${prdCode}`;
+                                    } else if (option1 === 'glossy') {
+                                        window.location.href = `/products_lip_detail_glossy/${prdCode}`;
+                                    } else {
+                                        window.location.href = `/products_lip_detail/${prdCode}`;
+                                    }
+                                } else {
+                                    window.location.href = `/products_${category}_detail/${prdCode}`;
+                                }
                             });
                         });
                     } else {

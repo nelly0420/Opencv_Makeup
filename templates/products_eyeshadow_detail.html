@@ -22,7 +22,7 @@
         width: 70%;
     }
     .breadcrumb-item a {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
         font-weight: bold;
         opacity: 0.6;
     }
@@ -40,20 +40,25 @@
         object-fit: cover;
         transform: translateX(-126px);
     }
-    #capture {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-460px);
-        background-color: #007BFF;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        z-index: 2;
+    #capture, #download {
+        background-color: #007BFF; /* Button background color */
+        color: #fff; /* Button text color */
+        border: none; /* Remove border */
+        padding: 10px 20px; /* Button padding */
+        font-size: 16px; /* Button font size */
+        cursor: pointer; /* Pointer cursor on hover */
+        z-index: 2; /* Ensure buttons are on top */
+    }
+    .button-container {
+        position: absolute; /* Position buttons absolutely within the container */
+        bottom: 10px; /* Adjust from the bottom of the container */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Center horizontally by half the container's width */
+        display: flex; /* Align buttons horizontally */
+        gap: 10px; /* Space between buttons */
     }
     .image-container {
+        position: relative;
         margin: 10px;
         width: 640px;
         float: left;
@@ -159,63 +164,187 @@
 </form>
 <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+
 <script>
+    let intervalId = null; // intervalId를 전역에서 정의
+    let streaming = false; // streaming 상태를 초기화
+
+
+    // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
+    // $(document).on('click', '.blush-item', function () {
+    // Function to update color buttons based on the selected product
+    function updateColorButtons(selectedValue) {
+        $('#colorButtons').empty();
+            $.getJSON('/productJSON?category=eyeshadow', function (data) {
+                const selectedProduct = data.find(item => item.prdCode === selectedValue);
+                if (selectedProduct) {
+                    $('#colorButtons').append(`
+                        <div class="color-button-wrapper">
+                            <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
+                            <p>${selectedProduct.PrdName}</p>
+                            <p>가격: ${selectedProduct.price}</p>
+                            <p>색상: ${selectedProduct.color}</p>
+                        </div>
+                    `);
+                }
+            });
+    }
+    
+    function makeupvidio(selectedValue){
+        // Remove selected class from all blush items
+        $('.blush-item').removeClass('selected');
+        
+        // Add selected class to the clicked item
+        $('.blush-item[data-prdcode="' + selectedValue + '"]').addClass('selected');
+        
+        // Get the product code (prdCode) from the data attribute of the clicked item
+        //var selectedValue = $(this).data('prdcode');
+        
+        // Update the hidden input field with the selected prdCode
+        $("#prdCode").val(selectedValue);
+    
+        // Check if a product is selected
+        if (!selectedValue) {
+            alert("제품을 선택해주세요!");
+            return false;
+        }
+    
+        console.log('Selected product code:', selectedValue); // Log the selected product code
+    
+        // Display color buttons section
+        console.log('상세정보 출력');
+        $('.color-buttons-section').show();
+    
+        // Update color buttons based on the selected product
+        updateColorButtons(selectedValue);
+    
+        // Start live video processing
+        if (intervalId !== null) {
+            clearInterval(intervalId); // Clear any existing interval
+        }
+        intervalId = setInterval(function() {
+            live(selectedValue);
+        }, 100);
+        streaming = true; // Set streaming to true
+    }
+    // });
+    function live(prdCode) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL('image/jpeg');
+        console.log('Captured data URL:', dataURL);
+        const blob = dataURItoBlob(dataURL);
+        const formData = new FormData();
+        formData.append('image', blob, 'capture.jpg');
+        formData.append('prdCode', prdCode);
+        console.log('FormData:', formData);
+        fetch('/apply_eyeshadow', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const imgUrl = URL.createObjectURL(blob);
+            $('#captured-image').attr('src', imgUrl);
+            console.log('Image applied successfully');
+        })
+        .catch(error => {
+            console.error('Error applying blush:', error);
+        });
+    }
+
+    // Function to convert Data URI to Blob
+    function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        }    
+
+    function autoclick(prd){
+        const selectedItem = $('.blush-item[data-prdcode='+ prd +']');
+        
+        if (selectedItem.length > 0) {
+            const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
+            console.log('SlickGoTo index:', slickIndex);
+            $('.blush-carousel').slick('slickGoTo', slickIndex, true);
+            console.log('Triggering click on:', selectedItem); // 클릭을 트리거하려는 항목 확인
+            //selectedItem.trigger('click'); // 클릭 이벤트 강제 발생
+            makeupvidio(prd);
+
+            // 선택된 항목에 .selected 클래스 추가
+            // $('.blush-item').removeClass('selected'); // 모든 항목의 선택 해제
+            // selectedItem.addClass('selected'); // 클릭된 항목에 선택 추가
+        }
+    }    
+    //--------------------------------------------------------------------------
     $(document).ready(function () {
-        let intervalId = null;
-        let streaming = false;
-        const urlParams = new URLSearchParams(window.location.search);
-        const prd = urlParams.get('prdCode');
-        // Load and initialize carousel items
+        
+        var prd = '{{ prdCode }}' ;
+
+
+        if (prd) {
+            console.log('prdCode:', prd); // prdCode가 있을 경우 출력
+        } else {
+            console.log('prdCode가  없습니다.');
+        }
+    
+        // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=eyeshadow', function (data) {
-            console.log("Loaded data:", data);
-            // Append carousel items
+            console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
+    
+            // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
             data.forEach(item => {
                 $('.blush-carousel').append(`
-                    <div class="blush-item" data-color="${item.color}" data-prdcode="${item.prdCode}">
+                    <div class="blush-item" onclick=" makeupvidio('${item.prdCode}')" data-color="${item.color}" data-prdcode="${item.prdCode}">
                         <img src="${item.imgsrc}" alt="${item.PrdName}">
                         <h5>${item.PrdName}</h5>
                         <p>${item.price}</p>
-                        <div class="color-circle" style="background-color:${item.color};"></div>
+                        <button class="color-circle" style="background-color:${item.color};"></button>
+                        
                     </div>
                 `);
             });
-            // Initialize Slick carousel
-            $('.blush-carousel').slick({
+    
+             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+            $('.blush-carousel').on('init', function() {
+                console.log('Slick initialized'); // Slick 초기화 확인
+
+                
+
+
+            }).slick({
                 infinite: true,
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 dots: true,
                 arrows: true
-            });
-            // If a product code is present, select and highlight it
-            if (prd) {
-                const selectedItem = $(`.blush-item[data-prdcode="${prd}"]`);
-                if (selectedItem.length > 0) {
-                    const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
-                    $('.blush-carousel').slick('slickGoTo', slickIndex, true);
-                    setTimeout(() => selectedItem.trigger('click'), 1000);
-                }
-            }
-        });
-        // Handle blush item click
-        $(document).on('click', '.blush-item', function () {
-            $('.blush-item').removeClass('selected');
-            $(this).addClass('selected');
-            const selectedValue = $(this).data('prdcode');
-            $("#prdCode").val(selectedValue);
-            console.log('Selected product code:', selectedValue);
-            if (!selectedValue) {
-                alert("제품을 선택해주세요!");
-                return;
-            }
-            $('.color-buttons-section').show();
-            updateColorButtons(selectedValue);
-            if (intervalId !== null) {
-                clearInterval(intervalId);
-            }
-            intervalId = setInterval(() => live(selectedValue), 100);
-            streaming = true;
-        });
+            }); 
+            
+            //3.강제 이동 & 강제 선택.
+            /* 강제 이동 & 강제 선택 */
+
+            setTimeout(function() {
+                autoclick(prd);
+            }, 1000); // 1초 지연 후 선택
+
+        }); //End of getJson
+
+
+        
+    
         $('#capture').on('click', function() {
             if (streaming) {
                 clearInterval(intervalId);
@@ -231,73 +360,26 @@
                 $(this).text('Stop');
             }
         });
+    
+        // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
+        // const video = document.getElementById('video');
+        // const socket = io('http://localhost:5000');
+    
+        // navigator.mediaDevices.getUserMedia({ video: true })
+        //     .then(function (stream) {
+        //         video.srcObject = stream;
+        //     })
+        //     .catch(function (err) {
+        //         console.log("An error occurred: " + err);
+        //     });
+
         // Initialize video stream
         const video = document.getElementById('video');
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => video.srcObject = stream)
             .catch(err => console.error("An error occurred: ", err));
-        // Capture live image and apply blush
-        function live(prdCode) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataURL = canvas.toDataURL('image/jpeg');
-            console.log('Captured data URL:', dataURL);
-            const blob = dataURItoBlob(dataURL);
-            const formData = new FormData();
-            formData.append('image', blob, 'capture.jpg');
-            formData.append('prdCode', prdCode);
-            console.log('FormData:', formData);
-            fetch('/apply_eyeshadow', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                const imgUrl = URL.createObjectURL(blob);
-                $('#captured-image').attr('src', imgUrl);
-                console.log('Image applied successfully');
-            })
-            .catch(error => {
-                console.error('Error applying blush:', error);
-            });
-        }
-        // Update color buttons based on selected product
-        function updateColorButtons(selectedValue) {
-            $('#colorButtons').empty();
-            $.getJSON('/productJSON?category=eyeshadow', function (data) {
-                const selectedProduct = data.find(item => item.prdCode === selectedValue);
-                if (selectedProduct) {
-                    $('#colorButtons').append(`
-                        <div class="color-button-wrapper">
-                            <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
-                            <p>${selectedProduct.PrdName}</p>
-                            <p>가격: ${selectedProduct.price}</p>
-                            <p>색상: ${selectedProduct.color}</p>
-                        </div>
-                    `);
-                }
-            });
-        }
-        // Convert Data URI to Blob
-        function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([ab], { type: mimeString });
-        }
-        // Handle download button click
+
+         // Handle download button click
         $('#download').on('click', function() {
             const img = document.getElementById('captured-image');
             const link = document.createElement('a');
@@ -305,6 +387,12 @@
             link.download = 'captured-image.jpg';
             link.click();
         });
+    
+        
+    
+        
     });
+    
 </script>
+
 {% endblock %}

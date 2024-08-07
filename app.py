@@ -109,37 +109,67 @@ def blush_detail(prdCode):
         return render_template("products_blush_detail.html")
     return render_template("products_blush_detail.html", category='blush', prdCode=prdCode)
 
+@app.route("/products_eyeliner_detail", defaults={'prdCode': None})
+@app.route("/products_eyeliner_detail/<prdCode>")
+def eyeliner_detail(prdCode):
+    if prdCode is None:
+        return render_template("products_eyeliner_detail.html")
+    return render_template("products_eyeliner_detaill", category='eyeliner', prdCode=prdCode)
 
-@app.route("/products_eyeliner_detail")
-def eyeliner_detail():
-    return render_template("products_eyeliner_detail.html")
-@app.route("/products_eyeshadow_detail")
-def eyeshadow_detail():
-    return render_template("products_eyeshadow_detail.html")
-@app.route("/products_eyebrow_detail")
-def eyebrow_detail():
-    return render_template("products_eyebrow_detail.html")
+@app.route("/products_eyeshadow_detail/", defaults={'prdCode': None})
+@app.route("/products_eyeshadow_detail/<prdCode>")
+def eyeshadow_detail(prdCode):
+    if prdCode is None:
+        return render_template("products_eyeshadow_detail.html")
+    return render_template("products_eyeshadow_detail.html", category='eyeshadow', prdCode=prdCode) 
+
+@app.route("/products_eyebrow_detail/", defaults={'prdCode': None})
+@app.route("/products_eyebrow_detail/<prdCode>")
+def eyebrow_detail(prdCode):
+    if prdCode is None:
+        return render_template("products_eyebrow_detail.html")
+    return render_template("products_eyebrow_detail.html", category='eyebrow', prdCode=prdCode)
+
 @app.route("/products_eye")
 def products_eye():
     return render_template("products_eye.html")
 @app.route("/products_lip")
 def products_lip():
     return render_template("products_lip.html")
-@app.route("/products_lip_detail_matte")
-def lip_detail_matte():
-    return render_template("products_lip_detail_matte.html")
-@app.route("/products_lip_detail_glossy")
-def lip_detail_glossy():
-    return render_template("products_lip_detail_glossy.html")
+
+@app.route("/products_lip_detail_matte/", defaults={'prdCode': None})
+@app.route("/products_lip_detail_matte/<prdCode>")
+def lip_detail_matte(prdCode):
+    if prdCode is None:
+        return render_template("products_lip_detail_matte.html")
+    return render_template("products_lip_detail_matte.html", category='lipstick', prdCode=prdCode)
+
+
+@app.route("/products_lip_detail_glossy/", defaults={'prdCode': None})
+@app.route("/products_lip_detail_glossy/<prdCode>")
+def lip_detail_glossy(prdCode):
+    if prdCode is None:
+        return render_template("products_lip_detail_glossy.html")
+    return render_template("products_lip_detail_glossy.html", category='lipstick', prdCode=prdCode)
+
 @app.route("/products_fashion")
 def products_fashion():
     return render_template("products_fashion.html")
-@app.route("/products_sunglasses")
-def products_sunglasses():
-    return render_template("products_sunglasses.html")
-@app.route("/products_lens")
-def products_lens():
-    return render_template("products_lens.html")
+
+@app.route("/products_sunglasses/", defaults={'prdCode': None})
+@app.route("/products_sunglasses/<prdCode>")
+def products_sunglasses(prdCode):
+    if prdCode is None:
+        return render_template("products_sunglasses.html")
+    return render_template("products_sunglasses.html", category='sunglasses', prdCode=prdCode)
+
+@app.route("/products_lens/", defaults={'prdCode': None})
+@app.route("/products_lens/<prdCode>")
+def products_lens(prdCode):
+    if prdCode is None:
+        return render_template("products_lens.html")
+    return render_template("products_lens.html", category='lens', prdCode=prdCode)
+
 @app.route("/test")
 def test():
     return render_template("test copy.html")
