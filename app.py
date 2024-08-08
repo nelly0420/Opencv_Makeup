@@ -90,9 +90,7 @@ def products():
 @app.route("/about")
 def about():
     return render_template("about.html")
-@app.route("/wish")
-def wish():
-    return render_template("wish.html")
+
 @app.route('/search', methods=['GET'])
 def search():
     if 'query' in request.args:
