@@ -175,7 +175,7 @@
     // Function to update color buttons based on the selected product
     function updateColorButtons(selectedValue) {
         $('#colorButtons').empty();
-            $.getJSON('/productJSON?category=blush', function (data) {
+            $.getJSON('/productJSON?category=lens', function (data) {
                 const selectedProduct = data.find(item => item.prdCode === selectedValue);
                 if (selectedProduct) {
                     $('#colorButtons').append(`
@@ -241,7 +241,7 @@
         formData.append('image', blob, 'capture.jpg');
         formData.append('prdCode', prdCode);
         console.log('FormData:', formData);
-        fetch('/apply_blush', {
+        fetch('/apply_color_lens', {
             method: 'POST',
             body: formData
         })
@@ -302,7 +302,7 @@
         }
     
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
-        $.getJSON('/productJSON?category=blush', function (data) {
+        $.getJSON('/productJSON?category=lens', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
     
             // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
