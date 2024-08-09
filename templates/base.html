@@ -75,6 +75,12 @@
             // Initialize cart count and items
             updateCartCount();
             showCartItems();
+            
+            // Attach event handler to clear-cart button
+            $('#clear-cart').on('click', function() {
+                console.log('Clear Cart button clicked'); // Debugging line
+                clearCart();
+            });
         });
 
         function updateCartCount() {
@@ -109,6 +115,7 @@
         }
 
         function removeFromCart(prdCode) {
+            console.log('Removing item:', prdCode); // Debugging line
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             cart = cart.filter(item => item.prdCode !== prdCode);
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -116,14 +123,13 @@
             showCartItems();
         }
 
-        $('#clear-cart').on('click', function() {
+        function clearCart() {
             localStorage.removeItem('cart');
             localStorage.setItem('cartCount', '0');
             updateCartCount();
             showCartItems();
-        });
+        }
     </script>
-
 </head>
 <body>
 
