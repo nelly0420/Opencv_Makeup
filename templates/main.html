@@ -33,7 +33,7 @@
             text-align: center;
         }
 
-        .bg2{
+        .bg2 {
             width: 450px;
             height: 360px;
             border: 2px solid #ccc;
@@ -41,7 +41,7 @@
         }
 
         .star {
-            color : rgb(236, 44, 108);
+            color: rgb(236, 44, 108);
             position: absolute;
             font-size: 24px;
             animation: moveStar 4s linear infinite;
@@ -51,27 +51,50 @@
             display: flex; /* Flexbox 레이아웃 사용 */
             justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
         }
+
         .navbar {
             background-color: #a8c0ff;
         }
+
         .navbar-brand {
             font-family: 'Brush Script MT', cursive;
             font-size: 2.0rem;
         }
+
         .title {
             font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
         }
+
         .container {
             max-width: 100%;
         }
+
         .navbar-nav .nav-link {
             color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
-        }
-        #btngoMain{
-            background-color : rgb(39, 60, 171);
+            position: relative; /* 배지와 하트 아이콘의 z-index를 조절하기 위해 relative 설정 */
         }
 
-        
+        #btngoMain {
+            background-color: rgb(39, 60, 171);
+        }
+
+        .badge {
+            position: absolute;
+            top: -2px; /* 상단 간격 조정 */
+            right: -5px; /* 오른쪽 간격 조정 */
+            background-color: rgb(39, 60, 171);
+            color: white;
+            padding: 4px 6px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1; /* 배지의 z-index 설정 */
+        }
+
+        .nav-link .fa-heart {
+            position: relative;
+            z-index: 2; /* 하트 아이콘의 z-index를 배지보다 높게 설정 */
+        }
 
         @keyframes moveStar {
             0% {
@@ -95,21 +118,7 @@
                 left: 0;
             }
         }
-
     </style>
-
-    <!-- jQuery Script for Interaction -->
-    <script>
-        $(document).ready(function(){
-            console.log('준비중');
-            // btngoMain 버튼 클릭 이벤트 처리
-            $("#btngoMain").click(function(event) {
-                window.location.href = '/products';
-            });
-            
-        });
-    </script>
-
 </head>
 <body>
     <!-- Navigation -->
@@ -122,10 +131,10 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/main" style="color:white;" style="font-weight: bold;">Home</a>
+                        <a class="nav-link" href="/main" style="color:white; font-weight: bold;">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/products" id="productsMenu" >Products</a>
+                        <a class="nav-link" href="/products" id="productsMenu">Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
@@ -134,9 +143,11 @@
                         <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/wish"><i class="fa fa-heart"></i></a>
+                        <a class="nav-link" href="#" id="cart-icon">
+                            <i class="fa fa-heart"></i>
+                            <span class="badge" id="cookie-count">0</span> <!-- 쿠키 개수를 표시하는 배지 -->
+                        </a>
                     </li>
-                    
                 </ul>
             </div>
         </div>
@@ -149,7 +160,6 @@
             <div>
                 <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
                 <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
-                <!-- <a class="btn btn-primary" href="/products" role="button" style="margin-top: 20px;">Try Now</a> -->
                 <button id="btngoMain" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -160,5 +170,96 @@
         </div>
     </div>
 
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="cart-items">
+                    <!-- Cart items will be dynamically inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="clear-cart">Clear Cart</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery Script for Interaction -->
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize cart count
+            updateCartCount();
+
+            // Try Now button click event
+            $('#btngoMain').on('click', function(event) {
+                event.preventDefault();
+                window.location.href = '/products';
+            });
+
+            // Show cart modal when cart icon is clicked
+            $('#cart-icon').on('click', function() {
+                showCartItems();
+                $('#cartModal').modal('show');
+            });
+
+            // Function to update cart count
+            function updateCartCount() {
+                const cartCount = localStorage.getItem('cartCount') || '0';
+                $('#cookie-count').text(cartCount);
+            }
+
+            // Function to get cart items from localStorage
+            function getCartItems() {
+                return JSON.parse(localStorage.getItem('cart')) || [];
+            }
+
+            // Function to show cart items in the modal
+            function showCartItems() {
+                const cartItemsContainer = $('#cart-items');
+                cartItemsContainer.empty();
+                const cartItems = getCartItems();
+
+                if (cartItems.length === 0) {
+                    cartItemsContainer.append('<p>Your cart is empty.</p>');
+                } else {
+                    cartItems.forEach(item => {
+                        cartItemsContainer.append(`
+                            <div class="cart-item mb-2">
+                                <h5>${item.PrdName}</h5>
+                                <p>Color: ${item.color}</p>
+                                <p>Price: ${item.price}</p>
+                                <p>Quantity: ${item.quantity}</p>
+                                <button class="btn btn-danger btn-sm" onclick="removeFromCart('${item.prdCode}')">Remove</button>
+                            </div>
+                        `);
+                    });
+                }
+            }
+
+            // Function to remove an item from the cart
+            window.removeFromCart = function(prdCode) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart = cart.filter(item => item.prdCode !== prdCode);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                showCartItems();
+            }
+
+            // Clear cart button click event
+            $('#clear-cart').on('click', function() {
+                localStorage.removeItem('cart');
+                localStorage.setItem('cartCount', '0');
+                updateCartCount();
+                showCartItems();
+            });
+        });
+    </script>
 </body>
 </html>

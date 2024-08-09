@@ -3,6 +3,7 @@
 <link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
 <style>
+    /* General button styling */
     .color-btn {
         width: 50px;
         height: 50px;
@@ -11,63 +12,85 @@
         border: none;
         display: inline-block;
     }
+    
     .color-title {
         font-size: 1.5rem;
         font-weight: bold;
         text-align: left;
     }
+    
     .color-line {
         border-top: 2px solid #000;
         margin: 10px 0;
         width: 70%;
     }
+    
     .breadcrumb-item a {
         font-size: 1.3rem;
         font-weight: bold;
         opacity: 0.6;
     }
-    .video-container {
-        position: absolute;
-        width: 280px;
-        height: auto;
-        z-index: 1;
+    
+    .image-container {
+        position: relative; /* 자식 요소의 위치 기준 */
+        border: none;
+        overflow: hidden;
+        width: 900px; /* 고정 너비 */
+        height: 740px; /* 고정 높이 */
+        display: flex; /* 플렉스 박스 사용 */
+        align-items: center; /* 수직 정렬 */
+        justify-content: center; /* 수평 정렬 */
+        margin: 0 auto; /* 중앙 정렬 */
+        flex-direction: column; /* 자식 요소 수직 배치 */
+        margin-left:570px;
+        margin-top:-30px;
     }
+    
+    .video-container {
+        position: absolute; /* 이미지 컨테이너 내 절대 위치 */
+        top: 0; /* 상단에 위치 */
+        left: 0; /* 좌측에 위치 */
+        width: 200px; /* 고정 너비 */
+        height: 200px; /* 고정 높이 */
+        display: flex; /* 플렉스 박스 사용 */
+        justify-content: center; /* 수평 정렬 */
+        align-items: center; /* 수직 정렬 */
+        z-index: 1; /* 이미지 위에 위치 */
+        border-radius: 8px; /* 둥근 모서리 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 */
+        margin-left:580px;
+        margin-top:-30px;
+    }
+    
     #video {
         width: 100%;
-        height: auto;
-        position: absolute;
-        margin: 10px;
         object-fit: cover;
-        transform: translateX(-126px);
     }
+    
     #capture, #download {
-        background-color: #007BFF; /* Button background color */
-        color: #fff; /* Button text color */
-        border: none; /* Remove border */
-        padding: 10px 20px; /* Button padding */
-        font-size: 16px; /* Button font size */
-        cursor: pointer; /* Pointer cursor on hover */
-        z-index: 2; /* Ensure buttons are on top */
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 2;
+        margin-top: 10px;
     }
+    
     .button-container {
-        position: absolute; /* Position buttons absolutely within the container */
-        bottom: 10px; /* Adjust from the bottom of the container */
-        left: 50%; /* Center horizontally */
-        transform: translateX(-50%); /* Center horizontally by half the container's width */
-        display: flex; /* Align buttons horizontally */
-        gap: 10px; /* Space between buttons */
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px; /* Ensure buttons are below the image */
+        padding: 10px 20px;
     }
-    .image-container {
-        position: relative;
-        margin: 10px;
-        width: 640px;
-        float: left;
-    }
+    
     #captured-image {
         width: 100%;
-        height: auto;
         border-radius: 8px;
     }
+    
     .blush-item {
         padding: 15px;
         cursor: pointer;
@@ -77,21 +100,20 @@
         background-color: #fff;
         text-align: center;
         width: 200px;
-        height: 250px;
+        height: 200px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
+    
     .blush-item img {
         max-width: 100%;
         max-height: 150px;
         border-radius: 8px;
         margin-bottom: 10px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
     }
+    
     .blush-item h5 {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -100,33 +122,59 @@
         font-size: 0.8rem;
         text-align: center;
     }
+    
     .blush-item.selected {
         background-color: rgba(0, 123, 255, 0.2);
     }
+    
     .slick-prev:before,
     .slick-next:before {
         color: black;
     }
+    
     .blush-carousel {
-        width: 60%;
-        float: left;
-        margin-left: 1.5%;
+        width: 95%; /* Full width within container */
+        height: 100%; /* Constrain width to prevent overflow */
     }
+    
     .color-buttons-section {
-        width: 35%;
-        float: right;
-        margin-left: 2%;
-        display: none;
-        position: relative;
+        margin-top: 10px; /* 간격 줄이기 */
+        padding-top: 10px; /* 패딩 줄이기 */
+        padding-left:150px;
     }
+    
     .color-button-wrapper {
         text-align: left;
-        margin-bottom: 10px;
+        margin-bottom: 50px;
+        margin-right: 15px;
     }
+    
     .color-button-wrapper p {
         margin: 0;
     }
+    
+    .product-info-section {
+        margin-top: 10px; /* 간격 줄이기 */
+        margin-bottom: 10px; /* 간격 줄이기 */
+        padding-bottom: 10px; /* 패딩 줄이기 */
+        margin-right: 10px;
+        padding-left:150px;
+    }
+    
+    .product-info-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: left;
+    }
+    
+    .product-info-line {
+        border-top: 2px solid #000;
+        margin: 10px 0;
+        width: 70%;
+    }
+    
 </style>
+
 <div class="container mt-4">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
         aria-label="breadcrumb">
@@ -138,23 +186,35 @@
     </nav>
 </div>
 <div class="container">
-    <div class="row" style="position:relative;">
-        <div class="video-container">
-            <video id="video" width="280" height="280" autoplay></video>
-        </div>
-        <div class="image-container">
-            <img id="captured-image" width="1080" height="720" />
-            <button id="capture">Play</button>
-            <button id="download" style="margin-top: 10px;">Download Image</button>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="blush-carousel mt-3"></div>
-            <div class="color-buttons-section">
-                <h5 class="color-title">상세정보</h5> 
-                <hr class="color-line">
-                <div class="color-buttons-container" id="colorButtons"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row" style="position:relative;">
+                        <div class="video-container">
+                            <video id="video" width="200" height="200" autoplay></video>
+                        </div>
+                        <div class="image-container">
+                            <img id="captured-image" width="900" height="690" />
+                            <div class="button-container">
+                                <button id="capture">Play</button>
+                                <button id="download" style="margin-top: 10px;">Download Image</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-info-section">
+                        <h5 class="product-info-title">상품 정보</h5> 
+                        <hr class="product-info-line">
+                        <div class="blush-carousel mt-3"></div>
+                    </div>
+                    <div class="color-buttons-section mt-4">
+                        <h5 class="color-title">상세 정보</h5> 
+                        <hr class="color-line">
+                        <div class="color-buttons-container" id="colorButtons"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

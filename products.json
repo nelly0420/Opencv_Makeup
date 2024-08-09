@@ -635,7 +635,31 @@
     "option2": "None", 
     "price":"269,000", 
     "imgsrc": "/static/images/product/칼 GC8 안경.png"
-    }
+    },
+
+    {
+      "prdCode": "LEN001", 
+      "PrdName": "샤인터치 밀키 브라운", 
+      "Manufacturer": "오렌즈", 
+      "category": "lens", 
+      "color": "#E5CEA2", 
+      "option1": "None", 
+      "option2": "None", 
+      "price":"25,000", 
+      "imgsrc": "/static/images/product/샤인터치_브라운.png"
+      } ,
+
+      {
+        "prdCode": "LEN002", 
+        "PrdName": "미스티 원데이 내츄럴초코", 
+        "Manufacturer": "오렌즈", 
+        "category": "lens", 
+        "color": "#8D704D", 
+        "option1": "None", 
+        "option2": "None", 
+        "price":"36,000", 
+        "imgsrc": "/static/images/product/미스티_내츄럴초코.png"
+        }
     
 ]
    

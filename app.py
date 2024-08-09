@@ -90,9 +90,7 @@ def products():
 @app.route("/about")
 def about():
     return render_template("about.html")
-@app.route("/wish")
-def wish():
-    return render_template("wish.html")
+
 @app.route('/search', methods=['GET'])
 def search():
     if 'query' in request.args:
@@ -310,6 +308,27 @@ def apply_eyebrow_endpoint():
         return buffer.tobytes(), 200
     else:
         return "Method not allowed", 405
+    
+@app.route('/apply_color_lens', methods=['POST'])
+def apply_color_lens_endpoint():
+    if request.method == 'POST':
+        # Get the FormData object from the request
+        data = request.form
+        # Extract prdCode from the FormData
+        prd_code = data.get('prdCode')
+        # Assuming you also want to receive the image data
+        image_data = request.files['image'].read()
+        nparr = np.frombuffer(image_data, np.uint8)
+        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        # Apply blush effect to the image
+        result_image = apply_eyeshadow(image_np, prd_code)
+        # Encode the processed image to JPEG format
+        _, buffer = cv2.imencode('.jpg', result_image)
+        # Return the processed image as bytes with a status code
+        return buffer.tobytes(), 200
+    else:
+        return "Method not allowed", 405
+    
     
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
