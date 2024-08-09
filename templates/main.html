@@ -33,7 +33,7 @@
             text-align: center;
         }
 
-        .bg2{
+        .bg2 {
             width: 450px;
             height: 360px;
             border: 2px solid #ccc;
@@ -41,7 +41,7 @@
         }
 
         .star {
-            color : rgb(236, 44, 108);
+            color: rgb(236, 44, 108);
             position: absolute;
             font-size: 24px;
             animation: moveStar 4s linear infinite;
@@ -51,27 +51,50 @@
             display: flex; /* Flexbox 레이아웃 사용 */
             justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
         }
+
         .navbar {
             background-color: #a8c0ff;
         }
+
         .navbar-brand {
             font-family: 'Brush Script MT', cursive;
             font-size: 2.0rem;
         }
+
         .title {
             font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
         }
+
         .container {
             max-width: 100%;
         }
+
         .navbar-nav .nav-link {
             color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
-        }
-        #btngoMain{
-            background-color : rgb(39, 60, 171);
+            position: relative; /* 배지와 하트 아이콘의 z-index를 조절하기 위해 relative 설정 */
         }
 
-        
+        #btngoMain {
+            background-color: rgb(39, 60, 171);
+        }
+
+        .badge {
+            position: absolute;
+            top: -2px; /* 상단 간격 조정 */
+            right: -5px; /* 오른쪽 간격 조정 */
+            background-color: rgb(39, 60, 171);
+            color: white;
+            padding: 4px 6px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1; /* 배지의 z-index 설정 */
+        }
+
+        .nav-link .fa-heart {
+            position: relative;
+            z-index: 2; /* 하트 아이콘의 z-index를 배지보다 높게 설정 */
+        }
 
         @keyframes moveStar {
             0% {
@@ -100,16 +123,32 @@
 
     <!-- jQuery Script for Interaction -->
     <script>
-        $(document).ready(function(){
-            console.log('준비중');
-            // btngoMain 버튼 클릭 이벤트 처리
-            $("#btngoMain").click(function(event) {
+        $(document).ready(function() {
+            // 페이지 로드 시 로컬 스토리지에서 장바구니 아이템 수를 가져와서 배지에 표시
+            const cartCount = localStorage.getItem('cartCount') || '0';
+            $('#cookie-count').text(cartCount);
+
+            // Try Now 버튼 클릭 이벤트
+            $(document).on('click', '#btngoMain', function(event) {
+                event.preventDefault();
+                // Try Now 버튼 클릭 시 페이지 이동만 수행
                 window.location.href = '/products';
             });
-            
+
+            // 추가된 함수: 장바구니에 아이템을 추가하는 예시
+            function addToCart() {
+                let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
+                
+                // 아이템 수가 3을 초과하지 않도록 체크
+                if (currentCount < 3) {
+                    localStorage.setItem('cartCount', currentCount + 1);
+                    $('#cookie-count').text(currentCount + 1);
+                } else {
+                    console.log('장바구니 아이템 수는 최대 3개까지만 가능합니다.');
+                }
+            }
         });
     </script>
-
 </head>
 <body>
     <!-- Navigation -->
@@ -122,10 +161,10 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/main" style="color:white;" style="font-weight: bold;">Home</a>
+                        <a class="nav-link" href="/main" style="color:white; font-weight: bold;">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/products" id="productsMenu" >Products</a>
+                        <a class="nav-link" href="/products" id="productsMenu">Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
@@ -134,9 +173,11 @@
                         <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/wish"><i class="fa fa-heart"></i></a>
+                        <a class="nav-link" href="/wish">
+                            <i class="fa fa-heart"></i>
+                            <span class="badge" id="cookie-count">0</span> <!-- 쿠키 개수를 표시하는 배지 -->
+                        </a>
                     </li>
-                    
                 </ul>
             </div>
         </div>
@@ -149,7 +190,6 @@
             <div>
                 <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
                 <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
-                <!-- <a class="btn btn-primary" href="/products" role="button" style="margin-top: 20px;">Try Now</a> -->
                 <button id="btngoMain" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -159,6 +199,5 @@
             </div>
         </div>
     </div>
-
 </body>
 </html>
