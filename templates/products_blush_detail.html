@@ -37,13 +37,14 @@
         border: none;
         overflow: hidden;
         width: 900px; /* 고정 너비 */
-        height: 720px; /* 고정 높이 */
+        height: 740px; /* 고정 높이 */
         display: flex; /* 플렉스 박스 사용 */
         align-items: center; /* 수직 정렬 */
         justify-content: center; /* 수평 정렬 */
         margin: 0 auto; /* 중앙 정렬 */
         flex-direction: column; /* 자식 요소 수직 배치 */
         margin-left:570px;
+        margin-top:-30px;
     }
     
     .video-container {
@@ -59,6 +60,7 @@
         border-radius: 8px; /* 둥근 모서리 */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 */
         margin-left:580px;
+        margin-top:-30px;
     }
     
     #video {
@@ -74,6 +76,7 @@
         font-size: 16px;
         cursor: pointer;
         z-index: 2;
+        margin-top: 10px;
     }
     
     .button-container {
@@ -81,6 +84,7 @@
         gap: 10px;
         justify-content: center;
         margin-top: 10px; /* Ensure buttons are below the image */
+        padding: 10px 20px;
     }
     
     #captured-image {
@@ -193,7 +197,7 @@
                             <video id="video" width="200" height="200" autoplay></video>
                         </div>
                         <div class="image-container">
-                            <img id="captured-image" width="900" height="720" />
+                            <img id="captured-image" width="900" height="690" />
                             <div class="button-container">
                                 <button id="capture">Play</button>
                                 <button id="download" style="margin-top: 10px;">Download Image</button>
