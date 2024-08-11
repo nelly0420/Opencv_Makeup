@@ -43,7 +43,7 @@
         justify-content: center; /* 수평 정렬 */
         margin: 0 auto; /* 중앙 정렬 */
         flex-direction: column; /* 자식 요소 수직 배치 */
-        margin-left:570px;
+        margin-left:250px;
         margin-top:-30px;
     }
     
@@ -59,7 +59,7 @@
         z-index: 1; /* 이미지 위에 위치 */
         border-radius: 8px; /* 둥근 모서리 */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 */
-        margin-left:580px;
+        margin-left:260px;
         margin-top:-30px;
     }
     
@@ -243,6 +243,7 @@
 <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cart.js') }}"></script> <!-- Ensure you link cart.js -->
+<script src="{{ url_for('static', filename='js/queue.js') }}"></script>
 
 <script>
     let intervalId = null;
@@ -266,7 +267,7 @@
             }
         });
     }
-    
+
     // Function to handle video processing and update image
     function makeupvidio(selectedValue) {
         $('.blush-item').removeClass('selected');
@@ -410,6 +411,7 @@
                 $(this).text('Stop');
             }
         });
+
 
         const video = document.getElementById('video');
         navigator.mediaDevices.getUserMedia({ video: true })

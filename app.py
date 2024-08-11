@@ -11,6 +11,8 @@ from util.eyeshadow import apply_eyeshadow
 import dlib
 import json
 import base64
+from datetime import datetime
+
 # Application 정의
 app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되어있음.
 # Socket 정의
@@ -328,7 +330,6 @@ def apply_color_lens_endpoint():
         return buffer.tobytes(), 200
     else:
         return "Method not allowed", 405
-    
-    
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
