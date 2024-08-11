@@ -582,7 +582,7 @@
         "PrdName": "더샘 샘물 싱글 섀도우 쉬머 CR04 매력퐁당 코랄",
         "Manufacturer": "더샘",
         "category": "eyeshadow",
-        "color": "#E58B83",
+        "color": "#E79E8D",
         "option1": "None",
         "option2": "None",
         "price": "4,000원",
@@ -604,25 +604,36 @@
         "PrdName": "미샤 모던 섀도우 105 프롬핑크",
         "Manufacturer": "미샤",
         "category": "eyeshadow",
-        "color": "#E7ABB4",
+        "color": "#EFC7CD",
         "option1": "None",
         "option2": "None",
         "price": "4,000원",
          "imgsrc": "/static/images/product/미샤 모던 섀도우 105 프롬핑크.jpg"
       },
 
-      {"prdCode": "ES0006", "PrdName": "모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카]", "Manufacturer": "더페이스샵", "category": "eyeshadow", "color": "#A77864", "option1": "#D4877C", "option2": "None", "price":"6,500", "imgsrc": "https://unpa.me/_next/image?url=https%3A%2F%2Fassets.unpa.me%2F304206&w=1080&q=75"},
+      {"prdCode": "ES0006", "PrdName": "모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카]", "Manufacturer": "더페이스샵", "category": "eyeshadow", "color": "#9B6C57", "option1": "#D69086", "option2": "None", "price":"6,500", "imgsrc": "/static/images/product/모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카].avif"},
 
       {
         "prdCode": "ES0007",
         "PrdName": "미네랄 모노 섀도우 듀얼 [16호 데어포유]",
         "Manufacturer": "어퓨",
         "category": "eyeshadow",
-        "color": "#8C5F4E",
-        "option1": "#C0896E",
+        "color": "#906351",
+        "option1": "#C6967C",
         "option2": "None",
         "price": "4,000원",
          "imgsrc": "https://unpa.me/_next/image?url=https%3A%2F%2Fassets.unpa.me%2F227286&w=1080&q=75"
+      },
+      {
+        "prdCode": "ES0008",
+        "PrdName": "미네랄 모노 섀도우(듀얼) [12호 라일락슈가]",
+        "Manufacturer": "어퓨",
+        "category": "eyeshadow",
+        "color": "#6E524E",
+        "option1": "#ECD1C8",
+        "option2": "None",
+        "price": "4,000원",
+         "imgsrc": "/static/images/product/미네랄 모노 섀도우(듀얼) 12호 라일락슈가.avif"
       },
 
     {
@@ -659,6 +670,18 @@
         "option2": "None", 
         "price":"36,000", 
         "imgsrc": "/static/images/product/미스티_내츄럴초코.png"
+        },
+        
+      {
+        "prdCode": "LEN003", 
+        "PrdName": "러시안벨벳 블루", 
+        "Manufacturer": "오렌즈", 
+        "category": "lens", 
+        "color": "#4E5F79", 
+        "option1": "None", 
+        "option2": "None", 
+        "price":"20,000", 
+        "imgsrc": "/static/images/product/3e8d7cf3-6c20-45e3-b8f9-df8b4592429fM_러시안벨벳_블루.webp"
         }
     
 ]
