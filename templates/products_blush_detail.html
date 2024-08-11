@@ -215,6 +215,9 @@
                             <div class="button-container">
                                 <button id="capture">Play</button>
                                 <button id="download" style="margin-top: 10px;">Download Image</button>
+                                <!-- 이미지를 표시할 곳 -->
+                                <!-- <img id="displayed-image" src="" alt="Captured Image"/> -->
+
                             </div>
                         </div>
                     </div>
@@ -361,6 +364,97 @@
             event.stopPropagation(); // Prevent further event propagation
         }
 
+        // 큐 인스턴스 생성
+        const queue = new Queue(10); // 큐의 최대 크기 설정
+
+        // 이미지 다운로드 및 장바구니 추가 작업을 큐에 추가하는 함수
+        function enqueueImageAndCartTask(prdCode) {
+            queue.enqueue({
+                type: 'imageAndCart',
+                prdCode: prdCode
+            });
+
+            processQueue(); // 큐를 처리하는 함수 호출
+        }
+
+        // 큐의 작업을 처리하는 함수
+        function processQueue() {
+            if (queue.getQueue().length === 0) return; // 큐가 비어 있으면 종료
+
+            const task = queue.dequeue();
+
+            if (task.type === 'imageAndCart') {
+                addToCartAndDownloadImage(task.prdCode);
+            }
+
+            // 모든 작업이 완료된 후, 추가 작업이 있을 경우 자동으로 처리
+            setTimeout(processQueue, 1000); // 1초마다 큐 작업 처리
+        }
+
+        function addToCartAndDownloadImage(prdCode) {
+            const img = document.getElementById('captured-image');
+            
+            if (!img || !img.src) {
+                console.error('다운로드할 이미지가 없습니다.');
+                return;
+            }
+            
+            // 이미지가 존재할 때 로컬 스토리지에 저장
+            try {
+                localStorage.setItem('lastCapturedImageUrl', img.src);
+                console.log('이미지 URL이 로컬 스토리지에 저장되었습니다.');
+            } catch (error) {
+                console.error('이미지 URL을 저장하는 동안 오류 발생:', error);
+            }
+
+            const link = document.createElement('a');
+            link.href = img.src;
+            link.download = 'captured-image.jpg';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            addToCart(prdCode);
+            displayCapturedImage();  // 이미지 표시
+            
+        }
+
+        function addToCart2(prdCode) {
+            if (!prdCode) {
+                console.error('제품 코드가 없습니다.');
+                return;
+            }
+
+            let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
+            currentCount += 1;
+            localStorage.setItem('cartCount', currentCount);
+            $('#cookie-count').text(currentCount);
+        }
+
+        function displayCapturedImage() {
+            // 로컬 스토리지에서 저장된 이미지 URL을 가져옴
+            const imageUrl = localStorage.getItem('lastCapturedImageUrl');
+            
+            // 이미지 URL이 존재하지 않을 경우 함수 종료
+            if (!imageUrl) {
+                console.error('저장된 이미지 URL이 없습니다.');
+                return;
+            }
+
+            // 이미지를 표시할 HTML 요소를 찾음 (예: img 태그)
+            const imgElement = document.getElementById('displayed-image');
+            
+            if (!imgElement) {
+                console.error('이미지를 표시할 요소를 찾을 수 없습니다.');
+                return;
+            }
+
+            // 이미지 요소의 src 속성에 로컬 스토리지에서 가져온 URL을 할당
+            imgElement.src = imageUrl;
+        }
+
+
     $(document).ready(function() {
         var prd = '{{ prdCode }}';
         if (prd) {
@@ -424,6 +518,21 @@
             link.href = img.src;
             link.download = 'captured-image.jpg';
             link.click();
+        });
+
+        // "Keep" 버튼 클릭 이벤트
+        $('#keep-button').on('click', function(event) {
+            event.stopPropagation(); // 이벤트 전파 방지
+
+            // 제품 코드 추출
+            const prdCode = $(this).closest('.color-button-wrapper').find('input[name="prdCode"]').val();
+            if (!prdCode) {
+                console.error('제품 코드가 없습니다.');
+                return;
+            }
+
+            // 큐에 이미지 다운로드 및 장바구니 추가 작업을 추가
+            enqueueImageAndCartTask(prdCode);
         });
     });
 </script>
