@@ -242,19 +242,19 @@
     // Function to update color buttons based on the selected product
     function updateColorButtons(selectedValue) {
         $('#colorButtons').empty();
-            $.getJSON('/productJSON?category=lipstick&option1=Matte', function (data) {
-                const selectedProduct = data.find(item => item.prdCode === selectedValue);
-                if (selectedProduct) {
-                    $('#colorButtons').append(`
-                        <div class="color-button-wrapper">
-                            <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
-                            <p>${selectedProduct.PrdName}</p>
-                            <p>가격: ${selectedProduct.price}</p>
-                            <p>색상: ${selectedProduct.color}</p>
-                        </div>
-                    `);
-                }
-            });
+        $.getJSON('/productJSON?category=lipstick&option1=Matte', function (data) {
+            const selectedProduct = data.find(item => item.prdCode === selectedValue);
+            if (selectedProduct) {
+                $('#colorButtons').html(`
+                    <div class="color-button-wrapper">
+                        <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
+                        <p>${selectedProduct.PrdName}</p>
+                        <p>가격: ${selectedProduct.price}</p>
+                        <p>색상: ${selectedProduct.color}</p>
+                    </div>
+                `);
+            }
+        });
     }
     
     function makeupvidio(selectedValue){

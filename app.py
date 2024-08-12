@@ -3,7 +3,7 @@ from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit # framework -> Flask, Django, FastAPI
 import cv2
 import numpy as np
-from util.lipstick import apply_lipstick
+from util.lipstick import apply_lipstick, apply_lipstick2
 from util.eyeliner import apply_eyeliner
 from util.blush import apply_blush
 from util.eyebrow import apply_eyebrow
@@ -19,76 +19,88 @@ app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되�
 socketio = SocketIO(app, cors_allowed_origins="*")
 # Initialize dlib's face detector
 detector = dlib.get_frontal_face_detector()
+
 @app.route("/sample")
 def sample():
     return render_template("sample.html")
+
 @socketio.on('connect')
 def handle_connect():
     print('Client connected')
+
 @socketio.on('disconnect')
 def handle_disconnect():
     print('Client disconnected')
-# @socketio.on('samplegray')
-# def handle_image_sample(data):
-#     # byte ->  numpy array
-#     nparr = np.frombuffer(data, np.uint8)
-#     # 버퍼에서 이미지 읽기.
-#     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-#     ##############################################
-#     # Convert image to grayscale
-#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#     # 이미지를 jpeg 로 변환.
-#     _, buffer = cv2.imencode('.jpg', gray)
-#     ##################################################
-#     # base64로 변환.
-#     result_image = base64.b64encode(buffer).decode('utf-8')
-#     # Emit 전송.
-#     emit('processed_image', {'image': result_image})
-@socketio.on('image')
-def handle_image(data):
-    # Decode image from bytes
-    nparr = np.frombuffer(data['image'], np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    # Apply makeup based on the selected option
-    makeup_type = data.get('type')
-    makeup_prdCode = data.get('id')
-    if makeup_type == 'lipstick':
-        print('Applying lipstick...')
-        #img_with_makeup = apply_lipstick(img)#, prdCode) to-be json의 key값을 가져오기
-        #test
-        #prdCode = "L00001"
-        #print("Received id: {makeup_prdCode}")
-        img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
-    elif makeup_type == 'eyeliner':
-        print('Applying eyeliner...')
-        img_with_makeup = apply_eyeliner(img, makeup_prdCode)
-    elif makeup_type == 'blush':
-        print('Applying blush...')
-        img_with_makeup = apply_blush(img, makeup_prdCode)
-    elif makeup_type == 'eyebrow':
-        print('Applying eyebrow...')
-        img_with_makeup = apply_eyebrow(img, makeup_prdCode)
-    elif makeup_type == 'eyeshadow':
-        print('Applying eyeshadow...')
-        img_with_makeup = apply_eyeshadow(img, makeup_prdCode)
-    else:
-        print(f'Unknown makeup type: {makeup_type}')
-        return
-    # Encode image back to bytes and send back to client
-    _, buffer = cv2.imencode('.jpg', img_with_makeup)
+
+@socketio.on('samplegray')
+def handle_image_sample(data):
+    # byte ->  numpy array
+    nparr = np.frombuffer(data, np.uint8)
+    # 버퍼에서 이미지 읽기.
+    #img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)  # 이미지를 원래 품질로 디코딩
+    ##############################################
+    # Convert image to grayscale
+    #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # 립스틱 적용.
+    img_with_makeup = apply_lipstick2(img, "LM0001")
+
+    # 최종적으로 클라이언트로 전송할 때 JPEG로 변환
+    _, buffer = cv2.imencode('.jpg', img_with_makeup, [int(cv2.IMWRITE_JPEG_QUALITY), 85]) #85% 품질.
+    ##################################################
     # base64로 변환.
-    img_rslt = base64.b64encode(buffer).decode('utf-8')
-    emit('processed_image', {'image': img_rslt})
+    result_image = base64.b64encode(buffer).decode('utf-8')
+    # Emit 전송.
+    emit('processed_image', {'image': result_image})
+
+# ---------------------------------------------------------------
+
+# @socketio.on('image')
+# def handle_image(data):
+#     # Decode image from bytes
+#     nparr = np.frombuffer(data['image'], np.uint8)
+#     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#     # Apply makeup based on the selected option
+#     makeup_type = data.get('type')
+#     makeup_prdCode = data.get('id')
+#     if makeup_type == 'lipstick':
+#         print('Applying lipstick...')
+#         img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
+#     elif makeup_type == 'eyeliner':
+#         print('Applying eyeliner...')
+#         img_with_makeup = apply_eyeliner(img, makeup_prdCode)
+#     elif makeup_type == 'blush':
+#         print('Applying blush...')
+#         img_with_makeup = apply_blush(img, makeup_prdCode)
+#     elif makeup_type == 'eyebrow':
+#         print('Applying eyebrow...')
+#         img_with_makeup = apply_eyebrow(img, makeup_prdCode)
+#     elif makeup_type == 'eyeshadow':
+#         print('Applying eyeshadow...')
+#         img_with_makeup = apply_eyeshadow(img, makeup_prdCode)
+#     else:
+#         print(f'Unknown makeup type: {makeup_type}')
+#         return
+#     # Encode image back to bytes and send back to client
+#     _, buffer = cv2.imencode('.jpg', img_with_makeup)
+#     # base64로 변환.
+#     img_rslt = base64.b64encode(buffer).decode('utf-8')
+#     emit('processed_image', {'image': img_rslt})
+
 @app.route("/")
 @app.route("/main")
 def main():
     return render_template("main.html")
+
 @app.route("/products_skin")
 def products_skin():
     return render_template("products_skin.html")
+
 @app.route("/products")
 def products():
     return redirect(url_for('products_skin'))
+    
 @app.route("/about")
 def about():
     return render_template("about.html")

@@ -127,3 +127,74 @@ def apply_lipstick(image, prdCode):
         #final_image = np.where(blurred_contour_mask == np.array([255, 255, 255]), blurred_contour_mask, corrected_lips)
 
         return final_image
+
+def apply_lipstick2(img, prdCode):
+    """
+    Applies lipstick to the face in the given image.
+
+    Parameters:
+    - img: The input image (numpy array).
+    - prdCode: The code for the lipstick color.
+
+    Returns:
+    - The image with lipstick applied (numpy array).
+    """
+    lip_color, option = get_color_from_json(prdCode)
+
+    # 오류가 발생할 경우 기본적으로 원본 이미지를 반환하도록 설정합니다.
+    img_with_lipstick = img.copy()
+    
+    try:
+        # Convert image to RGB (dlib expects RGB images)
+        rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        # Convert image to RGB (if it's RGBA, remove alpha channel)
+        # if img.shape[2] == 4:  # RGBA
+        #     rgb_img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+        # else:
+        #     rgb_img = img  # RGB or grayscale
+
+        # Detect faces in the image
+        faces = detector(rgb_img)
+
+        for face in faces:
+            # Predict facial landmarks
+            landmarks = predictor(rgb_img, face)
+            landmarks = np.array([(p.x, p.y) for p in landmarks.parts()])
+
+            # Define the lip area using landmark points (landmarks 48 to 67)
+            lip_indices = list(range(48, 68))
+            lips = [landmarks[i] for i in lip_indices]
+
+            # Create a mask for the lip region
+            mask = np.zeros_like(img[:, :, 0])
+            lips_points = np.array(lips, np.int32)
+            lips_points = lips_points.reshape((-1, 1, 2))
+            cv2.fillPoly(mask, [lips_points], 255)
+
+            # 이미지가 3차원 배열인지를 확인합니다. 3차원 배열은 일반적으로 (높이, 너비, 채널 수)의 형태를 가집니다.
+            # img.shape[2]는 이미지의 채널 수를 나타냅니다 (예: RGB 이미지의 경우 3, RGBA 이미지의 경우 4).
+            num_channels = img.shape[2] if len(img.shape) == 3 else 1
+
+            # Convert HEX color to RGB
+            # print(lip_color)
+            blue, green, red = lip_color
+
+            # Create the lipstick color (red) with the same number of channels as the image
+            lipstick_color = np.zeros_like(img)
+            lipstick_color[..., 0] = blue  # Blue channel
+            lipstick_color[..., 1] = green  # Green channel
+            lipstick_color[..., 2] = red  # Red channel
+            if num_channels == 4:
+                lipstick_color[..., 3] = 255  # 알파 채널을 255로 설정하여 색상이 완전히 불투명하도록 합니다.
+
+            # Apply lipstick to the lip region
+            img_with_lipstick = cv2.bitwise_and(img, img, mask=cv2.bitwise_not(mask))
+            lipstick_region = cv2.bitwise_and(lipstick_color, lipstick_color, mask=mask)
+            img_with_lipstick += lipstick_region
+            
+    except Exception as e:
+        # Log the error message if needed
+        print(f"Error applying lipstick: {e}")
+
+    return img_with_lipstick

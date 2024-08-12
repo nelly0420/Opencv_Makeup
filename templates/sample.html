@@ -85,11 +85,14 @@
 
         function sendFrames() {
             if (streaming) {
+                //추가.
+                canvas.width = video.videoWidth * 0.80;
+                canvas.height = video.videoHeight * 0.80;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 canvas.toBlob(function(blob) {
-                    socket.emit('samplegray', blob);
-                    setTimeout(sendFrames, 100); //0.1초마다.
-                }, 'image/jpeg');
+                    socket.emit('samplegray', blob); //소켓IO 이벤트명. [samplegray]
+                    setTimeout(sendFrames, 200); //0.2초마다. (5fps)
+                }, 'image/png'); //png 형태로.
             }
         }
     </script>

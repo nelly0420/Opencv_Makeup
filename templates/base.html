@@ -12,6 +12,10 @@
 
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+
+    <!--queue.js  = choi. 2024.08.12 -->
+    <script src="{{ url_for('static', filename='js/queue.js') }}"></script>
+
     <style>
         body, html {
             height: 100%;
@@ -71,66 +75,42 @@
                     $(this).addClass('active');
                 }
             });
-        
-            updateCartCount();
-            showCartItems();
+            
+            //=======================================================================
+            //찜목록 관련 추가 = choi. 2024.08.12
+            //=======================================================================
+            // Queue 인스턴스 생성
+            const myQueue = new Queue(3);
 
-            $('#exampleModal').on('shown.bs.modal', function () {
-                showCartItems();
-            });
-
-            $('#clear-cart').on('click', function() {
-                clearCart();
-            });
-        });
-
-        function updateCartCount() {
-            const cartCount = localStorage.getItem('cartCount') || '0';
-            $('#cookie-count').text(cartCount);
-        }
-
-        function getCartItems() {
-            return JSON.parse(localStorage.getItem('cart')) || [];
-        }
-
-        function showCartItems() {
-            const cartItems = getCartItems();
-            const cartItemsContainer = $('#modal-cart-items');
-            cartItemsContainer.empty();
-
-            if (cartItems.length === 0) {
-                cartItemsContainer.append('<p>Your cart is empty.</p>');
-            } else {
-                cartItems.forEach(item => {
-                    cartItemsContainer.append(`
-                        <div class="cart-item mb-2">
-                            <h5>${item.PrdName}</h5>
-                            <p>Color: ${item.color}</p>
-                            <p>Price: ${item.price}</p>
-                            <p>Quantity: ${item.quantity}</p>
-                            <button class="btn btn-danger btn-sm" onclick="removeFromCart('${item.prdCode}')">Remove</button>
-                        </div>
-                    `);
-                });
+            // 큐 상태를 업데이트하는 함수(테스트용도)
+            function updateQueueDisplay() {
+                $('#queueContent').text(JSON.stringify(myQueue.getQueue(), null, 2));
             }
-        }
 
-        function removeFromCart(prdCode) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart = cart.filter(item => item.prdCode !== prdCode);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            localStorage.setItem('cartCount', cart.length.toString());
-            updateCartCount();
-            showCartItems();
-        }
+            // Enqueue 버튼 클릭 이벤트
+            $('#enqueueBtn').click(function() {
+                const item = prompt('Enter data to enqueue:');
+                if (item) {
+                    myQueue.enqueue(item);
+                    updateQueueDisplay();
+                }
+            });
 
-        function clearCart() {
-            localStorage.removeItem('cart');
-            localStorage.setItem('cartCount', '0');
-            updateCartCount();
-            showCartItems();
-        }
-        
+            // Dequeue 버튼 클릭 이벤트
+            $('#dequeueBtn').click(function() {
+                const item = myQueue.dequeue();
+                if (item) {
+                    alert(`Dequeued: ${item}`);
+                    updateQueueDisplay();
+                } else {
+                    alert('Queue is empty');
+                }
+            });
+
+            // 초기 큐 상태 표시
+            updateQueueDisplay();
+            //=======================================================================
+        });
         
     </script>
 </head>
