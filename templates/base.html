@@ -62,7 +62,7 @@
     <script>
         $(document).ready(function() {
             var currentPageUrl = window.location.pathname;
-
+        
             $('.navbar-nav .nav-link').each(function() {
                 var linkUrl = $(this).attr('href');
                 if (linkUrl === '/' && currentPageUrl === '/') {
@@ -71,14 +71,15 @@
                     $(this).addClass('active');
                 }
             });
-
-            // Initialize cart count and items
+        
             updateCartCount();
             showCartItems();
-            
-            // Attach event handler to clear-cart button
+
+            $('#exampleModal').on('shown.bs.modal', function () {
+                showCartItems();
+            });
+
             $('#clear-cart').on('click', function() {
-                console.log('Clear Cart button clicked'); // Debugging line
                 clearCart();
             });
         });
@@ -115,10 +116,10 @@
         }
 
         function removeFromCart(prdCode) {
-            console.log('Removing item:', prdCode); // Debugging line
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             cart = cart.filter(item => item.prdCode !== prdCode);
             localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('cartCount', cart.length.toString());
             updateCartCount();
             showCartItems();
         }
@@ -129,6 +130,8 @@
             updateCartCount();
             showCartItems();
         }
+        
+        
     </script>
 </head>
 <body>
