@@ -1,51 +1,32 @@
+# blush.py
+
 import cv2
-import dlib
 import numpy as np
+from util.detect import get_landmarks, get_cheek_centers
 from util.utils import get_color_from_json
 
-# dlib 초기화: 얼굴 감지기와 랜드마크 예측기 로드
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-
-blush_alpha = 0.15  # 블러셔 투명도 (0.0 ~ 1.0)
-blush_radius = 35  # 블러셔 적용 반경 (픽셀 단위, 조정 가능)
-blush_offset = -20  # 볼 위치를 위로 이동시키는 오프셋 값 (픽셀 단위)
+blush_alpha = 0.12  # 블러셔 투명도 (0.0 ~ 1.0)
+blush_radius = 45  # 블러셔 적용 반경 (픽셀 단위, 조정 가능)
+blush_offset = -36  # 볼 위치를 위로 이동시키는 오프셋 값 (픽셀 단위)
 x_offset = 5  # 볼 위치를 왼쪽으로 이동시키는 오프셋 값 (픽셀 단위)
-
-def get_cheek_centers(shape, y_offset, x_offset):
-    # 왼쪽과 오른쪽 볼에 해당하는 얼굴 랜드마크 인덱스
-    left_cheek_idxs = [1, 2, 3, 4, 31, 49]
-    right_cheek_idxs = [12, 13, 14, 15, 35, 53]
-    
-    # 왼쪽 볼 중심점 계산
-    left_cheek_x = np.mean([shape.part(i).x for i in left_cheek_idxs]) + x_offset
-    left_cheek_y = np.mean([shape.part(i).y for i in left_cheek_idxs]) + y_offset
-    left_cheek_center = np.array([left_cheek_x, left_cheek_y])
-    
-    # 오른쪽 볼 중심점 계산
-    right_cheek_x = np.mean([shape.part(i).x for i in right_cheek_idxs]) + x_offset
-    right_cheek_y = np.mean([shape.part(i).y for i in right_cheek_idxs]) + y_offset
-    right_cheek_center = np.array([right_cheek_x, right_cheek_y])
-    
-    return left_cheek_center, right_cheek_center
 
 def apply_blush(image, prdCode):
     # 색상 정보를 JSON에서 가져오기
-    blush_color, option = get_color_from_json(prdCode)
+    blush_color, _ = get_color_from_json(prdCode)
 
     # 이미지의 BGR을 BGRA로 변환 (알파 채널 추가)
     image_bgra = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
     
     # 이미지에서 얼굴 감지
-    faces = detector(image, 1)
-    if len(faces) == 0:
+    landmarks = get_landmarks(image)
+    if landmarks is None:
         print("No faces detected.")
         return image
 
-    for k, d in enumerate(faces):
-        # 얼굴 랜드마크 예측
-        shape = predictor(image, d)
-        
+    # 얼굴 랜드마크 예측
+    for face in [landmarks]:  # 현재는 얼굴 하나만 처리
+        shape = landmarks
+
         # 왼쪽과 오른쪽 볼 중심점 계산
         left_cheek_center, right_cheek_center = get_cheek_centers(shape, blush_offset, x_offset)
         
