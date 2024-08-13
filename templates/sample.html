@@ -90,7 +90,7 @@
                 canvas.height = video.videoHeight * 0.80;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 canvas.toBlob(function(blob) {
-                    socket.emit('samplegray', blob); //소켓IO 이벤트명. [samplegray]
+                    socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
                     setTimeout(sendFrames, 200); //0.2초마다. (5fps)
                 }, 'image/png'); //png 형태로.
             }
