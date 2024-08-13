@@ -1,41 +1,131 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <!-- Content -->
-         <!-- Main Title and Description -->
+    <!-- 콘텐츠 -->
+    <!-- 메인 제목과 설명 -->
     <div class="container text-center mt-5">
         <h1 class="title">Augmented <br>Make up</h1>
         <p class="lead" style="font-weight: semi-bold;">제품을 선택해주세요.</p>
     </div>
 
-    <!-- Category Buttons -->
-    <div class="category-buttons d-flex justify-content-center mb-3">
-        <a href="/products_skin" class="btn btn-outline-primary">SKIN</a>
-        <a href="/products_eye" class="btn btn-outline-primary">EYE</a>
-        <a href="/products_lip" class="btn btn-outline-primary">LIP</a>
-        <a href="/products_fashion" class="btn btn-outline-primary">Fashion</a>
-    </div>
-  
+    <!-- 탭 네비게이션 -->
+    <ul class="nav nav-tabs justify-content-center mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="pills-skin-tab" data-bs-toggle="pill" href="#pills-skin" role="tab" aria-controls="pills-skin" aria-selected="true">SKIN</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="pills-eye-tab" data-bs-toggle="pill" href="#pills-eye" role="tab" aria-controls="pills-eye" aria-selected="false">EYE</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="pills-lip-tab" data-bs-toggle="pill" href="#pills-lip" role="tab" aria-controls="pills-lip" aria-selected="false">LIP</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="pills-fashion-tab" data-bs-toggle="pill" href="#pills-fashion" role="tab" aria-controls="pills-fashion" aria-selected="false">Fashion</a>
+        </li>
+    </ul>
 
-        <div class="row justify-content-center">
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/foundation.jpg') }}" class="img-fluid" alt="Lipstick">
-                <h5 class="mt-2">파운데이션&쿠션</h5>
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
-            </div>
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/contouring.jpg') }}" class="img-fluid" alt="Lip Gloss">
-                <h5 class="mt-2">컨투어</h5> 
-                <a class="btn btn-primary" href="/lip_detail" role="button">Try Now</a>
-            </div>
-            <div class="col-md-4 product">
-                <img src="{{ url_for('static', filename='images/blur.jpg') }}" class="img-fluid" alt="Lip Gloss">
-                <h5 class="mt-2">블러셔</h5>
-                <a class="btn btn-primary" href="/products_blush_detail" role="button">Try Now</a>
+    <!-- 탭 콘텐츠 -->
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-skin" role="tabpanel" aria-labelledby="pills-skin-tab">
+            <div class="row justify-content-center">
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/foundation.jpg') }}" class="img-fluid" alt="Foundation">
+                    <h5 class="mt-2">파운데이션&쿠션</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_skin_detail" role="button">Try Now</a>
+                </div>
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/contouring.jpg') }}" class="img-fluid" alt="Contouring">
+                    <h5 class="mt-2">컨투어</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_lip_detail" role="button">Try Now</a>
+                </div>
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/blur.jpg') }}" class="img-fluid" alt="Blush">
+                    <h5 class="mt-2">블러셔</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_blush_detail" role="button">Try Now</a>
+                </div>
             </div>
         </div>
-
+        <div class="tab-pane fade" id="pills-eye" role="tabpanel" aria-labelledby="pills-eye-tab">
+            <!-- Eye products will be listed here -->
+            <div class="row justify-content-center">
+                <!-- Add Eye products here -->
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/eyebrow.jpg') }}" class="img-fluid" alt="eyebrow">
+                    <h5 class="mt-2">아이브로우</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_eyebrow_detail" role="button">Try Now</a>
+                </div>
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/eyeline.jpg') }}" class="img-fluid" alt="eyeliner">
+                    <h5 class="mt-2">아이라이너</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_eyeliner_detail" role="button">Try Now</a>
+                </div>
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/eyeshadow.jpg') }}" class="img-fluid" alt="eyeshadow">
+                    <h5 class="mt-2">아이쉐도우</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_eyeshadow_detail" role="button">Try Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-lip" role="tabpanel" aria-labelledby="pills-lip-tab">
+            <div class="row justify-content-center">
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/lipstick1.jpg') }}" class="img-fluid" alt="Lipstick">
+                    <h5 class="mt-2">매트한 타입</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_lip_detail_matte" role="button">Try Now</a>
+                </div>
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/lipstick2.jpg') }}" class="img-fluid" alt="Lip Gloss">
+                    <h5 class="mt-2">글로시 타입</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_lip_detail_glossy" role="button">Try Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-fashion" role="tabpanel" aria-labelledby="pills-fashion-tab">
+            <!-- Fashion products will be listed here -->
+            <div class="row justify-content-center">
+                <!-- Add Fashion products here -->
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/sunglasses.jpg') }}" class="img-fluid" alt="Lipstick">
+                    <h5 class="mt-2">선글라스</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_sunglasses" role="button">Try Now</a>
+                </div>   
+                <div class="col-md-4 product">
+                    <img src="{{ url_for('static', filename='images/lens.jpg') }}" class="img-fluid" alt="Lipstick">
+                    <h5 class="mt-2">컬러렌즈</h5>
+                    <a class="btn btn-primary btn-custom" href="/products_lens" role="button">Try Now</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- 스타일 추가 -->
+    <style>
+        .nav-tabs .nav-link {
+            color: rgb(39, 60, 171); /* 기본 탭의 텍스트 색상 */
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #000; /* 활성 탭의 텍스트 색상 */
+            background-color: rgb(39, 60, 171); /* 활성 탭의 배경색 */
+            border-color: #e9ecef; /* 활성 탭의 테두리 색상 */
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: rgb(39, 60, 171); /* 호버 상태의 텍스트 색상 */
+            background-color: #e9ecef; /* 호버 상태의 배경색 */
+            border-color: rgb(39, 60, 171); /* 호버 상태의 테두리 색상 */
+        }
+
+        .btn-custom {
+            background-color: rgb(39, 60, 171); /* Try Now 버튼의 배경색 */
+            border-color: rgb(39, 60, 171); /* Try Now 버튼의 테두리 색상 */
+        }
+
+        .btn-custom:hover {
+            background-color: #273cab; /* 호버 시 버튼의 배경색 */
+            border-color: #273cab; /* 호버 시 버튼의 테두리 색상 */
+        }
+    </style>
 
     <script>
         $(document).ready(function() {
@@ -47,4 +137,5 @@
             });
         });
     </script>
+
 {% endblock %}
