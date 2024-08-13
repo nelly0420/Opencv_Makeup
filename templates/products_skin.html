@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
     <!-- 콘텐츠 -->
     <!-- 메인 제목과 설명 -->
     <div class="container text-center mt-5">
@@ -129,11 +131,19 @@
 
     <script>
         $(document).ready(function() {
-            console.log('준비중');
-            $("#homeMenu").click(function(event) {
-                event.preventDefault();
-                console.log('홈클릭');
-                alert("준비중입니다.");
+            // 페이지 로드 시 해시 값에 따라 탭 활성화
+            var hash = window.location.hash;
+            if (hash) {
+                var tabToActivate = $('a[href="' + hash + '"]');
+                if (tabToActivate.length) {
+                    // Bootstrap의 tab 메소드를 사용하여 해당 탭 활성화
+                    tabToActivate.tab('show');
+                }
+            }
+
+            // 탭 클릭 시 URL 해시값 갱신
+            $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.hash;
             });
         });
     </script>
