@@ -12,7 +12,7 @@ x_offset = 5  # 볼 위치를 왼쪽으로 이동시키는 오프셋 값 (픽셀
 
 def apply_blush(image, prdCode):
     # 색상 정보를 JSON에서 가져오기
-    blush_color, _ = get_color_from_json(prdCode)
+    blush_color, _, _ = get_color_from_json(prdCode)
 
     # 이미지의 BGR을 BGRA로 변환 (알파 채널 추가)
     image_bgra = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
