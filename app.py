@@ -57,37 +57,38 @@ def handle_image_sample(data):
 
 # ---------------------------------------------------------------
 
-# @socketio.on('image')
-# def handle_image(data):
-#     # Decode image from bytes
-#     nparr = np.frombuffer(data['image'], np.uint8)
-#     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-#     # Apply makeup based on the selected option
-#     makeup_type = data.get('type')
-#     makeup_prdCode = data.get('id')
-#     if makeup_type == 'lipstick':
-#         print('Applying lipstick...')
-#         img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
-#     elif makeup_type == 'eyeliner':
-#         print('Applying eyeliner...')
-#         img_with_makeup = apply_eyeliner(img, makeup_prdCode)
-#     elif makeup_type == 'blush':
-#         print('Applying blush...')
-#         img_with_makeup = apply_blush(img, makeup_prdCode)
-#     elif makeup_type == 'eyebrow':
-#         print('Applying eyebrow...')
-#         img_with_makeup = apply_eyebrow(img, makeup_prdCode)
-#     elif makeup_type == 'eyeshadow':
-#         print('Applying eyeshadow...')
-#         img_with_makeup = apply_eyeshadow(img, makeup_prdCode)
-#     else:
-#         print(f'Unknown makeup type: {makeup_type}')
-#         return
-#     # Encode image back to bytes and send back to client
-#     _, buffer = cv2.imencode('.jpg', img_with_makeup)
-#     # base64로 변환.
-#     img_rslt = base64.b64encode(buffer).decode('utf-8')
-#     emit('processed_image', {'image': img_rslt})
+@socketio.on('send_image')
+def handle_image(data):
+    # Decode image from bytes
+    nparr = np.frombuffer(data['image'], np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    makeup_type = data['category']
+    makeup_prdCode = data['prdCode']
+    
+    if makeup_type == 'lipstick':
+        print('Applying lipstick...')
+        img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
+    elif makeup_type == 'eyeliner':
+        print('Applying eyeliner...')
+        img_with_makeup = apply_eyeliner(img, makeup_prdCode)
+    elif makeup_type == 'blush':
+        print('Applying blush...')
+        img_with_makeup = apply_blush(img, makeup_prdCode)
+    elif makeup_type == 'eyebrow':
+        print('Applying eyebrow...')
+        img_with_makeup = apply_eyebrow(img, makeup_prdCode)
+    elif makeup_type == 'eyeshadow':
+        print('Applying eyeshadow...')
+        img_with_makeup = apply_eyeshadow(img, makeup_prdCode)
+    else:
+        print(f'Unknown makeup type: {makeup_type}')
+        return
+    # Encode image back to bytes and send back to client
+    _, buffer = cv2.imencode('.jpg', img_with_makeup)
+    # base64로 변환.
+    img_rslt = base64.b64encode(buffer).decode('utf-8')
+    emit('processed_image', {'image': img_rslt})
 
 @app.route("/")
 @app.route("/main")

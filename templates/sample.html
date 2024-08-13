@@ -156,7 +156,7 @@
                         category: "lipstick",  // category
                         prdCode: "LM0001"      // prdCode
                     };
-                    socket.emit('samplelipstick', data);
+                    socket.emit('send_image', data);
                     setTimeout(sendFrames, 200); // 0.2초마다
                 }, 'image/jpeg');
             }
