@@ -445,7 +445,7 @@
       },
     
       {
-        "prdCode": "B00001",
+        "prdCode": "EB001",
         "PrdName": "이니스프리 오토 펜슬 아이브로우 01 블랙",
         "Manufacturer": "이니스프리",
         "category": "eyebrow",
@@ -456,7 +456,7 @@
         "imgsrc": "/static/images/product/이니스프리 오토 펜슬 아이브로우 01 블랙.jpg"
       },
       {
-        "prdCode": "B00002",
+        "prdCode": "EB002",
         "PrdName": "이니스프리 오토 펜슬 아이브로우 02 다크브라운",
         "Manufacturer": "이니스프리",
         "category": "eyebrow",
@@ -467,7 +467,7 @@
          "imgsrc": "/static/images/product/이니스프리 오토 펜슬 아이브로우 02 다크브라운.jpg"
       },
       {
-        "prdCode": "B00003",
+        "prdCode": "EB003",
         "PrdName": "에뛰드하우스 드로잉 아이브로우 펜슬 01 블랙",
         "Manufacturer": "에뛰드하우스",
         "category": "eyebrow",
@@ -478,7 +478,7 @@
         "imgsrc": "/static/images/product/에뛰드하우스 드로잉 아이브로우 펜슬 01 블랙.jpg"
       },
       {
-        "prdCode": "B00004",
+        "prdCode": "EB004",
         "PrdName": "에뛰드하우스 드로잉 아이브로우 펜슬 02 다크브라운",
         "Manufacturer": "에뛰드하우스",
         "category": "eyebrow",
@@ -489,7 +489,7 @@
         "imgsrc": "/static/images/product/에뛰드하우스 드로잉 아이브로우 펜슬 02 다크브라운.jpg"
       },
       {
-        "prdCode": "B00005",
+        "prdCode": "EB005",
         "PrdName": "더샘 오토 아이브로우 펜슬 01 다크브라운",
         "Manufacturer": "더샘",
         "category": "eyebrow",
@@ -500,7 +500,7 @@
          "imgsrc": "/static/images/product/더샘 오토 아이브로우 펜슬 01 다크브라운.jpg"
       },
       {
-        "prdCode": "B00006",
+        "prdCode": "EB006",
         "PrdName": "더샘 오토 아이브로우 펜슬 02 라이트브라운",
         "Manufacturer": "더샘",
         "category": "eyebrow",
@@ -511,7 +511,7 @@
          "imgsrc": "/static/images/product/더샘 오토 아이브로우 펜슬 02 라이트브라운.jpg"
       },
       {
-        "prdCode": "B00007",
+        "prdCode": "EB007",
         "PrdName": "홀리카홀리카 글램 락 아이브로우 02 다크브라운",
         "Manufacturer": "홀리카홀리카",
         "category": "eyebrow",
@@ -522,7 +522,7 @@
          "imgsrc": "/static/images/product/홀리카홀리카 글램 락 아이브로우 02 다크브라운.jpg"
       },
       {
-        "prdCode": "B00008",
+        "prdCode": "EB008",
         "PrdName": "삐아 젤 아이브로우 02 브라운",
         "Manufacturer": "삐아",
         "category": "eyebrow",
@@ -533,7 +533,7 @@
          "imgsrc": "/static/images/product/삐아 젤 아이브로우 02 브라운.jpg"
       },
       {
-        "prdCode": "B00009",
+        "prdCode": "EB009",
         "PrdName": "삐아 젤 아이브로우 01 블랙",
         "Manufacturer": "삐아",
         "category": "eyebrow",
@@ -544,7 +544,7 @@
          "imgsrc": "/static/images/product/삐아 젤 아이브로우 02 브라운.jpg"
       },
       {
-        "prdCode": "B00010",
+        "prdCode": "EB010",
         "PrdName": "에스쁘아 아이브로우 펜슬 01 블랙",
         "Manufacturer": "에스쁘아",
         "category": "eyebrow",
@@ -636,17 +636,54 @@
          "imgsrc": "/static/images/product/미네랄 모노 섀도우(듀얼) 12호 라일락슈가.avif"
       },
 
-    {
-    "prdCode": "SUN001", 
-    "PrdName": "칼 GC8 안경", 
-    "Manufacturer": "젠틀몬스터", 
-    "category": "sunglasses", 
-    "color": "#020100", 
-    "option1": "None", 
-    "option2": "None", 
-    "price":"269,000", 
-    "imgsrc": "/static/images/product/칼 GC8 안경.png"
-    },
+      {
+        "prdCode": "SUN001", 
+        "PrdName": "None", 
+        "Manufacturer": "None", 
+        "category": "sunglasses", 
+        "color": "None", 
+        "option1": "None", 
+        "option2": "None", 
+        "price":"None", 
+        "imgsrc": "/static/images/product/선글라스.png"
+        },
+    
+        {
+          "prdCode": "SUN002", 
+          "PrdName": "트리옹프 04 아세테이트", 
+          "Manufacturer": "셀린느", 
+          "category": "sunglasses", 
+          "color": "None", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"690,000", 
+          "imgsrc": "/static/images/product/셀린느 선글라스.png"
+        },
+
+        {
+          "prdCode": "SUN003", 
+          "PrdName": "MM109 블랙", 
+          "Manufacturer": "젠틀몬스터X메종 마르지엘라", 
+          "category": "sunglasses", 
+          "color": "None", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"368,000", 
+          "imgsrc": "/static/images/product/젠틀몬스터 선글라스.png"
+        },
+
+        {
+          "prdCode": "SUN004", 
+          "PrdName": "레이디 95.22 R2F 라운드 블랙", 
+          "Manufacturer": "디올", 
+          "category": "sunglasses", 
+          "color": "None", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"770,000", 
+          "imgsrc": "/static/images/product/디올 선글라스.png"
+        },
+
 
     {
       "prdCode": "LEN001", 

@@ -29,6 +29,10 @@ def get_eyebrows(landmarks):
     """
     left_eyebrow_points = [ (landmarks.part(i).x, landmarks.part(i).y) for i in range(17, 22) ]
     right_eyebrow_points = [ (landmarks.part(i).x, landmarks.part(i).y) for i in range(22, 27) ]
+
+    right_eyebrow_points = np.array(right_eyebrow_points)
+    left_eyebrow_points = np.array(left_eyebrow_points)
+    
     return left_eyebrow_points, right_eyebrow_points
 
 def get_lip_points(landmarks):
