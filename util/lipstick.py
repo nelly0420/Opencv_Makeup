@@ -54,7 +54,7 @@ def apply_lipstick(image: np.ndarray, prdCode: str) -> np.ndarray:
     final_image = np.where(lips_only == np.array([255, 255, 255]), corrected_lips, image_with_lipstick)
     return final_image
 
-def apply_lipstick2(img, prdCode):
+def apply_lipstick2(detector, predictor, img, prdCode):
     """
     Applies lipstick to the face in the given image.
 
