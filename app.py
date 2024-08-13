@@ -18,9 +18,7 @@ app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되�
 # Socket 정의
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# dlib 초기화
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
 
 @app.route("/sample")
 def sample():
@@ -44,11 +42,10 @@ def handle_image_sample(data):
     ##############################################
     # 아래 부분만 수정.
     ##############################################
-    # Convert image to grayscale
-    #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
     
     # 립스틱 적용.
-    img_with_makeup = apply_lipstick2(detector, predictor, img, "LM0001")
+    img_with_makeup = apply_lipstick( img, "LM0001")
 
     # 최종적으로 클라이언트로 전송할 때 JPEG로 변환
     _, buffer = cv2.imencode('.jpg', img_with_makeup, [int(cv2.IMWRITE_JPEG_QUALITY), 85]) #85% 품질.

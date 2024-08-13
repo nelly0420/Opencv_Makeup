@@ -147,7 +147,7 @@
                 canvas.toBlob(function(blob) {
                     socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
                     setTimeout(sendFrames, 200); //0.2초마다. (5fps)
-                }, 'image/jpeg'); //png 형태로.
+                }, 'image/jpeg'); //jpeg-> png -> jpeg 형태로.
                 
             }
         }
