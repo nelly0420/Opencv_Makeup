@@ -177,197 +177,8 @@
     
 </style>
 
-<div class="container mt-4">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-        aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
-            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">Matte</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
-        </ol>
-    </nav>
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row" style="position:relative;">
-                        <div class="video-container">
-                            <video id="video" width="200" height="200" autoplay></video>
-                        </div>
-                        <div class="image-container">
-                            <img id="captured-image" width="900" height="690" />
-                            <div class="button-container">
-                                <button id="capture">Play</button>
-                                <button id="download" style="margin-top: 10px;">Download Image</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="product-info-section">
-                        <h5 class="product-info-title">상품 정보</h5> 
-                        <hr class="product-info-line">
-                        <div class="blush-carousel mt-3"></div>
-                    </div>
-                    <div class="color-buttons-section mt-4">
-                        <h5 class="color-title">상세 정보</h5> 
-                        <hr class="color-line">
-                        <div class="color-buttons-container" id="colorButtons"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<form id="frmSend" style="display: none;">
-    <input type="hidden" id="prdCode" name="prdCode" value="" />
-</form>
-
-<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
-
-
 <script>
-    let intervalId = null; // intervalId를 전역에서 정의
-    let streaming = false; // streaming 상태를 초기화
-
-
-    // 립스틱 항목 클릭 이벤트를 설정하여 선택된 항목을 강조 표시하고 색상 버튼을 표시합니다.
-    // $(document).on('click', '.blush-item', function () {
-    // Function to update color buttons based on the selected product
-    function updateColorButtons(selectedValue) {
-        $('#colorButtons').empty();
-        $.getJSON('/productJSON?category=lipstick&option1=Matte', function (data) {
-            const selectedProduct = data.find(item => item.prdCode === selectedValue);
-            if (selectedProduct) {
-                $('#colorButtons').html(`
-                    <div class="color-button-wrapper">
-                        <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
-                        <p>${selectedProduct.PrdName}</p>
-                        <p>가격: ${selectedProduct.price}</p>
-                        <p>색상: ${selectedProduct.color}</p>
-                    </div>
-                `);
-            }
-        });
-    }
-    
-    function makeupvidio(selectedValue){
-        // Remove selected class from all blush items
-        $('.blush-item').removeClass('selected');
-        
-        // Add selected class to the clicked item
-        $('.blush-item[data-prdcode="' + selectedValue + '"]').addClass('selected');
-        
-        // Get the product code (prdCode) from the data attribute of the clicked item
-        //var selectedValue = $(this).data('prdcode');
-        
-        // Update the hidden input field with the selected prdCode
-        $("#prdCode").val(selectedValue);
-    
-        // Check if a product is selected
-        if (!selectedValue) {
-            alert("제품을 선택해주세요!");
-            return false;
-        }
-    
-        console.log('Selected product code:', selectedValue); // Log the selected product code
-    
-        // Display color buttons section
-        console.log('상세정보 출력');
-        $('.color-buttons-section').show();
-    
-        // Update color buttons based on the selected product
-        updateColorButtons(selectedValue);
-    
-        // Start live video processing
-        if (intervalId !== null) {
-            clearInterval(intervalId); // Clear any existing interval
-        }
-        intervalId = setInterval(function() {
-            live(selectedValue);
-        }, 100);
-        streaming = true; // Set streaming to true
-    }
-    // });
-    function live(prdCode) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataURL = canvas.toDataURL('image/jpeg');
-        console.log('Captured data URL:', dataURL);
-        const blob = dataURItoBlob(dataURL);
-        const formData = new FormData();
-        formData.append('image', blob, 'capture.jpg');
-        formData.append('prdCode', prdCode);
-        console.log('FormData:', formData);
-        fetch('/apply_lipstick', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.blob();
-        })
-        .then(blob => {
-            const imgUrl = URL.createObjectURL(blob);
-            $('#captured-image').attr('src', imgUrl);
-            console.log('Image applied successfully');
-        })
-        .catch(error => {
-            console.error('Error applying blush:', error);
-        });
-    }
-
-    // Function to convert Data URI to Blob
-    function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([ab], { type: mimeString });
-        }    
-
-    function autoclick(prd){
-        const selectedItem = $('.blush-item[data-prdcode='+ prd +']');
-        
-        if (selectedItem.length > 0) {
-            const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
-            console.log('SlickGoTo index:', slickIndex);
-            $('.blush-carousel').slick('slickGoTo', slickIndex, true);
-            console.log('Triggering click on:', selectedItem); // 클릭을 트리거하려는 항목 확인
-            //selectedItem.trigger('click'); // 클릭 이벤트 강제 발생
-            makeupvidio(prd);
-
-            // 선택된 항목에 .selected 클래스 추가
-            // $('.blush-item').removeClass('selected'); // 모든 항목의 선택 해제
-            // selectedItem.addClass('selected'); // 클릭된 항목에 선택 추가
-        }
-    }    
-    //--------------------------------------------------------------------------
     $(document).ready(function () {
-        
-        var prd = '{{ prdCode }}' ;
-
-
-        if (prd) {
-            console.log('prdCode:', prd); // prdCode가 있을 경우 출력
-        } else {
-            console.log('prdCode가  없습니다.');
-        }
-    
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
         $.getJSON('/productJSON?category=lipstick&option1=Matte', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
@@ -375,23 +186,22 @@
             // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
             data.forEach(item => {
                 $('.blush-carousel').append(`
-                    <div class="blush-item" onclick=" makeupvidio('${item.prdCode}')" data-color="${item.color}" data-prdcode="${item.prdCode}">
-                        <img src="${item.imgsrc}" alt="${item.PrdName}">
-                        <h5>${item.PrdName}</h5>
-                        <p>${item.price}</p>
-                        <button class="color-circle" style="background-color:${item.color};"></button>
-                        
+                    <div class="card border-secondary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">${item.PrdName}</div>
+                        <div class="card-body text-secondary">
+                            <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
+                            <p>${item.price}</p>
+                            <input type="button" class="btn color-circle" style="background-color:${item.color};" value="${item.prdCode}"/>
+                        </div>
                     </div>
+
+
                 `);
             });
     
-             // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+            // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
             $('.blush-carousel').on('init', function() {
                 console.log('Slick initialized'); // Slick 초기화 확인
-
-                
-
-
             }).slick({
                 infinite: true,
                 slidesToShow: 3,
@@ -403,63 +213,130 @@
             //3.강제 이동 & 강제 선택.
             /* 강제 이동 & 강제 선택 */
 
-            setTimeout(function() {
-                autoclick(prd);
-            }, 1000); // 1초 지연 후 선택
+            // setTimeout(function() {
+            //     autoclick(prd);
+            // }, 1000); // 1초 지연 후 선택
 
         }); //End of getJson
+    });//End of ready
+</script>
 
+<div class="container mt-4">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:black !important;">Lip</a></li>
+            <li class="breadcrumb-item"><a href="/products_lip" style="color:gray !important;">Matte</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
+        </ol>
+    </nav>
+</div>
 
-        
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <video id="video" width="400" height="300" autoplay playsinline ></video>
+        </div>
+        <div class="col-2">
+            <button id="playButton" class="btn btn-primary mt-3" style="position: absolute;left: 318px;">Play</button>
+        </div>
+        <div class="col-8">
+            <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+            <img id="processedImage" class="mt-3" width="400" height="300" />
+        </div>
+    </div>
     
-        $('#capture').on('click', function() {
-            if (streaming) {
-                clearInterval(intervalId);
-                intervalId = null;
-                streaming = false;
-                $(this).text('Play');
-            } else {
-                if (intervalId !== null) {
-                    clearInterval(intervalId);
-                }
-                intervalId = setInterval(() => live($("#prdCode").val()), 100);
-                streaming = true;
-                $(this).text('Stop');
-            }
+    <!-- 상품정보 리스트 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="blush-carousel mt-3"></div>
+        </div>
+    </div>
+    
+</div>
+
+
+
+<form id="frmSend" style="display: none;">
+    <input type="hidden" id="prdCode" name="prdCode" value="" />
+</form>
+
+<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    
+    const processedImage = document.getElementById('processedImage');
+    let streaming = false;
+    let socket;
+
+    // Get user media
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Error accessing media devices.', error);
         });
-    
-        // 사용자 미디어 장치에서 비디오를 가져와 설정합니다.
-        // const video = document.getElementById('video');
-        // const socket = io('http://localhost:5000');
-    
-        // navigator.mediaDevices.getUserMedia({ video: true })
-        //     .then(function (stream) {
-        //         video.srcObject = stream;
-        //     })
-        //     .catch(function (err) {
-        //         console.log("An error occurred: " + err);
-        //     });
 
-        // Initialize video stream
-        const video = document.getElementById('video');
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => video.srcObject = stream)
-            .catch(err => console.error("An error occurred: ", err));
-
-         // Handle download button click
-        $('#download').on('click', function() {
-            const img = document.getElementById('captured-image');
-            const link = document.createElement('a');
-            link.href = img.src;
-            link.download = 'captured-image.jpg';
-            link.click();
-        });
-    
-        
-    
-        
+    $('#playButton').on('click', function() {
+        if (!streaming) {
+            startStreaming();
+        } else {
+            stopStreaming();
+        }
     });
-    
+
+    function startStreaming() {
+        //socket = io.connect('http://localhost:5000');
+        socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+        socket.on('connect', function() {
+            console.log("Connected...!", socket.connected);
+            alert('WebSocket connection!!!');
+            playButton.textContent = 'Stop';
+            playButton.classList.remove('btn-primary');
+            playButton.classList.add('btn-danger');
+            streaming = true;
+            sendFrames();
+        });
+
+        socket.on('processed_image', function(data) {
+            processedImage.src = 'data:image/jpeg;base64,' + data.image;
+        });
+
+        socket.on('disconnect', function() {
+            alert('WebSocket disconnect !!!');
+            stopStreaming();
+        });
+    }
+
+    function stopStreaming() {
+        if (socket) {
+            socket.disconnect();
+        }
+        playButton.textContent = 'Play';
+        playButton.classList.remove('btn-danger');
+        playButton.classList.add('btn-primary');
+        streaming = false;
+    }
+
+    function sendFrames() {
+        if (streaming) {
+            //추가.
+            canvas.width = video.videoWidth * 0.75;
+            canvas.height = video.videoHeight * 0.75;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(function(blob) {
+                socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
+                setTimeout(sendFrames, 200); //0.2초마다. (5fps)
+            }, 'image/jpeg'); //jpeg-> png -> jpeg 형태로.
+            
+        }
+    }
 </script>
 
 {% endblock %} 
