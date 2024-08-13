@@ -2,80 +2,65 @@ import cv2
 import dlib
 import numpy as np
 from util.utils import get_color_from_json
+from util.detect import get_landmarks, get_eyebrows
 
-def add_intermediate_points(points):
-    detailed_points = []
-    for i in range(len(points) - 1):
-        detailed_points.append(points[i])
-        # 중간점 추가
-        mid_point = ((points[i][0] + points[i + 1][0]) // 2, (points[i][1] + points[i + 1][1]) // 2)
-        detailed_points.append(mid_point)
-    detailed_points.append(points[-1])
-
-
-    return np.array(detailed_points, dtype=np.int32)
-
-def transform_to_right_angle_trapezoid(points):
-    # y 값을 오른쪽 끝에서 왼쪽 끝으로 선형적으로 감소시키되, 중간에서 원래 값으로 돌아옴
-    x_coords = points[:, 0]
-    y_coords = points[:, 1]
-    n = len(y_coords)
+# 특정 포인트의 위치 조정
+def adjust_point(points, target_index, x_index, y_index):
     
-    # 선형적으로 감소시키되 끝부분에서 원래 값으로 돌아오게 함
-    y_coords_trapezoid = np.copy(y_coords)
-    mid_index = n // 2
-    for i in range(mid_index):
-        y_coords_trapezoid[i] = y_coords[i] - (y_coords[i] - y_coords[-1]) * (i / mid_index)
+    # 대상 포인트를 복사합니다
+    target_point = points[target_index].copy()
     
-    transformed_points = np.vstack((x_coords, y_coords_trapezoid)).T
-    return transformed_points.astype(np.int32)
+    # 참조 포인트로부터 새로운 x와 y 좌표를 가져옵니다
+    new_x = points[x_index][0]
+    new_y = points[y_index][1]
+    
+    # 대상 포인트의 x와 y 좌표를 업데이트합니다
+    target_point[0] = new_x
+    target_point[1] = new_y
+    
+    # 업데이트된 포인트를 배열에 다시 할당합니다
+    points[target_index] = target_point
+    
+    return points
 
 
-transparency = 0.5
 def apply_eyebrow(image, prdCode):
-    bgr_color, option1 = get_color_from_json(prdCode)
-
-    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    detector = dlib.get_frontal_face_detector()    
-    # 우리만의 행렬 곱하기
+    brow_color, option = get_color_from_json(prdCode)
+    landmarks = get_landmarks(image)
     
-    faces = detector(gray)
-
-    for face in faces:
-        shape = predictor(gray, face)
-        
-        left_eyebrow_points = []
-        for i in range(17, 22): 
-            x = shape.part(i).x
-            y = shape.part(i).y
-            left_eyebrow_points.append((x, y))
-
-        right_eyebrow_points = []
-        for i in range(22, 27):
-            x = shape.part(i).x
-            y = shape.part(i).y
-            right_eyebrow_points.append((x, y))
-
-        right_eyebrow_points = np.array(right_eyebrow_points)
-        left_eyebrow_points = np.array(left_eyebrow_points)
-
-        move_up = np.array([0, -5])
-        left_eyebrow_points += move_up
-        right_eyebrow_points += move_up
-
-        #left_eyebrow_points = add_intermediate_points(left_eyebrow_points)
-        #right_eyebrow_points = add_intermediate_points(right_eyebrow_points)
-        right_eyebrow_points = transform_to_right_angle_trapezoid(right_eyebrow_points)
-
-        mask = np.zeros_like(image)
-        cv2.fillPoly(mask, [left_eyebrow_points], bgr_color)
-        cv2.fillPoly(mask, [right_eyebrow_points], bgr_color)
-
-        # 투명도 조절
-        image_with_eyebrows = cv2.addWeighted(image, 1.0, mask, transparency, 0.0)
+    if landmarks is None:
+        print("No faces detected.")
+        return image
     
+    # nparray 형태
+    left_eyebrow_points, right_eyebrow_points = get_eyebrows(landmarks)
+
+    # move_up = np.array([0, -5])
+    # left_eyebrow_points += move_up
+    # right_eyebrow_points += move_up
+
+    # 눈썹 앞머리 조정
+    left_eyebrow_points = adjust_point(left_eyebrow_points, 3, 4, 2)
+    right_eyebrow_points = adjust_point(right_eyebrow_points, 1, 0, 2)
+
+    mask = np.zeros_like(image)
+
+    cv2.fillPoly(mask, [left_eyebrow_points], brow_color)
+    cv2.fillPoly(mask, [right_eyebrow_points], brow_color)
+
+    contour_mask = np.zeros_like(image)
+    gray_mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+    contours, _ = cv2.findContours(gray_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    cv2.drawContours(contour_mask, contours, -1, brow_color, 1)
+    eyebrow_liner = cv2.GaussianBlur(contour_mask, (21, 21), 0)
+    eyebrow_liner = cv2.GaussianBlur(eyebrow_liner, (15, 15), 0)
+    
+    blurred_mask = cv2.GaussianBlur(mask, (21, 21), 4)
+
+    image_with_eyebrows = cv2.addWeighted(image, 1, blurred_mask, 0.5, 0)
+    image_with_eyebrows = cv2.addWeighted(image_with_eyebrows, 1, eyebrow_liner, 0.7, 0)
+    
+
     return image_with_eyebrows
-
 
