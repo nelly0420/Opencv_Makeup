@@ -144,11 +144,21 @@
                 canvas.width = video.videoWidth * 0.75;
                 canvas.height = video.videoHeight * 0.75;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                canvas.toBlob(function(blob) {
-                    socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
-                    setTimeout(sendFrames, 200); //0.2초마다. (5fps)
-                }, 'image/jpeg'); //jpeg-> png -> jpeg 형태로.
+                // canvas.toBlob(function(blob) {
+                //     socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
+                //     setTimeout(sendFrames, 200); //0.2초마다. (5fps)
+                // }, 'image/jpeg'); //jpeg-> png -> jpeg 형태로.
                 
+                canvas.toBlob(function(blob) {
+                    // 데이터를 객체로 만들어서 전송
+                    const data = {
+                        image: blob,
+                        category: "lipstick",  // category
+                        prdCode: "LM0001"      // prdCode
+                    };
+                    socket.emit('samplelipstick', data);
+                    setTimeout(sendFrames, 200); // 0.2초마다
+                }, 'image/jpeg');
             }
         }
     </script>
