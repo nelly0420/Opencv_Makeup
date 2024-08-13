@@ -32,13 +32,15 @@ def handle_connect():
 def handle_disconnect():
     print('Client disconnected')
 
-@socketio.on('samplegray')
+@socketio.on('samplelipstick')
 def handle_image_sample(data):
     # byte ->  numpy array
     nparr = np.frombuffer(data, np.uint8)
     # 버퍼에서 이미지 읽기.
     #img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)  # 이미지를 원래 품질로 디코딩
+    ##############################################
+    # 아래 부분만 수정.
     ##############################################
     # Convert image to grayscale
     #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
