@@ -76,36 +76,49 @@
                 }
             });
             
-            // 페이지 로드 시 해시 값에 따라 탭 활성화
-            var hash = window.location.hash;
-            if (hash) {
-                var tabToActivate = $('a[href="' + hash + '"]');
-                if (tabToActivate.length) {
-                    tabToActivate.tab('show');
+           // 페이지 로드 시 해시 값에 따라 탭 활성화
+            function activateTabFromHash() {
+                var hash = window.location.hash;
+                if (hash) {
+                    // 해시에서 '#pills-skin' 등만 추출
+                    var cleanHash = hash.split('#')[1];
+                    var tabToActivate = $('a[href="#' + cleanHash + '"]');
+                    if (tabToActivate.length) {
+                        tabToActivate.tab('show');
+                    }
                 }
             }
+            
+            // 초기 페이지 로드 시 탭 활성화
+            activateTabFromHash();
 
             // 드롭다운 아이템 클릭 시 해당 탭 활성화
             $('.dropdown-item').on('click', function(event) {
                 event.preventDefault();  // 기본 링크 클릭 동작 방지
-                var targetHash = $(this).attr('href');
+                var targetHash = $(this).attr('href').split('#')[1];
                 if (targetHash) {
+                    var newHash = '#' + targetHash;
                     // 페이지 URL을 해시로 업데이트
-                    window.location.hash = targetHash;
+                    if (window.location.hash !== newHash) {
+                        window.location.hash = newHash;
+                    }
                     // 해당 탭을 활성화
-                    var tabToActivate = $('a[href="' + targetHash + '"]');
+                    var tabToActivate = $('a[href="' + newHash + '"]');
                     if (tabToActivate.length) {
                         tabToActivate.tab('show');
+                        // 드롭다운 닫기
+                        var dropdownToggle = $(this).closest('.dropdown-menu').prev('.dropdown-toggle');
+                        dropdownToggle.dropdown('hide');
                     }
-                    // 드롭다운 닫기
-                    var dropdownToggle = $(this).closest('.dropdown-menu').prev('.dropdown-toggle');
-                    dropdownToggle.dropdown('hide');
                 }
             });
 
             // 탭 클릭 시 URL 해시값 갱신
             $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
-                window.location.hash = e.target.hash;
+                var newHash = e.target.hash;
+                if (window.location.hash !== newHash) {
+                    window.location.hash = newHash;
+                }
             });
 
             //=======================================================================
