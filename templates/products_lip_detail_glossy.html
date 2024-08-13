@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,12 +14,16 @@
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
     <script>
+        let streaming = false;
+        let socket;
+        let selectedPrdCode = "LG0001";  // 상품코드 첫번째 상품
+
         $(document).ready(function () {
-            // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
+            // Fetch JSON data and populate carousel
             $.getJSON('/productJSON?category=lipstick&option1=Glossy', function (data) {
-                console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
-        
-                // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
+                console.log(data); // Log the data for debugging
+                
+                // Populate the carousel with product information
                 data.forEach(item => {
                     $('.blush-carousel').append(`
                         <div class="card border-secondary mb-3" style="max-width: 18rem;">
@@ -24,34 +31,80 @@
                             <div class="card-body text-secondary">
                                 <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
                                 <p>${item.price}</p>
-                                <input type="button" class="btn color-circle" style="background-color:${item.color};" value="${item.prdCode}"/>
+                                <input type="button" class="btn color-circle" style="background-color:${item.color};" value="${item.prdCode}" data-color="${item.color}" data-prdcode="${item.prdCode}"/>
                             </div>
                         </div>
-
-
                     `);
                 });
         
-                // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+                // Initialize the Slick carousel
                 $('.blush-carousel').on('init', function() {
-                    console.log('Slick initialized'); // Slick 초기화 확인
+                    console.log('Slick initialized');
                 }).slick({
                     infinite: true,
                     slidesToShow: 3,
                     slidesToScroll: 1,
                     dots: true,
                     arrows: true
-                }); 
-                
-                //3.강제 이동 & 강제 선택.
-                /* 강제 이동 & 강제 선택 */
+                });
 
-                // setTimeout(function() {
-                //     autoclick(prd);
-                // }, 1000); // 1초 지연 후 선택
+                // Color button click event
+                $('.blush-carousel').on('click', '.color-circle', function() {
+                    const selectedColor = $(this).data('color');
+                    selectedPrdCode = $(this).data('prdcode');  // Update selected product code
+                    console.log('Selected Color:', selectedColor);
+                    console.log('Selected Product Code:', selectedPrdCode);
 
-            }); //End of getJson
-        });//End of ready
+                    
+                });
+            });
+        });
+
+        function startStreaming() {
+            socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+            socket.on('connect', function() {
+                console.log("Connected...!", socket.connected);
+                alert('WebSocket connection!!!');
+                $('#playButton').text('Stop').removeClass('btn-primary').addClass('btn-danger');
+                streaming = true;
+                sendFrames();
+            });
+
+            socket.on('processed_image', function(data) {
+                processedImage.src = 'data:image/jpeg;base64,' + data.image;
+            });
+
+            socket.on('disconnect', function() {
+                alert('WebSocket disconnect !!!');
+                stopStreaming();
+            });
+        }
+
+        function stopStreaming() {
+            if (socket) {
+                socket.disconnect();
+            }
+            $('#playButton').text('Play').removeClass('btn-danger').addClass('btn-primary');
+            streaming = false;
+        }
+
+        function sendFrames() {
+            if (streaming) {
+                canvas.width = video.videoWidth * 0.75;
+                canvas.height = video.videoHeight * 0.75;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob(function(blob) {
+                    const data = {
+                        image: blob,
+                        category: "lipstick",
+                        prdCode: selectedPrdCode  // Use the selected product code
+                    };
+                    socket.emit('send_image', data);
+                    setTimeout(sendFrames, 200); // 0.2 seconds interval
+                }, 'image/jpeg');
+            }
+        }
+        
     </script>
 
 </head>
@@ -59,7 +112,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-2">
-                <video id="video" width="400" height="300" autoplay playsinline ></video>
+                <video id="video" width="400" height="300" autoplay playsinline></video>
             </div>
             <div class="col-2">
                 <button id="playButton" class="btn btn-primary mt-3" style="position: absolute;left: 318px;">Play</button>
@@ -83,10 +136,7 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
-        
         const processedImage = document.getElementById('processedImage');
-        let streaming = false;
-        let socket;
 
         // Get user media
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -104,64 +154,8 @@
                 stopStreaming();
             }
         });
-
-        function startStreaming() {
-            //socket = io.connect('http://localhost:5000');
-            socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
-            socket.on('connect', function() {
-                console.log("Connected...!", socket.connected);
-                alert('WebSocket connection!!!');
-                playButton.textContent = 'Stop';
-                playButton.classList.remove('btn-primary');
-                playButton.classList.add('btn-danger');
-                streaming = true;
-                sendFrames();
-            });
-
-            socket.on('processed_image', function(data) {
-                processedImage.src = 'data:image/jpeg;base64,' + data.image;
-            });
-
-            socket.on('disconnect', function() {
-                alert('WebSocket disconnect !!!');
-                stopStreaming();
-            });
-        }
-
-        function stopStreaming() {
-            if (socket) {
-                socket.disconnect();
-            }
-            playButton.textContent = 'Play';
-            playButton.classList.remove('btn-danger');
-            playButton.classList.add('btn-primary');
-            streaming = false;
-        }
-
-        function sendFrames() {
-            if (streaming) {
-                //추가.
-                canvas.width = video.videoWidth * 0.75;
-                canvas.height = video.videoHeight * 0.75;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                // canvas.toBlob(function(blob) {
-                //     socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
-                //     setTimeout(sendFrames, 200); //0.2초마다. (5fps)
-                // }, 'image/jpeg'); //jpeg-> png -> jpeg 형태로.
-                
-                canvas.toBlob(function(blob) {
-                    // 데이터를 객체로 만들어서 전송
-                    const data = {
-                        image: blob,
-                        category: "lipstick",  // category
-                        prdCode: "LM0001"      // prdCode
-                    };
-                    socket.emit('send_image', data);
-                    setTimeout(sendFrames, 200); // 0.2초마다
-                }, 'image/jpeg');
-            }
-        }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
 </body>
 </html>
+{% endblock %}

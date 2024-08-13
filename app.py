@@ -65,10 +65,11 @@ def handle_image(data):
 
     makeup_type = data['category']
     makeup_prdCode = data['prdCode']
+    option1 = data.get('option1', None)  # 옵션 추가
     
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
-        img_with_makeup = apply_lipstick(img, makeup_prdCode) #to-be json의 key값을 가져오기
+        img_with_makeup = apply_lipstick(img, makeup_prdCode,option1) #to-be json의 key값을 가져오기
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
         img_with_makeup = apply_eyeliner(img, makeup_prdCode)
@@ -156,7 +157,7 @@ def products_lip():
 def lip_detail_matte(prdCode):
     if prdCode is None:
         return render_template("products_lip_detail_matte.html")
-    return render_template("products_lip_detail_matte.html", category='lipstick', prdCode=prdCode)
+    return render_template("products_lip_detail_matte.html", category='lipstick', option1='Matte', prdCode=prdCode)
 
 
 @app.route("/products_lip_detail_glossy/", defaults={'prdCode': None})
@@ -164,7 +165,7 @@ def lip_detail_matte(prdCode):
 def lip_detail_glossy(prdCode):
     if prdCode is None:
         return render_template("products_lip_detail_glossy.html")
-    return render_template("products_lip_detail_glossy.html", category='lipstick', prdCode=prdCode)
+    return render_template("products_lip_detail_glossy.html", category='lipstick', option1='Glossy', prdCode=prdCode)
 
 @app.route("/products_fashion")
 def products_fashion():

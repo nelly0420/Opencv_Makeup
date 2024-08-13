@@ -12,7 +12,7 @@ def gamma_correction(src: np.ndarray, gamma: float, coefficient: int = 1.2):
     dst = (dst * 255).astype('uint8')
     return dst
 
-def apply_lipstick(image: np.ndarray, prdCode: str) -> np.ndarray:
+def apply_lipstick(image: np.ndarray, prdCode: str, option: str) -> np.ndarray:
     lip_color, option, _ = get_color_from_json(prdCode)
     
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
