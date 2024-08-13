@@ -1,540 +1,167 @@
-{% extends "base.html" %}
-{% block content %}
-<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Capture and WebSocket</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
 
-<style>
-    /* General button styling */
-    .color-btn {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin: 5px;
-        border: none;
-        display: inline-block;
-    }
-    
-    .color-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: left;
-    }
-    
-    .color-line {
-        border-top: 2px solid #000;
-        margin: 10px 0;
-        width: 70%;
-    }
-    
-    .breadcrumb-item a {
-        font-size: 1.3rem;
-        font-weight: bold;
-        opacity: 0.6;
-    }
-    
-    .image-container {
-        position: relative; /* 자식 요소의 위치 기준 */
-        border: none;
-        overflow: hidden;
-        width: 900px; /* 고정 너비 */
-        height: 740px; /* 고정 높이 */
-        display: flex; /* 플렉스 박스 사용 */
-        align-items: center; /* 수직 정렬 */
-        justify-content: center; /* 수평 정렬 */
-        margin: 0 auto; /* 중앙 정렬 */
-        flex-direction: column; /* 자식 요소 수직 배치 */
-        margin-left:250px;
-        margin-top:-30px;
-    }
-    
-    .video-container {
-        position: absolute; /* 이미지 컨테이너 내 절대 위치 */
-        top: 0; /* 상단에 위치 */
-        left: 0; /* 좌측에 위치 */
-        width: 200px; /* 고정 너비 */
-        height: 200px; /* 고정 높이 */
-        display: flex; /* 플렉스 박스 사용 */
-        justify-content: center; /* 수평 정렬 */
-        align-items: center; /* 수직 정렬 */
-        z-index: 1; /* 이미지 위에 위치 */
-        border-radius: 8px; /* 둥근 모서리 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 */
-        margin-left:260px;
-        margin-top:-30px;
-    }
-    
-    #video {
-        width: 100%;
-        object-fit: cover;
-    }
-    
-    #capture, #download {
-        background-color: #007BFF;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        z-index: 2;
-        margin-top: 10px;
-    }
-    
-    .button-container {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px; /* Ensure buttons are below the image */
-        padding: 10px 20px;
-    }
-    
-    #captured-image {
-        width: 100%;
-        border-radius: 8px;
-    }
-    
-    .blush-item {
-        padding: 15px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #fff;
-        text-align: center;
-        width: 200px;
-        height: 200px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .blush-item img {
-        max-width: 100%;
-        max-height: 150px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
-    
-    .blush-item h5 {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        font-size: 0.8rem;
-        text-align: center;
-    }
-    
-    .blush-item.selected {
-        background-color: rgba(0, 123, 255, 0.2);
-    }
-    
-    .slick-prev:before,
-    .slick-next:before {
-        color: black;
-    }
-    
-    .blush-carousel {
-        width: 95%; /* Full width within container */
-        height: 100%; /* Constrain width to prevent overflow */
-    }
-    
-    .color-buttons-section {
-        margin-top: 10px; /* 간격 줄이기 */
-        padding-top: 10px; /* 패딩 줄이기 */
-        padding-left:150px;
-    }
-    
-    .color-button-wrapper {
-        text-align: left;
-        margin-bottom: 50px;
-        margin-right: 15px;
-    }
-    
-    .color-button-wrapper p {
-        margin: 0;
-    }
-    
-    .product-info-section {
-        margin-top: 10px; /* 간격 줄이기 */
-        margin-bottom: 10px; /* 간격 줄이기 */
-        padding-bottom: 10px; /* 패딩 줄이기 */
-        margin-right: 10px;
-        padding-left:150px;
-    }
-    
-    .product-info-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: left;
-    }
-    
-    .product-info-line {
-        border-top: 2px solid #000;
-        margin: 10px 0;
-        width: 70%;
-    }
-
-    .keep-button {
-        background-color:#007BFF;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        font-size: 14px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    .keep-button:hover {
-        background-color: #273cab;
-    }
-</style>
-
-<div class="container mt-4">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-        aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/products_skin" style="color:black !important;">SKIN</a></li>
-            <li class="breadcrumb-item"><a href="/products_skin" style="color:gray !important;">Blush</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
-        </ol>
-    </nav>
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row" style="position:relative;">
-                        <div class="video-container">
-                            <video id="video" width="200" height="200" autoplay></video>
-                        </div>
-                        <div class="image-container">
-                            <img id="captured-image" width="900" height="690" />
-                            <div class="button-container">
-                                <button id="capture">Play</button>
-                                <button id="download" style="margin-top: 10px;">Download Image</button>
-                                <!-- 이미지를 표시할 곳 -->
-                                <!-- <img id="displayed-image" src="" alt="Captured Image"/> -->
-
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
+            $.getJSON('/productJSON?category=blush', function (data) {
+                console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
+        
+                // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
+                data.forEach(item => {
+                    $('.blush-carousel').append(`
+                        <div class="card border-secondary mb-3" style="max-width: 18rem;">
+                            <div class="card-header">${item.PrdName}</div>
+                            <div class="card-body text-secondary">
+                                <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
+                                <p>${item.price}</p>
+                                <input type="button" class="btn color-circle" style="background-color:${item.color};" value="${item.prdCode}"/>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="product-info-section">
-                        <h5 class="product-info-title">상품 정보</h5> 
-                        <hr class="product-info-line">
-                        <div class="blush-carousel mt-3"></div>
-                    </div>
-                    <div class="color-buttons-section mt-4">
-                        <h5 class="color-title">상세 정보</h5> 
-                        <hr class="color-line">
-                        <div class="color-buttons-container" id="colorButtons"></div>
-                    </div>
-                </div>
+
+
+                    `);
+                });
+        
+                // Slick 라이브러리를 이용해 립스틱 캐러셀을 설정합니다.
+                $('.blush-carousel').on('init', function() {
+                    console.log('Slick initialized'); // Slick 초기화 확인
+                }).slick({
+                    infinite: true,
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    dots: true,
+                    arrows: true
+                }); 
+                
+                //3.강제 이동 & 강제 선택.
+                /* 강제 이동 & 강제 선택 */
+
+                // setTimeout(function() {
+                //     autoclick(prd);
+                // }, 1000); // 1초 지연 후 선택
+
+            }); //End of getJson
+        });//End of ready
+    </script>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2">
+                <video id="video" width="400" height="300" autoplay playsinline ></video>
+            </div>
+            <div class="col-2">
+                <button id="playButton" class="btn btn-primary mt-3" style="position: absolute;left: 318px;">Play</button>
+            </div>
+            <div class="col-8">
+                <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+                <img id="processedImage" class="mt-3" width="400" height="300" />
             </div>
         </div>
+        
+        <!-- 상품정보 리스트 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="blush-carousel mt-3"></div>
+            </div>
+        </div>
+        
     </div>
-</div>
 
-<form id="frmSend" style="display: none;">
-    <input type="hidden" id="prdCode" name="prdCode" value="" />
-</form>
-
-<script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/cart.js') }}"></script> <!-- Ensure you link cart.js -->
-<script src="{{ url_for('static', filename='js/queue.js') }}"></script>
-
-<script>
-    let intervalId = null;
-    let streaming = false;
-
-    // Function to update color buttons based on selected product
-    function updateColorButtons(selectedValue) {
-        $('#colorButtons').empty();
-        $.getJSON('/productJSON?category=blush', function(data) {
-            const selectedProduct = data.find(item => item.prdCode === selectedValue);
-            if (selectedProduct) {
-                $('#colorButtons').append(`
-                    <div class="color-button-wrapper">
-                        <button class="color-btn" style="background-color:${selectedProduct.color};"></button>
-                        <p>${selectedProduct.PrdName}</p>
-                        <p>가격: ${selectedProduct.price}</p>
-                        <p>색상: ${selectedProduct.color}</p>
-                        <button class="keep-button" onclick="addToCart('${selectedProduct.prdCode}'); event.stopPropagation();">Keep</button>
-                    </div>
-                `);
-            }
-        });
-    }
-
-    // Function to handle video processing and update image
-    function makeupvidio(selectedValue) {
-        $('.blush-item').removeClass('selected');
-        $('.blush-item[data-prdcode="' + selectedValue + '"]').addClass('selected');
-        $("#prdCode").val(selectedValue);
-    
-        if (!selectedValue) {
-            alert("제품을 선택해주세요!");
-            return false;
-        }
-    
-        console.log('Selected product code:', selectedValue);
-        $('.color-buttons-section').show();
-        updateColorButtons(selectedValue);
-    
-        if (intervalId !== null) {
-            clearInterval(intervalId);
-        }
-        intervalId = setInterval(() => live(selectedValue), 100);
-        streaming = true;
-    }
-    
-    // Function to process live image from video
-    function live(prdCode) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataURL = canvas.toDataURL('image/jpeg');
-        const blob = dataURItoBlob(dataURL);
-        const formData = new FormData();
-        formData.append('image', blob, 'capture.jpg');
-        formData.append('prdCode', prdCode);
-
-        fetch('/apply_blush', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.blob();
-        })
-        .then(blob => {
-            const imgUrl = URL.createObjectURL(blob);
-            $('#captured-image').attr('src', imgUrl);
-        })
-        .catch(error => {
-            console.error('Error applying blush:', error);
-        });
-    }
-
-    function dataURItoBlob(dataURI) {
-        const byteString = atob(dataURI.split(',')[1]);
-        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        return new Blob([ab], { type: mimeString });
-    }
-
-    // Function to handle auto-click functionality in carousel
-    function autoclick(prd) {
-        const selectedItem = $('.blush-item[data-prdcode=' + prd + ']');
-        if (selectedItem.length > 0) {
-            const slickIndex = selectedItem.closest('.slick-slide').data('slick-index');
-            $('.blush-carousel').slick('slickGoTo', slickIndex, true);
-            makeupvidio(prd);
-        }
-    }
-
-    // Add to Cart and update count
-        function addToCart(prdCode) {
-            if (!prdCode) {
-                console.error('Product code is missing');
-                return;
-            }
-
-            let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
-            currentCount += 1;
-            localStorage.setItem('cartCount', currentCount);
-            $('#cookie-count').text(currentCount);
-        }
-
-        function addToCartAndPreventEventPropagation(prdCode) {
-            addToCart(prdCode);
-            event.stopPropagation(); // Prevent further event propagation
-        }
-
-        // 큐 인스턴스 생성
-        const queue = new Queue(10); // 큐의 최대 크기 설정
-
-        // 이미지 다운로드 및 장바구니 추가 작업을 큐에 추가하는 함수
-        function enqueueImageAndCartTask(prdCode) {
-            queue.enqueue({
-                type: 'imageAndCart',
-                prdCode: prdCode
-            });
-
-            processQueue(); // 큐를 처리하는 함수 호출
-        }
-
-        // 큐의 작업을 처리하는 함수
-        function processQueue() {
-            if (queue.getQueue().length === 0) return; // 큐가 비어 있으면 종료
-
-            const task = queue.dequeue();
-
-            if (task.type === 'imageAndCart') {
-                addToCartAndDownloadImage(task.prdCode);
-            }
-
-            // 모든 작업이 완료된 후, 추가 작업이 있을 경우 자동으로 처리
-            setTimeout(processQueue, 1000); // 1초마다 큐 작업 처리
-        }
-
-        function addToCartAndDownloadImage(prdCode) {
-            const img = document.getElementById('captured-image');
-            
-            if (!img || !img.src) {
-                console.error('다운로드할 이미지가 없습니다.');
-                return;
-            }
-            
-            // 이미지가 존재할 때 로컬 스토리지에 저장
-            try {
-                localStorage.setItem('lastCapturedImageUrl', img.src);
-                console.log('이미지 URL이 로컬 스토리지에 저장되었습니다.');
-            } catch (error) {
-                console.error('이미지 URL을 저장하는 동안 오류 발생:', error);
-            }
-
-            const link = document.createElement('a');
-            link.href = img.src;
-            link.download = 'captured-image.jpg';
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            addToCart(prdCode);
-            displayCapturedImage();  // 이미지 표시
-            
-        }
-
-        function addToCart2(prdCode) {
-            if (!prdCode) {
-                console.error('제품 코드가 없습니다.');
-                return;
-            }
-
-            let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
-            currentCount += 1;
-            localStorage.setItem('cartCount', currentCount);
-            $('#cookie-count').text(currentCount);
-        }
-
-        function displayCapturedImage() {
-            // 로컬 스토리지에서 저장된 이미지 URL을 가져옴
-            const imageUrl = localStorage.getItem('lastCapturedImageUrl');
-            
-            // 이미지 URL이 존재하지 않을 경우 함수 종료
-            if (!imageUrl) {
-                console.error('저장된 이미지 URL이 없습니다.');
-                return;
-            }
-
-            // 이미지를 표시할 HTML 요소를 찾음 (예: img 태그)
-            const imgElement = document.getElementById('displayed-image');
-            
-            if (!imgElement) {
-                console.error('이미지를 표시할 요소를 찾을 수 없습니다.');
-                return;
-            }
-
-            // 이미지 요소의 src 속성에 로컬 스토리지에서 가져온 URL을 할당
-            imgElement.src = imageUrl;
-        }
-
-
-    $(document).ready(function() {
-        var prd = '{{ prdCode }}';
-        if (prd) {
-            console.log('prdCode:', prd);
-        } else {
-            console.log('prdCode가 없습니다.');
-        }
-
-        $.getJSON('/productJSON?category=blush', function(data) {
-            data.forEach(item => {
-                $('.blush-carousel').append(`
-                    <div class="blush-item" onclick="makeupvidio('${item.prdCode}')" data-color="${item.color}" data-prdcode="${item.prdCode}">
-                        <img src="${item.imgsrc}" alt="${item.PrdName}">
-                        <h5>${item.PrdName}</h5>
-                        <p>${item.price}</p>
-                        <button class="color-circle" style="background-color:${item.color};"></button>
-                    </div>
-                `);
-            });
-
-            $('.blush-carousel').slick({
-                infinite: true,
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                dots: true,
-                arrows: true
-            }).on('afterChange', function(event, slick, currentSlide) {
-                console.log('Slide changed to:', currentSlide);
-            });
-
-            setTimeout(function() {
-                autoclick(prd);
-            }, 1000);
-        });
-
-        $('#capture').on('click', function() {
-            if (streaming) {
-                clearInterval(intervalId);
-                intervalId = null;
-                streaming = false;
-                $(this).text('Play');
-            } else {
-                if (intervalId !== null) {
-                    clearInterval(intervalId);
-                }
-                intervalId = setInterval(() => live($("#prdCode").val()), 100);
-                streaming = true;
-                $(this).text('Stop');
-            }
-        });
-
-
+    <script>
         const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        
+        const processedImage = document.getElementById('processedImage');
+        let streaming = false;
+        let socket;
+
+        // Get user media
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => video.srcObject = stream)
-            .catch(err => console.error("An error occurred: ", err));
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing media devices.', error);
+            });
 
-        $('#download').on('click', function() {
-            const img = document.getElementById('captured-image');
-            const link = document.createElement('a');
-            link.href = img.src;
-            link.download = 'captured-image.jpg';
-            link.click();
-        });
-
-        // "Keep" 버튼 클릭 이벤트
-        $('#keep-button').on('click', function(event) {
-            event.stopPropagation(); // 이벤트 전파 방지
-
-            // 제품 코드 추출
-            const prdCode = $(this).closest('.color-button-wrapper').find('input[name="prdCode"]').val();
-            if (!prdCode) {
-                console.error('제품 코드가 없습니다.');
-                return;
+        $('#playButton').on('click', function() {
+            if (!streaming) {
+                startStreaming();
+            } else {
+                stopStreaming();
             }
-
-            // 큐에 이미지 다운로드 및 장바구니 추가 작업을 추가
-            enqueueImageAndCartTask(prdCode);
         });
-    });
-</script>
 
-{% endblock %}
+        function startStreaming() {
+            //socket = io.connect('http://localhost:5000');
+            socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+            socket.on('connect', function() {
+                console.log("Connected...!", socket.connected);
+                alert('WebSocket connection!!!');
+                playButton.textContent = 'Stop';
+                playButton.classList.remove('btn-primary');
+                playButton.classList.add('btn-danger');
+                streaming = true;
+                sendFrames();
+            });
+
+            socket.on('processed_image', function(data) {
+                processedImage.src = 'data:image/jpeg;base64,' + data.image;
+            });
+
+            socket.on('disconnect', function() {
+                alert('WebSocket disconnect !!!');
+                stopStreaming();
+            });
+        }
+
+        function stopStreaming() {
+            if (socket) {
+                socket.disconnect();
+            }
+            playButton.textContent = 'Play';
+            playButton.classList.remove('btn-danger');
+            playButton.classList.add('btn-primary');
+            streaming = false;
+        }
+
+        function sendFrames() {
+            if (streaming) {
+                //추가.
+                canvas.width = video.videoWidth * 0.75;
+                canvas.height = video.videoHeight * 0.75;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                // canvas.toBlob(function(blob) {
+                //     socket.emit('samplelipstick', blob); //소켓IO 이벤트명. [samplelipstick]
+                //     setTimeout(sendFrames, 200); //0.2초마다. (5fps)
+                // }, 'image/jpeg'); //jpeg-> png -> jpeg 형태로.
+                
+                canvas.toBlob(function(blob) {
+                    // 데이터를 객체로 만들어서 전송
+                    const data = {
+                        image: blob,
+                        category: "blush",  // category
+                        prdCode: "LM0001"      // prdCode
+                    };
+                    socket.emit('send_image', data);
+                    setTimeout(sendFrames, 200); // 0.2초마다
+                }, 'image/jpeg');
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+</body>
+</html>
