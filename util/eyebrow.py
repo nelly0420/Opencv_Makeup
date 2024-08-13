@@ -25,7 +25,7 @@ def adjust_point(points, target_index, x_index, y_index):
 
 
 def apply_eyebrow(image, prdCode):
-    brow_color, option = get_color_from_json(prdCode)
+    brow_color, option,_ = get_color_from_json(prdCode)
     landmarks = get_landmarks(image)
     
     if landmarks is None:

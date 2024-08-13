@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Products</title>
+    <style>
+
+    /* 사이드바 전체 레이아웃 */
+    .sidebar-only-layout {
+        display: flex;
+        height: 100vh;
+        justify-content: flex-end; /* 화면의 오른쪽 끝에 배치 */
+        margin-top: -50px; /* 모든 방향의 여백을 제거 */
+        margin-right: -11px;
+        padding: 0; /* 모든 방향의 여백을 제거 */
+    }
+
+    /* 사이드바 스타일 */
+    .sidebar {
+        background-color: #98A8DD; /* 이미지의 파란색 톤 */
+        width: 300px;
+        padding: 20px; /* 사이드바 내의 패딩은 유지 */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* 사이드바 내용을 위쪽에 정렬 */
+        margin: -30; /* 모든 방향의 여백을 제거 */
+    }
+
+
+
+        /* 사이드바의 제목 스타일 */
+        .sidebar h2 {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        /* 각 제품 옵션 박스 스타일 */
+        .product-option {
+            background-color: #F0F0F0; /* 회색 박스 */
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* 제품 이미지 스타일 */
+        .product-option img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        /* 쓰레기통 버튼 스타일 */
+        .trash-button {
+            background-color: #00274D; /* 진한 파란색 버튼 */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar-only-layout">
+        <div class="sidebar">
+            <h2>제품 선택</h2>
+            <div id="product-queue">
+                <!-- 로컬 스토리지에서 가져온 제품이 여기에 추가됩니다 -->
+            </div>
+            <div class="sidebar-bottom">
+                <button class="trash-button">🗑️</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 로컬 스토리지에서 데이터 가져오기
+        function getStoredProducts() {
+            return JSON.parse(localStorage.getItem('products')) || [];
+        }
+
+        // 제품을 큐 형식으로 화면에 출력
+        function displayProductQueue(products) {
+            const queueContainer = document.getElementById('product-queue');
+            queueContainer.innerHTML = '';  // 컨테이너 비우기
+
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.classList.add('product-option');
+
+                productElement.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <p>${product.name}</p>
+                `;
+
+                queueContainer.appendChild(productElement);
+            });
+        }
+
+        // 페이지 로드 시
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedProducts = getStoredProducts();
+            displayProductQueue(storedProducts);
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

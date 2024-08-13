@@ -52,7 +52,7 @@ def apply_eyeliner(image, prdCode):
         numpy.array: 아이라인이 적용된 이미지
     """
     # 색상 정보를 JSON에서 가져오기
-    eyeline_color, _ = get_color_from_json(prdCode)
+    eyeline_color, _ , _ = get_color_from_json(prdCode)
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # 이미지의 회색조 변환
     faces = detector(gray, 0)  # 얼굴 감지

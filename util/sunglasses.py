@@ -4,7 +4,7 @@ import numpy as np
 from util.utils import get_color_from_json
 
 def apply_sunglasses(image, prdCode):
-    color, option = get_color_from_json(prdCode)
+    color, option,_ = get_color_from_json(prdCode)
     finalimg = image.copy()
     
     # Load dlib's face detector and shape predictor

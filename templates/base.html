@@ -76,6 +76,38 @@
                 }
             });
             
+            // 페이지 로드 시 해시 값에 따라 탭 활성화
+            var hash = window.location.hash;
+            if (hash) {
+                var tabToActivate = $('a[href="' + hash + '"]');
+                if (tabToActivate.length) {
+                    tabToActivate.tab('show');
+                }
+            }
+
+            // 드롭다운 아이템 클릭 시 해당 탭 활성화
+            $('.dropdown-item').on('click', function(event) {
+                event.preventDefault();  // 기본 링크 클릭 동작 방지
+                var targetHash = $(this).attr('href');
+                if (targetHash) {
+                    // 페이지 URL을 해시로 업데이트
+                    window.location.hash = targetHash;
+                    // 해당 탭을 활성화
+                    var tabToActivate = $('a[href="' + targetHash + '"]');
+                    if (tabToActivate.length) {
+                        tabToActivate.tab('show');
+                    }
+                    // 드롭다운 닫기
+                    var dropdownToggle = $(this).closest('.dropdown-menu').prev('.dropdown-toggle');
+                    dropdownToggle.dropdown('hide');
+                }
+            });
+
+            // 탭 클릭 시 URL 해시값 갱신
+            $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.hash;
+            });
+
             //=======================================================================
             //찜목록 관련 추가 = choi. 2024.08.12
             //=======================================================================
@@ -128,8 +160,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/products">Products</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                            <li><a class="dropdown-item" href="/products_skin#pills-skin">SKIN</a></li>
+                            <li><a class="dropdown-item" href="/products_skin#pills-eye">EYE</a></li>
+                            <li><a class="dropdown-item" href="/products_skin#pills-lip">LIP</a></li>
+                            <li><a class="dropdown-item" href="/products_skin#pills-fashion">Fashion</a></li>
+                        </ul>
+                        
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>

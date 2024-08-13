@@ -7,14 +7,12 @@ eyeshadow_alpha = 0.7  # 아이섀도우의 투명도 설정 (0.0 ~ 1.0)
 
 def apply_eyeshadow(image, prdCode):
     # 색상 정보 얻기
-    bgr_color, option1 = get_color_from_json(prdCode)
-    print(f"Primary color (BGR): {bgr_color}, Option1 color (Hex): {option1}")
-
+    bgr_color, _, option2 = get_color_from_json(prdCode)
+    # print(f"Primary color (BGR): {bgr_color}, Option1 color (Hex): {option2}")
     bgr_color2 = None
-    if option1 != "None":
-        option1 = option1.lstrip('#')
-        rgb_color2 = tuple(int(option1[i:i+2], 16) for i in (0, 2, 4))  # Hex to RGB
-        bgr_color2 = (rgb_color2[2], rgb_color2[1], rgb_color2[0])  # RGB to BGR
+    if option2 != "None":
+        option2 = option2.lstrip('#')
+        bgr_color2 = tuple(int(option2[i:i+2], 16) for i in (4, 2, 0))  # Hex to RGB
         print(f"Option1 color (BGR): {bgr_color2}")
 
     # 이미지 그레이스케일로 변환

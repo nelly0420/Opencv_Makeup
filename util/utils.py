@@ -9,14 +9,16 @@ def get_color_from_json(prdCode):
     match_row = df[df['prdCode'] == prdCode]
     if not match_row.empty:
         info = match_row[['color', 'option1', 'option2']]
-        print(info)
+        #print(info)
 
         hex_color = info['color'].values[0].lstrip('#')
         new_color = tuple(int(hex_color[i:i+2], 16) for i in (4, 2, 0)) # BGR로 변환
         option1 = info['option1'].values[0]
+        option2 = info['option2'].values[0]
     else:
         print(f"No Matching prdCode: {prdCode}")
         new_color = (0, 0, 0)
         option1 = None
+        option2 = None
     
-    return new_color, option1 
+    return new_color, option1, option2 
