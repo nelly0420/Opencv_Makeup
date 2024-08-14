@@ -66,22 +66,23 @@ def handle_image(data):
     makeup_type = data['category']
     makeup_prdCode = data['prdCode']
     option1 = data.get('option1', None)  # 옵션 추가
+    color = data['color']
     
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
-        img_with_makeup = apply_lipstick(img, makeup_prdCode,option1) #to-be json의 key값을 가져오기
+        img_with_makeup = apply_lipstick(img, makeup_prdCode,option1,color) #to-be json의 key값을 가져오기
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
-        img_with_makeup = apply_eyeliner(img, makeup_prdCode)
+        img_with_makeup = apply_eyeliner(img, makeup_prdCode,color)
     elif makeup_type == 'blush':
         print('Applying blush...')
-        img_with_makeup = apply_blush(img, makeup_prdCode)
+        img_with_makeup = apply_blush(img, makeup_prdCode,color)
     elif makeup_type == 'eyebrow':
         print('Applying eyebrow...')
-        img_with_makeup = apply_eyebrow(img, makeup_prdCode)
+        img_with_makeup = apply_eyebrow(img, makeup_prdCode,color)
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
-        img_with_makeup = apply_eyeshadow(img, makeup_prdCode)
+        img_with_makeup = apply_eyeshadow(img, makeup_prdCode,color)
     else:
         print(f'Unknown makeup type: {makeup_type}')
         return

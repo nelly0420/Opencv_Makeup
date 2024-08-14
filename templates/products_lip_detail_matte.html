@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -16,7 +15,8 @@
     <script>
         let streaming = false;
         let socket;
-        let selectedPrdCode = "LM0001";  // 상품코드 첫번째 상품
+        let selectedPrdCode = "LM0001";  // Initial product code
+        let selectedColor = "#ffffff";  // Default color
 
         $(document).ready(function () {
             // Fetch JSON data and populate carousel
@@ -38,9 +38,7 @@
                 });
         
                 // Initialize the Slick carousel
-                $('.blush-carousel').on('init', function() {
-                    console.log('Slick initialized');
-                }).slick({
+                $('.blush-carousel').slick({
                     infinite: true,
                     slidesToShow: 3,
                     slidesToScroll: 1,
@@ -50,13 +48,17 @@
 
                 // Color button click event
                 $('.blush-carousel').on('click', '.color-circle', function() {
-                    const selectedColor = $(this).data('color');
+                    selectedColor = $(this).data('color');
                     selectedPrdCode = $(this).data('prdcode');  // Update selected product code
                     console.log('Selected Color:', selectedColor);
                     console.log('Selected Product Code:', selectedPrdCode);
-
-                    
                 });
+            });
+
+            // Color picker change event
+            $('#colorPicker').on('input', function() {
+                selectedColor = $(this).val();
+                console.log('Selected Color from Picker:', selectedColor);
             });
         });
 
@@ -97,16 +99,15 @@
                     const data = {
                         image: blob,
                         category: "lipstick",
-                        prdCode: selectedPrdCode  // Use the selected product code
+                        prdCode: selectedPrdCode,  // Use the selected product code
+                        color: selectedColor        // Use the selected color
                     };
                     socket.emit('send_image', data);
                     setTimeout(sendFrames, 200); // 0.2 seconds interval
                 }, 'image/jpeg');
             }
         }
-        
     </script>
-
 </head>
 <body>
     <div class="container-fluid">
@@ -123,13 +124,20 @@
             </div>
         </div>
         
-        <!-- 상품정보 리스트 -->
+        <!-- Color Picker -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <label for="colorPicker">Pick a color for the lipstick:</label>
+                <input type="color" id="colorPicker" value="#ffffff" />
+            </div>
+        </div>
+
+        <!-- Product Info List -->
         <div class="row">
             <div class="col-12">
                 <div class="blush-carousel mt-3"></div>
             </div>
         </div>
-        
     </div>
 
     <script>
@@ -158,4 +166,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
 </body>
 </html>
+
 {% endblock %}
