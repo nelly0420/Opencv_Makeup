@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1 class="title">Augmented <br>Make up</h1>
+   
     <p class="lead" style="font-weight: bold;">About</p>
     <style>
         .poster {
             text-align: center;
-            margin-top: -20px; /* Adjust this value as needed to move the poster up */
+            margin-top: -20px;
         }
         .poster img {
             max-width: 100%;
             margin-top: 10px;
             height: auto;
-            width: 40%; /* Adjust the width as needed */
+            width: 40%;
         }
         .features {
-            text-align: left; /* Aligns the features list to the right */
-            padding: 15px; /* Adds padding around the features section */
-            margin-top: 20px; /* Adds margin to the top of the features section */
+            text-align: left;
+            padding: 15px;
+            margin-top: 20px;
         }
         .features ul {
             list-style-type: none;
-            padding-right: 0; /* Removes padding from the right side */
+            padding-right: 0;
         }
         .features ul li {
             margin-bottom: 0.7rem;
@@ -30,6 +30,39 @@
             font-size: 1rem;
             margin-bottom: 5px;
             padding-left: 15px;
+            line-height: 1.6; /* 텍스트 간격 조정 */
+        }
+        .team-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .team-member {
+            text-align: center;
+            width: 23%; /* 네 개의 사진이 나란히 배치되도록 너비 설정 */
+        }
+        .team-member img {
+            width: 100%;
+            height: auto;
+        }
+        .team-member p {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .social-buttons a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .github-button {
+            background-color: #333;
+        }
+        .instagram-button {
+            background-color: #E4405F;
         }
     </style>
     <div class="content container">
@@ -38,27 +71,57 @@
                 <h2 class="features">Virtual Makeup App Using OpenCV And Dlib</h2>
                 <div class="description-container">
                     <p class="project-description">
-                        This project leverages OpenCV and Dlib to create a virtual makeup application that allows users to apply lipstick, blush, eyeliner, and eyeshadow to their photos.
+                        이 프로젝트는 OpenCV와 Dlib을 활용하여 실시간 영상에서 얼굴 랜드마크를 감지하고, 다양한 메이크업을 자연스럽게 적용할 수 있는 가상 메이크업 애플리케이션입니다. 
                     </p>
                     <p class="project-description">
-                        The application uses facial landmark detection to accurately place makeup on the appropriate facial regions.
+                        사용자는 립스틱, 블러쉬, 아이라이너, 아이섀도 등 다양한 색상과 스타일을 선택할 수 있으며, 웹캠을 통해 실시간으로 메이크업을 시도하고 최종 결과물을 이미지로 
+                    </p>
+                    <p class="project-description">
+                        저장해 원하는 제품 목록과 함께 비교해볼 수 있습니다.
                     </p>
                 </div>
-                <div class="features">
-                    <h3>Features</h3>
-                    <ul>
-                        <li>Lipstick Application: Apply Different Shades Of Lipstick.</li>
-                        <li>Blush Application: Add Blush To The Cheeks With Various Colors.</li>
-                        <li>Eyeliner: Customize Eyeliner Styles And Colors.</li>
-                        <li>Eyeshadow: Apply Eyeshadow With Options For Multiple Colors And Gradients.</li>
-                        <li>Real-Time Makeup: Apply Makeup In Real-Time Using A Webcam Feed.</li>
-                        <li>Save Results: Save The Final Makeup-Applied Image.</li>
-                    </ul>
+            </div>
+        </div>
+        <div class="team-container">
+            <div class="team-member">
+                <img src="/static/images/product/러브샤인 워터샤인 립스틱 211 알덴트 카민.jpg" alt="팀원 1 사진">
+                <p>멘토. 최재철</p>
+                <div class="social-buttons">
+                    <a href="https://github.com/your_github_profile" target="_blank" class="github-button">GitHub</a>
+                    <a href="https://www.instagram.com/your_instagram_profile" target="_blank" class="instagram-button">Instagram</a>
                 </div>
             </div>
-            <div class="col-md-4 poster">
-                <img src="{{ url_for('static', filename='images/poster.png') }}" alt="Augmented Make Up Poster">
-                <p>Made By. Team [동글레]</p>
+            <div class="team-member">
+                <img src="/static/images/product/러브샤인 워터샤인 립스틱 211 알덴트 카민.jpg" alt="팀원 2 사진">
+                <p>팀장. 조희선</p>
+                <div class="social-buttons">
+                    <a href="https://github.com/your_github_profile" target="_blank" class="github-button">GitHub</a>
+                    <a href="https://www.instagram.com/your_instagram_profile" target="_blank" class="instagram-button">Instagram</a>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="/static/images/product/러브샤인 워터샤인 립스틱 211 알덴트 카민.jpg" alt="팀원 2 사진">
+                <p>팀원. 조희진</p>
+                <div class="social-buttons">
+                    <a href="https://github.com/your_github_profile" target="_blank" class="github-button">GitHub</a>
+                    <a href="https://www.instagram.com/your_instagram_profile" target="_blank" class="instagram-button">Instagram</a>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="/static/images/product/러브샤인 워터샤인 립스틱 211 알덴트 카민.jpg" alt="팀원 3 사진">
+                <p>팀원. 우수정</p>
+                <div class="social-buttons">
+                    <a href="https://github.com/your_github_profile" target="_blank" class="github-button">GitHub</a>
+                    <a href="https://www.instagram.com/your_instagram_profile" target="_blank" class="instagram-button">Instagram</a>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="/static/images/product/러브샤인 워터샤인 립스틱 211 알덴트 카민.jpg" alt="팀원 4 사진">
+                <p>팀원. 양서은</p>
+                <div class="social-buttons">
+                    <a href="https://github.com/your_github_profile" target="_blank" class="github-button">GitHub</a>
+                    <a href="https://www.instagram.com/your_instagram_profile" target="_blank" class="instagram-button">Instagram</a>
+                </div>
             </div>
         </div>
     </div>
@@ -73,9 +136,3 @@
         });
     </script>
 {% endblock %}
-
-
-
-
-
-
