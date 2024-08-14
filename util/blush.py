@@ -4,7 +4,7 @@ from util.detect import get_landmarks, get_cheek_centers
 from util.utils import get_color_from_json
 
 blush_alpha = 0.12  # Blush transparency (0.0 to 1.0)
-blush_radius = 45  # Blush application radius (in pixels, adjustable)
+blush_radius = 38  # Blush application radius (in pixels, adjustable)
 blush_offset = -36  # Offset to move the blush position upwards (in pixels)
 x_offset = 5  # Offset to move the blush position leftwards (in pixels)
 
