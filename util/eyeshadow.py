@@ -3,68 +3,72 @@ import numpy as np
 from util.detect import get_landmarks, get_eye_points, create_shifted_points, add_intermediate_points, expand_points
 from util.utils import get_color_from_json
 
-eyeshadow_alpha = 0.7  # 아이섀도우의 투명도 설정 (0.0 ~ 1.0)
+eyeshadow_alpha = 0.7  # Opacity of the eyeshadow (0.0 to 1.0)
 
-def apply_eyeshadow(image, prdCode):
-    # 색상 정보 얻기
+def hex_to_bgr(hex_color: str) -> tuple:
+    """Convert HEX color code to BGR color format."""
+    rgb = tuple(int(hex_color[i:i+2], 16) for i in (1, 3, 5))  # Skip the '#'
+    return (rgb[2], rgb[1], rgb[0])  # Convert RGB to BGR
+
+def apply_eyeshadow(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
+    """
+    Apply eyeshadow to the image using specified product code and color.
+
+    :param image: Input image (BGR format)
+    :param prdCode: Product code to fetch color from JSON
+    :param color: HEX color code for eyeshadow
+    :return: Image with applied eyeshadow
+    """
+    # Get primary color from JSON and convert HEX to BGR
     bgr_color, _, option2 = get_color_from_json(prdCode)
-    # print(f"Primary color (BGR): {bgr_color}, Option1 color (Hex): {option2}")
+    bgr_color = hex_to_bgr(color)
+    
     bgr_color2 = None
-    if option2 != "None":
+    if option2 and option2 != "None":
         option2 = option2.lstrip('#')
-        bgr_color2 = tuple(int(option2[i:i+2], 16) for i in (4, 2, 0))  # Hex to RGB
-        print(f"Option1 color (BGR): {bgr_color2}")
+        bgr_color2 = hex_to_bgr(option2)
 
-    # 이미지 그레이스케일로 변환
+    # Convert image to grayscale and detect landmarks
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     landmarks = get_landmarks(image)
-
+    
     if landmarks is None:
         print("No faces detected.")
         return image
 
-    # 랜드마크 점 추출
-    def get_landmark_points(landmarks):
-        return np.array([(landmarks.part(i).x, landmarks.part(i).y) for i in range(68)])
+    landmarks = np.array([(landmarks.part(i).x, landmarks.part(i).y) for i in range(68)])
 
-    landmarks = get_landmark_points(landmarks)
-
-    # 랜드마크 36-39 (왼쪽 눈)과 42-45 (오른쪽 눈)를 사용하여 반달 모양 생성
+    # Extract points for left and right eyes
     left_eye_indices = range(36, 40)
     right_eye_indices = range(42, 46)
-
+    
     left_eye_points = landmarks[left_eye_indices]
     right_eye_points = landmarks[right_eye_indices]
 
-    # 각 점 사이에 중간 점 추가
+    # Add intermediate points for smoother transition
     left_eye_points = add_intermediate_points(left_eye_points.tolist(), num_points=2)
     right_eye_points = add_intermediate_points(right_eye_points.tolist(), num_points=2)
 
-    # 랜드마크 확장 (눈 옆에 두 개의 포인트 추가)
+    # Expand points to cover more area around the eyes
     additional_left_points = np.array([
-        landmarks[37] + np.array([7, 0]),  # 왼쪽으로 확장
-        landmarks[39] + np.array([7, 0])   # 왼쪽으로 확장
+        landmarks[37] + np.array([7, 0]),  # Extend left
+        landmarks[39] + np.array([7, 0])   # Extend left
     ])
     additional_right_points = np.array([
-        landmarks[43] + np.array([7, 0]),  # 오른쪽으로 확장
-        landmarks[45] + np.array([7, 0])   # 오른쪽으로 확장
+        landmarks[43] + np.array([7, 0]),  # Extend right
+        landmarks[45] + np.array([7, 0])   # Extend right
     ])
 
-    # 기존 포인트와 추가 포인트를 병합
     left_eye_points = np.vstack((left_eye_points, additional_left_points))
     right_eye_points = np.vstack((right_eye_points, additional_right_points))
 
-    # 중간 점 추가
+    # Add intermediate points for smoother coverage
     left_eye_points = add_intermediate_points(left_eye_points.tolist(), num_points=2)
     right_eye_points = add_intermediate_points(right_eye_points.tolist(), num_points=2)
 
-    # 각 점 사이에 중간 점 추가
-    left_eye_points = np.array(left_eye_points)
-    right_eye_points = np.array(right_eye_points)
-
-    # 점들을 y축으로 이동시키고, 약간 확장
-    y_shift1 = 18  # 첫 번째 이동 거리 (조금 작은 값)
-    y_shift2 = 26  # 두 번째 이동 거리 (조금 작은 값)
+    # Shift and expand points to cover the eye area
+    y_shift1 = 18
+    y_shift2 = 26
     left_shifted_points1 = create_shifted_points(left_eye_points, y_shift1)
     left_shifted_points2 = create_shifted_points(left_eye_points, y_shift2)
     right_shifted_points1 = create_shifted_points(right_eye_points, y_shift1)
@@ -75,56 +79,50 @@ def apply_eyeshadow(image, prdCode):
     right_shifted_points1 = expand_points(right_shifted_points1, factor=1.2)
     right_shifted_points2 = expand_points(right_shifted_points2, factor=1.4)
 
-    # 왼쪽 및 오른쪽 눈에 대해 첫 번째 및 두 번째 색상 영역을 생성
+    # Define the eyeshadow areas for both colors
     left_eye_area1 = np.vstack((left_eye_points, left_shifted_points1[::-1]))
     left_eye_area2 = np.vstack((left_shifted_points1, left_shifted_points2[::-1]))
     right_eye_area1 = np.vstack((right_eye_points, right_shifted_points1[::-1]))
     right_eye_area2 = np.vstack((right_shifted_points1, right_shifted_points2[::-1]))
 
-    # BGRA 형식으로 이미지 변환 (Alpha 채널 추가)
+    # Convert image to BGRA (add alpha channel)
     image_bgra = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
 
-    # 첫 번째 색상 적용
+    # Apply the first eyeshadow color
     for eye_area, color in zip([left_eye_area1, right_eye_area1], [bgr_color, bgr_color]):
         mask = np.zeros((image.shape[0], image.shape[1]), dtype=np.float32)
-        cv2.fillPoly(mask, [eye_area], (1))  # 아이섀도우 적용할 영역을 마스크로 생성
+        cv2.fillPoly(mask, [eye_area], (1))
 
-        # Alpha 채널 생성
+        # Create and blur alpha channel
         alpha_channel = (mask * eyeshadow_alpha * 255).astype(np.uint8)
-
-        # Alpha 채널의 블러링
         blurred_alpha_channel = cv2.GaussianBlur(alpha_channel, (45, 45), 0)
         blurred_alpha_channel = cv2.medianBlur(blurred_alpha_channel, 27)
 
-        # 아이섀도우 생성
+        # Create and apply eyeshadow
         eyeshadow = np.zeros_like(image_bgra, dtype=np.uint8)
         eyeshadow[:, :, :3] = color
         eyeshadow[:, :, 3] = blurred_alpha_channel
 
-        # 최종 이미지에 아이섀도우 적용
         alpha_mask = blurred_alpha_channel / 255.0
         for c in range(0, 3):
             image[:, :, c] = (1.0 - alpha_mask) * image[:, :, c] + alpha_mask * eyeshadow[:, :, c]
 
-    # 두 번째 색상 적용 (option1이 있는 경우)
+    # Apply the second eyeshadow color if available
     if bgr_color2:
         for eye_area, color in zip([left_eye_area2, right_eye_area2], [bgr_color2, bgr_color2]):
             mask = np.zeros((image.shape[0], image.shape[1]), dtype=np.float32)
-            cv2.fillPoly(mask, [eye_area], (1))  # 아이섀도우 적용할 영역을 마스크로 생성
+            cv2.fillPoly(mask, [eye_area], (1))
 
-            # Alpha 채널 생성
+            # Create and blur alpha channel
             alpha_channel = (mask * eyeshadow_alpha * 255).astype(np.uint8)
-
-            # Alpha 채널의 블러링
             blurred_alpha_channel = cv2.GaussianBlur(alpha_channel, (75, 75), 0)
             blurred_alpha_channel = cv2.medianBlur(blurred_alpha_channel, 21)
 
-            # 아이섀도우 생성
+            # Create and apply eyeshadow
             eyeshadow = np.zeros_like(image_bgra, dtype=np.uint8)
             eyeshadow[:, :, :3] = color
             eyeshadow[:, :, 3] = blurred_alpha_channel
 
-            # 최종 이미지에 아이섀도우 적용
             alpha_mask = blurred_alpha_channel / 255.0
             for c in range(0, 3):
                 image[:, :, c] = (1.0 - alpha_mask) * image[:, :, c] + alpha_mask * eyeshadow[:, :, c]

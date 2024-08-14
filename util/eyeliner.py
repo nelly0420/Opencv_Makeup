@@ -1,7 +1,7 @@
 import cv2
 import dlib
 import numpy as np
-from util.utils import get_color_from_json  # util.py에서 get_color_from_json 함수를 import
+from util.utils import get_color_from_json
 
 # dlib 초기화: 얼굴 감지기와 랜드마크 예측기 로드
 detector = dlib.get_frontal_face_detector()
@@ -14,8 +14,8 @@ EYE_IDXS = {
 }
 
 # 아이라인 색상 및 두께
-eyeline_thickness = 1  # 아이라인의 두께 설정 (픽셀 단위)
-eyeline_alpha = 0.2  # 아이라인의 투명도 (0.0 ~ 1.0)
+eyeline_thickness = 2  # 아이라인의 두께 설정 (픽셀 단위)
+eyeline_alpha = 0.6  # 아이라인의 투명도 (0.0 ~ 1.0)
 eyeline_offset_y = -3  # 아이라인의 y축 위치 조정
 
 def bezier_curve(points, n=100):
@@ -40,21 +40,31 @@ def bezier_curve(points, n=100):
 
     return curve.astype(int)
 
-def apply_eyeliner(image, prdCode):
+def hex_to_rgb(hex_color: str) -> tuple:
+    """Convert HEX color code to RGB color format."""
+    hex_color = hex_color.lstrip('#')
+    rgb = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))  # Convert HEX to RGB
+    return rgb  # Return RGB
+
+def apply_eyeliner(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     """
     이미지에 아이라인을 적용합니다.
     
     Parameters:
-        image (numpy.array): 입력 이미지
+        image (numpy.array): 입력 이미지 (BGR 형식)
         prdCode (str): 색상 정보를 얻기 위한 코드
     
     Returns:
-        numpy.array: 아이라인이 적용된 이미지
+        numpy.array: 아이라인이 적용된 이미지 (BGR 형식)
     """
-    # 색상 정보를 JSON에서 가져오기
-    eyeline_color, _ , _ = get_color_from_json(prdCode)
+    # Convert BGR image to RGB
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # 이미지의 회색조 변환
+    # 색상 정보를 JSON에서 가져오기
+    eyeline_color_hex, _, _ = get_color_from_json(prdCode)
+    eyeline_color = hex_to_rgb(color)  # HEX 색상 코드를 RGB로 변환
+
+    gray = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)  # 이미지의 회색조 변환
     faces = detector(gray, 0)  # 얼굴 감지
 
     if len(faces) == 0:
@@ -73,19 +83,26 @@ def apply_eyeliner(image, prdCode):
             if len(upper_points) > 1:
                 curve = bezier_curve(upper_points)
 
-                # 곡선을 이미지에 그리기
-                cv2.polylines(image, [curve], isClosed=False, color=eyeline_color, thickness=eyeline_thickness)
+                # Create a mask for the eyeliner
+                mask = np.zeros((image_rgb.shape[0], image_rgb.shape[1]), dtype=np.uint8)
+                cv2.polylines(mask, [curve], isClosed=False, color=255, thickness=eyeline_thickness)
+                alpha_mask = cv2.GaussianBlur(mask, (15, 15), 0)  # Smooth the mask to create a gradient effect
+                alpha_mask = alpha_mask / 255.0  # Normalize to [0, 1] range
 
-                # 그라데이션 효과 적용
-                for i in range(len(curve) - 1):
-                    p1, p2 = curve[i], curve[i + 1]
-                    cv2.line(image, tuple(p1), tuple(p2), eyeline_color, eyeline_thickness)
-                    alpha = eyeline_alpha * (i / len(curve))
-                    overlay = image.copy()
-                    cv2.line(overlay, tuple(p1), tuple(p2), eyeline_color, eyeline_thickness)
-                    image = cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0)
+                # Convert image to float32 for blending
+                image_rgb = image_rgb.astype(np.float32) / 255.0
+
+                # Blend the color into the image using the alpha mask
+                for c in range(3):
+                    image_rgb[:, :, c] = image_rgb[:, :, c] * (1 - alpha_mask) + eyeline_color[c] / 255.0 * alpha_mask
+
+                # Convert back to uint8
+                image_rgb = (image_rgb * 255).astype(np.uint8)
 
     # 가우시안 블러 적용 (최종 이미지를 부드럽게 만듭니다)
-    result_image = cv2.GaussianBlur(image, (5, 5), 0)
+    result_image_rgb = cv2.GaussianBlur(image_rgb, (5, 5), 0)
+
+    # Convert the final result back to BGR
+    result_image = cv2.cvtColor(result_image_rgb, cv2.COLOR_RGB2BGR)
 
     return result_image
