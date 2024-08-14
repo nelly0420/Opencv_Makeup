@@ -66,6 +66,7 @@ def handle_image(data):
     makeup_type = data['category']
     makeup_prdCode = data['prdCode']
     option1 = data.get('option1', None)  # 옵션 추가
+    option2 = data.get('option2', None)  # 옵션 추가
     color = data['color']
     
     if makeup_type == 'lipstick':
@@ -82,7 +83,7 @@ def handle_image(data):
         img_with_makeup = apply_eyebrow(img, makeup_prdCode,color)
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
-        img_with_makeup = apply_eyeshadow(img, makeup_prdCode,color)
+        img_with_makeup = apply_eyeshadow(img, makeup_prdCode,color,option2)
     else:
         print(f'Unknown makeup type: {makeup_type}')
         return
