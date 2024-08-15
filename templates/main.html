@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vitual-makeup main page</title>
+    <title>Virtual Makeup Main Page</title>
     <!-- Bootstrap CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-    <!-- 폰트 어썸 CSS 추가 -->
+    <!-- Font Awesome CSS -->
     <link href="{{ url_for('static', filename='css/all.css') }}" rel="stylesheet">
-   
     <!-- jQuery -->
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <!-- Bootstrap Bundle with Popper -->
@@ -19,134 +18,201 @@
         body, html {
             height: 100%;
             margin: 0;
+            font-family: 'Podkova', sans-serif;
         }
-        .bg {
-            background-image: url("{{ url_for('static', filename='images/main2.jpg') }}");
-            height: 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
+        .carousel-item img {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
         }
-
-        .bg2 {
-            width: 450px;
-            height: 360px;
-            border: 2px solid #ccc;
-            position: relative;
-        }
-
-        .star {
-            color: rgb(236, 44, 108);
-            position: absolute;
-            font-size: 24px;
-            animation: moveStar 4s linear infinite;
-        }
-
-        .collapse {
-            display: flex; /* Flexbox 레이아웃 사용 */
-            justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
-        }
-
-        .navbar {
-            background-color: #a8c0ff;
-        }
-
-        .navbar-brand {
-            font-family: 'Brush Script MT', cursive;
-            font-size: 2.0rem;
-        }
-
+        
         .title {
-            font-family: 'Podkova', sans-serif; /* Podkova 폰트를 사용 */
+            font-size: 90px;
+            color: #4F2626;
         }
-
+        .subtitle {
+            font-size: 30px;
+            color: #4F2626;
+        }
         .container {
             max-width: 100%;
         }
-
         .navbar-nav .nav-link {
-            color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
-            position: relative; /* 배지와 하트 아이콘의 z-index를 조절하기 위해 relative 설정 */
+            color: white;
+            position: relative;
         }
-
         #btngoMain {
             background-color: rgb(39, 60, 171);
+            border: none;
+            color: white;
+            font-size: 16px;
         }
-
         .badge {
             position: absolute;
-            top: -2px; /* 상단 간격 조정 */
-            right: -5px; /* 오른쪽 간격 조정 */
+            top: -2px;
+            right: -5px;
             background-color: rgb(39, 60, 171);
             color: white;
             padding: 4px 6px;
             border-radius: 50%;
             font-size: 12px;
             font-weight: bold;
-            z-index: 1; /* 배지의 z-index 설정 */
+            z-index: 1;
         }
-
         .nav-link .fa-heart {
             position: relative;
-            z-index: 2; /* 하트 아이콘의 z-index를 배지보다 높게 설정 */
+            z-index: 2;
         }
+        .cherry-blossom-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .petal {
+            position: absolute;
+            background-color: FFCCC2;
+            border-radius: 100% 0 100% 0;
+            animation: animate-petal 10s linear;
+        }
+        .petal::after {
+            content: "";
+            position: absolute;
+            top: -14%;
+            left: -10%;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: #F45C5C;
+            border-radius: 100% 0 100% 0;
+            transform: rotate(15deg);
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #4F2626; /* Replace with your desired color */
+                    }
 
-        @keyframes moveStar {
+        
+        @keyframes animate-petal {
             0% {
                 top: 0;
-                left: 0;
+                opacity: 0;
+                transform: rotate(0deg);
             }
-            25% {
-                top: 0;
-                left: calc(100% - 24px); /* 24px is the approximate width of the star */
+            10% {
+                opacity: 1;
             }
-            50% {
-                top: calc(100% - 24px);
-                left: calc(100% - 24px);
-            }
-            75% {
-                top: calc(100% - 24px);
-                left: 0;
+            90% {
+                opacity: 1;
             }
             100% {
-                top: 0;
-                left: 0;
+                opacity: 0;
+                top: 100vh;
+                transform: rotate(3000deg);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="/main">Augmented Make Up</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
+    
+   <!-- Background Image Carousel -->
+    <div id="carouselExampleIndicators" class="carousel slide">
+        
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
         </div>
-    </nav>
-
-    <!-- Background Image Section -->
-    <div class="bg">
-        <div class="bg2">
-            <div class="star">★</div>
-            <div>
-                <h1 class="title" style="color: rgb(39, 60, 171); font-size: 90px;">Try for<br/>Cosmetic</h1>
-                <p style="color: black;">다양한 제품들을 증강 현실을<br/>통해 미리 체험해볼 수 있어요.</p>
-                <button id="btngoMain" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg> Try Now
-                </button>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="cherry-blossom-container"></div>
+                <img src="{{ url_for('static', filename='images/main/main1.jpg') }}" alt="Slide 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">"화용월태"(花容月態)</h5>
+                    <p style="color: black; font-size:20px">Matte와 Glossy 립스틱을 가상으로 미리 적용해보며, <br/>꽃 같은 입술과 달 같은 자태를 완성해보세요.</p>
+                    <button id="btngoMain" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg> Try Now
+                    </button>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="cherry-blossom-container"></div>
+                <img src="{{ url_for('static', filename='images/main/main2.jpg') }}" alt="Slide 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">“칠색조화”(七色造化)</h5>
+                    <p style="color: black; font-size:20px">다양한 색감의 쉐도우를 적용하여 나만의  <br/>독특하고 다채로운 스타일을 발견해보세요.</p>
+                    <button id="btngoMain" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg> Try Now
+                    </button>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="cherry-blossom-container"></div>
+                <img src="{{ url_for('static', filename='images/main/main3.jpg') }}" alt="Slide 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">“화려강산”(華麗江山)</h5>
+                    <p style="color: black; font-size:20px">다양한 블러셔를 체험하며, 화려하고 매혹적인  <br/> 나만의 스타일을 발견해보세요.</p>
+                    <button id="btngoMain" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg> Try Now
+                    </button>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="cherry-blossom-container"></div>
+                <img src="{{ url_for('static', filename='images/main/main4.jpg') }}" alt="Slide 4">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">“유려미문”(流麗美文)</h5>
+                    <p style="color: black; font-size:20px">가상의 환경에서 흐르는 듯 자연스럽고   <br/>아름다운 나만의 스타일을 발견해보세요</p>
+                    <button id="btngoMain" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg> Try Now
+                    </button>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="cherry-blossom-container"></div>
+                <img src="{{ url_for('static', filename='images/main/main5.jpg') }}" alt="Slide 5">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">"다채만상" (多彩萬象)</h5>
+                    <p style="color: black; font-size:20px">다양한 화장품을 가상의 환경에서 체험하며  <br/> 나만의 다채로운 스타일을 발견해보세요</p>
+                    <button id="btngoMain" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg> Try Now
+                    </button>
+                </div>
             </div>
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 
     <!-- Cart Modal -->
@@ -168,8 +234,6 @@
         </div>
     </div>
 
-
-
     <script>
         $(document).ready(function() {
             // Initialize cart count
@@ -179,12 +243,6 @@
             $('#btngoMain').on('click', function(event) {
                 event.preventDefault();
                 window.location.href = '/products';
-            });
-
-            // Show cart modal when cart icon is clicked
-            $('#cart-icon').on('click', function() {
-                showCartItems();
-                $('#cartModal').modal('show');
             });
 
             // Function to update cart count
@@ -237,6 +295,31 @@
                 updateCartCount();
                 showCartItems();
             });
+
+            const $section = $('.cherry-blossom-container');
+
+            // Function to create a petal
+            const createPetal = () => {
+                const $petalEl = $('<span class="petal"></span>');
+                const minSize = 10;
+                const maxSize = 15;
+                const size = Math.random() * (maxSize - minSize) + minSize;
+                $petalEl.css({
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    left: `${Math.random() * $(window).width()}px`,
+                    top: `-${size}px` // Start position just above the viewport
+                });
+                $section.append($petalEl);
+        
+                // Remove petal after animation
+                setTimeout(() => {
+                    $petalEl.remove();
+                }, 10000);
+            }
+
+            // Generate petals at intervals
+            setInterval(createPetal, 300);
         });
     </script>
 </body>
