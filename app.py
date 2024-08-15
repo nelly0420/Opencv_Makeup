@@ -347,6 +347,11 @@ def apply_color_lens_endpoint():
         return buffer.tobytes(), 200
     else:
         return "Method not allowed", 405
+    
+
+@app.route("/queue_display")
+def queue_display():
+    return render_template("queue_display.html")
 
 if __name__ == '__main__':
     socketio.run(app, port=5000, debug=True, allow_unsafe_werkzeug=True)
