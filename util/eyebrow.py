@@ -48,19 +48,19 @@ def apply_eyebrow(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     cv2.fillPoly(mask, [left_eyebrow_points], brow_color)
     cv2.fillPoly(mask, [right_eyebrow_points], brow_color)
 
-    # Create a contour mask and apply Gaussian blur
+     # Create a contour mask and apply Gaussian blur
     contour_mask = np.zeros_like(image, dtype=np.uint8)
     gray_mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
     contours, _ = cv2.findContours(gray_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(contour_mask, contours, -1, brow_color, 1)
-    eyebrow_liner = cv2.GaussianBlur(contour_mask, (21, 21), 0)
-    eyebrow_liner = cv2.GaussianBlur(eyebrow_liner, (15, 15), 0)
+    eyebrow_liner = cv2.GaussianBlur(contour_mask, (9, 9), 2)
+    #eyebrow_liner = cv2.GaussianBlur(eyebrow_liner, (15, 15), 0)
 
     # Blur the mask for a smoother effect
-    blurred_mask = cv2.GaussianBlur(mask, (21, 21), 4)
+    blurred_mask = cv2.GaussianBlur(mask, (11, 11), 2)
 
     # Combine the original image with the blurred eyebrow mask
-    image_with_eyebrows = cv2.addWeighted(image, 1, blurred_mask, 0.5, 0)
+    image_with_eyebrows = cv2.addWeighted(image, 1, blurred_mask, 0.7, 0)
     image_with_eyebrows = cv2.addWeighted(image_with_eyebrows, 1, eyebrow_liner, 0.7, 0)
 
     return image_with_eyebrows
