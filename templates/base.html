@@ -6,6 +6,8 @@
     <title>Bootstrap 5 Main Page</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Podkova&family=Noto+Sans+KR:wght@400;700&display=swap">
+   
     <!-- Base css -->
     <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/all.css') }}" rel="stylesheet">
@@ -20,11 +22,17 @@
         body, html {
             height: 100%;
             margin: 0;
+            background-image: url('/static/images/main/background.jpg'); /* 절대 경로로 이미지 지정 */
+            background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
+            background-position: center; /* 배경 이미지를 화면 중앙에 배치 */
+            background-repeat: no-repeat; /* 배경 이미지가 반복되지 않도록 설정 */
+            color: #4E2A1E; /* 기본 글씨색을 어두운 갈색으로 설정 */
+            
         }
         .custom-btn {
             background-color: #a8c0ff; /* 원하는 색상 */
             border-color: #a8c0ff; /* 경계선 색상 */
-            color: white; /* 버튼 텍스트 색상 */
+            color: #4E2A1E; /* 기본 글씨색을 어두운 갈색으로 설정 */
         }
         .custom-outline-btn {
             background-color: white; /* 원하는 색상 */
@@ -35,9 +43,31 @@
             background-color: #91a4eb; /* 마우스를 올렸을 때 색상 */
             border-color: #91a4eb; /* 마우스를 올렸을 때 경계선 색상 */
         }
+        .navbar {
+            background-color: transparent; /* 네비게이션 바 배경을 투명하게 설정 */
+            border: none; /* 네비게이션 바의 경계선 제거 */
+        }
         .navbar-nav .nav-link {
-            color: white; /* 네비게이션 바의 링크 텍스트 색상 설정 */
-            position: relative; /* 배지와 하트 아이콘의 z-index를 조절하기 위해 relative 설정 */
+            color: #4E2A1E !important; /* 네비게이션 바의 링크 텍스트 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
+            font-family: 'Noto Sans KR', serif; /* 브랜드 이름에 'Noto Sans KR' 글씨체 적용 */
+            font-size: 1.5rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
+        }
+
+        .navbar-brand {
+            font-family: 'Noto Sans KR', serif; /* 브랜드 이름에 'Noto Sans KR' 글씨체 적용 */
+            color: #4E2A1E !important; /* 브랜드 이름 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
+            font-size: 3rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
+        }
+
+        .navbar-toggler-icon {
+            filter: invert(38%) sepia(17%) saturate(327%) hue-rotate(342deg) brightness(93%) contrast(89%);
+            /* 토글 아이콘 색상을 어두운 갈색으로 변경 */
+        }
+
+        .navbar .fa-search, 
+        .navbar .fa-heart {
+            color: #4E2A1E !important; /* 아이콘 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
+            font-size: 1.5rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
         }
 
         #btngoMain {
@@ -49,7 +79,7 @@
             top: -2px; /* 상단 간격 조정 */
             right: -5px; /* 오른쪽 간격 조정 */
             background-color: rgb(39, 60, 171); /* 배지 색상 */
-            color: white;
+            color: #A0522D;
             padding: 4px 6px;
             border-radius: 50%;
             font-size: 12px;
@@ -60,6 +90,22 @@
         .nav-link .fa-heart {
             position: relative;
             z-index: 2; /* 하트 아이콘의 z-index를 배지보다 높게 설정 */
+        }
+
+        /* 아이콘 및 텍스트가 활성화되거나 클릭될 때 색상 변경 */
+        .navbar-nav .nav-link:active,
+        .navbar-nav .nav-link.active,
+        .navbar-brand:active,
+        .navbar .fa-search:active,
+        .navbar .fa-heart:active {
+            color: #A0522D !important; /* 눌렸을 때 연갈색으로 변경 */
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-brand:hover,
+        .navbar .fa-search:hover,
+        .navbar .fa-heart:hover {
+            color: #A0522D !important; /* 마우스 오버 시 연갈색으로 변경 */
         }
     </style>
     
@@ -164,7 +210,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Augmented Make Up</a>
+            <a class="navbar-brand" href="/"> 화연(華焰)</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -192,7 +238,7 @@
                         <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <a class="nav-link position-relative"  href="/queue_display">    <!-- data-bs-toggle="modal" data-bs-target="#exampleModal"-->
                             <i class="fas fa-heart"></i>
                             <span class="badge" id="cookie-count">0</span> <!-- 쿠키 개수를 표시하는 배지 -->
                         </a>

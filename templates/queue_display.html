@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Items</title>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/queue.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #ffffff; /* 배경색을 하얀색으로 설정 */
+            font-family: Arial, sans-serif;
+            color: #333; /* 텍스트 색상을 약간 어두운 색으로 설정 */
+        }
+        .container {
+            max-width: 900px;
+            margin-top: 30px;
+        }
+        .item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa; /* 항목의 배경색을 약간 회색으로 설정 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #007bff; /* 제목 색상을 부트스트랩 기본 색상으로 설정 */
+        }
+        #clearQueueBtn {
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            
+            function loadQueueItems() {
+                // 로컬 스토리지에서 큐 데이터를 가져옵니다.
+                const myQueue = JSON.parse(localStorage.getItem('queue')) || [];
+
+                // 큐 데이터를 화면에 출력합니다.
+                // myQueue.forEach(item => {
+                //     const itemElement = $('<div class="item"></div>');
+                //     const imgElement = $('<img>').attr('src', item.image);
+                //     const prdCodeElement = $('<p></p>').text('상품코드: ' + item.prdCode);
+                //     const colorElement = $('<p></p>').text('색상: ' + item.color);
+                //     itemElement.append(imgElement, prdCodeElement, colorElement);
+                //     $('#savedItems').append(itemElement);
+                // });
+                
+                // 큐 데이터를 화면에 출력합니다.
+                let html = '<ul class="list-unstyled">';
+                    myQueue.forEach(item => {
+                    html += `
+                        <li class="item">
+                            <p><strong>상품코드:</strong> ${item.prdCode}</p>
+                            <p><strong>색상정보:</strong> ${item.color}</p>
+                            <img src="${item.image}" alt="Item Image" />
+                        </li>`;
+                });
+                html += '</ul>';
+                $('#queueDisplay').html(html);
+            }
+
+            loadQueueItems(); // 페이지 로드 시 큐 데이터를 불러옵니다.
+
+            // 전체삭제 버튼 클릭 이벤트
+            $('#clearQueueBtn').click(function() {
+                const delQueue = new Queue(3); // 큐 인스턴스 생성
+                delQueue.clear(); // 큐 비우기
+                alert('큐가 비워졌습니다.');
+                window.location.reload(); // 페이지 새로 고침
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>사진 저장 목록 조회</h1>
+        <div id="queueDisplay"></div>
+        <button id="clearQueueBtn" class="btn btn-danger">전체 삭제</button>
+    </div>
+</body>
+</html>
+{% endblock %}
