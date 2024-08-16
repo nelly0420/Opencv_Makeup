@@ -13,14 +13,13 @@ def gamma_correction(src: np.ndarray, gamma: float, coefficient: int = 1.2):
     dst = (dst * 255).astype('uint8')
     return dst
 
-def apply_lipstick(image: np.ndarray, prdCode: str, option: str, color: str) -> np.ndarray:
+def apply_lipstick(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     # Convert color from hex to RGB and then to BGR
     rgb_color = ImageColor.getrgb(color)
     bgr_color = (rgb_color[2], rgb_color[1], rgb_color[0])  # Convert RGB to BGR
     
     # Extract the predefined lipstick color and other options from the JSON
     lip_color, option, _ = get_color_from_json(prdCode)
-    lip_color_bgr = (lip_color[2], lip_color[1], lip_color[0])  # Convert RGB to BGR
 
     # Get facial landmarks
     landmarks = get_landmarks(image)
@@ -32,13 +31,17 @@ def apply_lipstick(image: np.ndarray, prdCode: str, option: str, color: str) -> 
     # Get lip points from landmarks
     lip_points = get_lip_points(landmarks)
     
+    # 사용자 정의 컬러가 있으면 립 색상 변경
+    if bgr_color != None:
+        lip_color = bgr_color
+
     # Create masks
     mask = np.zeros_like(image)
-    mask = cv2.fillPoly(mask, [lip_points], bgr_color)  # Apply the selected color to the lip region
+    mask = cv2.fillPoly(mask, [lip_points], lip_color)  # Apply the selected color to the lip region
     
     contour_mask = np.zeros_like(image)
     contours, _ = cv2.findContours(cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(contour_mask, contours, -1, bgr_color, 1) 
+    cv2.drawContours(contour_mask, contours, -1, lip_color, 1) 
     lip_liner = cv2.GaussianBlur(contour_mask, (19, 19), 0)
     
     # image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.4, 0.0)

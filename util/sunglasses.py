@@ -4,7 +4,7 @@ import numpy as np
 from util.utils import get_color_from_json
 
 def apply_sunglasses(image, prdCode):
-    color, option,_ = get_color_from_json(prdCode)
+    color, option, _ = get_color_from_json(prdCode)
     finalimg = image.copy()
     
     # Load dlib's face detector and shape predictor
@@ -60,31 +60,3 @@ def apply_sunglasses(image, prdCode):
     
     return finalimg
 
-
-if __name__ == "__main__":
-    # Define paths for image and product code
-    image_path = "path/to/your/image.jpg"  # Replace with your image path
-    prdCode = "SUN001"  # Replace with your actual product code
-
-    # Simulated color retrieval based on prdCode (replace with actual logic)
-    def get_color_from_json(prdCode):
-        # Example color mapping based on prdCode
-        color_map = {
-            "SUN001": [0, 255, 0],  # Green in BGR format
-            "SUN002": [255, 0, 0],  # Blue in BGR format
-        }
-        return color_map.get(prdCode, [0, 0, 0])  # Default to black if prdCode not found
-    
-    # Load image
-    image = cv2.imread(image_path)
-    
-    if image is None:
-        print("Error loading image.")
-    else:
-        # Apply sunglasses with the selected color
-        rslt = apply_sunglasses(image, prdCode)
-
-        # Display the result image using OpenCV
-        cv2.imshow('Your Makeup Results', rslt)
-        cv2.waitKey(0)  # Wait indefinitely for a key press
-        cv2.destroyAllWindows()  # Close the window

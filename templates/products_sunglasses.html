@@ -301,7 +301,7 @@
         formData.append('image', blob, 'capture.jpg');
         formData.append('prdCode', prdCode);
         console.log('FormData:', formData);
-        fetch('/apply_blush', {
+        fetch('/apply_sunglasses', {
             method: 'POST',
             body: formData
         })
@@ -317,7 +317,7 @@
             console.log('Image applied successfully');
         })
         .catch(error => {
-            console.error('Error applying blush:', error);
+            console.error('Error applying sunglasses:', error);
         });
     }
 
@@ -362,7 +362,7 @@
         }
     
         // 서버에서 JSON 데이터를 가져와 색상 버튼과 립스틱 항목을 동적으로 생성합니다.
-        $.getJSON('/productJSON?category=blush', function (data) {
+        $.getJSON('/productJSON?category=sunglasses', function (data) {
             console.log(data); // 데이터를 콘솔에 출력하여 확인합니다.
     
             // 각 상품 항목에 대해 반복하여 립스틱 항목을 생성합니다.
