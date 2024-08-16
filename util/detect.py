@@ -56,6 +56,24 @@ def get_lip_points(landmarks):
     lip_points = np.array(points_top + points_bottom)
     return lip_points
 
+
+def get_eyeCenter_points(landmarks):
+    """
+    얼굴 랜드마크 좌표를 입력받아 왼쪽 눈과 오른쪽 눈의 중심 좌표를 반환합니다.
+
+    """
+    # 왼쪽 눈의 중심 좌표 계산
+    left_eye = ((np.asarray(landmarks[37]) + np.asarray(landmarks[38]) +
+                 np.asarray(landmarks[40]) + np.asarray(landmarks[41])) / 4).astype(int)
+    
+    # 오른쪽 눈의 중심 좌표 계산
+    right_eye = ((np.asarray(landmarks[43]) + np.asarray(landmarks[44]) +
+                  np.asarray(landmarks[46]) + np.asarray(landmarks[47])) / 4).astype(int)
+    
+    # 리스트 형식으로 반환
+    return list(left_eye), list(right_eye)
+
+
 def get_cheek_centers(shape, y_offset, x_offset):
     """
     주어진 랜드마크에서 왼쪽 및 오른쪽 뺨의 중심을 계산합니다.
