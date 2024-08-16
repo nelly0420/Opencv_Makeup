@@ -3,21 +3,24 @@ from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit # framework -> Flask, Django, FastAPI
 import cv2
 import numpy as np
-from util.lipstick import apply_lipstick, apply_lipstick2
+import base64
+import json
+
+from util.lipstick import apply_lipstick
 from util.eyeliner import apply_eyeliner
 from util.blush import apply_blush
 from util.eyebrow import apply_eyebrow
 from util.eyeshadow import apply_eyeshadow
-import dlib
-import json
-import base64
-from datetime import datetime
+from util.sunglasses import apply_sunglasses
+
+# import dlib
+# from datetime import datetime
 
 # Application 정의
 app = Flask(__name__, static_url_path="/static") # static 경로 설정이 되어있음.
+
 # Socket 정의
 socketio = SocketIO(app, cors_allowed_origins="*")
-
 
 
 @app.route("/sample")
@@ -32,28 +35,28 @@ def handle_connect():
 def handle_disconnect():
     print('Client disconnected')
 
-@socketio.on('samplelipstick')
-def handle_image_sample(data):
-    # byte ->  numpy array
-    nparr = np.frombuffer(data, np.uint8)
-    # 버퍼에서 이미지 읽기.
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR) #BGR 형식의 컬러 이미지로 가져오기
-    # img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)  # 이미지를 원래 품질로 디코딩
-    ##############################################
-    # 아래 부분만 수정.
-    ##############################################
+# @socketio.on('samplelipstick')
+# def handle_image_sample(data):
+#     # byte ->  numpy array
+#     nparr = np.frombuffer(data, np.uint8)
+#     # 버퍼에서 이미지 읽기.
+#     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR) #BGR 형식의 컬러 이미지로 가져오기
+#     # img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)  # 이미지를 원래 품질로 디코딩
+#     ##############################################
+#     # 아래 부분만 수정.
+#     ##############################################
     
     
-    # 립스틱 적용.
-    img_with_makeup = apply_lipstick( img, "LM0001")
+#     # 립스틱 적용.
+#     img_with_makeup = apply_lipstick( img, "LM0001")
 
-    # 최종적으로 클라이언트로 전송할 때 JPEG로 변환
-    _, buffer = cv2.imencode('.jpg', img_with_makeup, [int(cv2.IMWRITE_JPEG_QUALITY), 85]) #85% 품질.
-    ##################################################
-    # base64로 변환.
-    result_image = base64.b64encode(buffer).decode('utf-8')
-    # Emit 전송.
-    emit('processed_image', {'image': result_image})
+#     # 최종적으로 클라이언트로 전송할 때 JPEG로 변환
+#     _, buffer = cv2.imencode('.jpg', img_with_makeup, [int(cv2.IMWRITE_JPEG_QUALITY), 85]) #85% 품질.
+#     ##################################################
+#     # base64로 변환.
+#     result_image = base64.b64encode(buffer).decode('utf-8')
+#     # Emit 전송.
+#     emit('processed_image', {'image': result_image})
 
 # ---------------------------------------------------------------
 
@@ -65,28 +68,29 @@ def handle_image(data):
 
     makeup_type = data['category']
     makeup_prdCode = data['prdCode']
-    option1 = data.get('option1', None)  # 옵션 추가
-    option2 = data.get('option2', None)  # 옵션 추가
-    color = data['color']
+    userColor = data['color'] # 사용자 설정 color
     
     if makeup_type == 'lipstick':
         print('Applying lipstick...')
-        img_with_makeup = apply_lipstick(img, makeup_prdCode,option1,color) #to-be json의 key값을 가져오기
+        img_with_makeup = apply_lipstick(img, makeup_prdCode, userColor) #to-be json의 key값을 가져오기(prdCode)
     elif makeup_type == 'eyeliner':
         print('Applying eyeliner...')
-        img_with_makeup = apply_eyeliner(img, makeup_prdCode,color)
+        img_with_makeup = apply_eyeliner(img, makeup_prdCode, userColor)
     elif makeup_type == 'blush':
         print('Applying blush...')
-        img_with_makeup = apply_blush(img, makeup_prdCode,color)
+        img_with_makeup = apply_blush(img, makeup_prdCode, userColor)
     elif makeup_type == 'eyebrow':
         print('Applying eyebrow...')
-        img_with_makeup = apply_eyebrow(img, makeup_prdCode,color)
+        img_with_makeup = apply_eyebrow(img, makeup_prdCode, userColor)
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
-        img_with_makeup = apply_eyeshadow(img, makeup_prdCode,color,option2)
+        img_with_makeup = apply_eyeshadow(img, makeup_prdCode) # 사용자 설정 color 기능 없음
+    elif makeup_type == "sunglasses":
+        img_with_makeup = apply_sunglasses(img, makeup_prdCode)
     else:
         print(f'Unknown makeup type: {makeup_type}')
         return
+    
     # Encode image back to bytes and send back to client
     _, buffer = cv2.imencode('.jpg', img_with_makeup)
     # base64로 변환.
@@ -190,6 +194,8 @@ def products_lens(prdCode):
 @app.route("/test")
 def test():
     return render_template("test copy.html")
+
+# api 형식임 ---> 소켓통신으로 고칠 것
 @app.route("/productJSON", methods=["GET"])
 def get_products():
     # JSON 파일 경로 설정
@@ -213,6 +219,7 @@ def get_products():
     #     # 카테고리가 지정되지 않은 경우 모든 제품 반환
     #     filtered_products = products_data
     return jsonify(filtered_products)
+
 # @app.route("/productJSON", methods=["POST"])
 # def aaaaa():
 #     return "hello"
@@ -230,123 +237,127 @@ def get_products():
 #     print(f'Product Code: {prd_code}')
 #     # 필요한 처리 로직 수행
 #     return jsonify({'status': 'Success', 'prdCode': prd_code})
-@app.route('/apply_blush', methods=['POST'])
-def apply_blush_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # Apply blush effect to the image
-        result_image = apply_blush(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
-@app.route('/apply_lipstick', methods=['POST'])
-def apply_lip_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # Apply blush effect to the image
-        result_image = apply_lipstick(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
-@app.route('/apply_eyeliner', methods=['POST'])
-def apply_eyeliner_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-         # Apply blush effect to the image
-        result_image = apply_eyeliner(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
+
+
+# ------------------------------------------------> 아래는 api통신방법
+# @app.route('/apply_blush', methods=['POST'])
+# def apply_blush_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         # Apply blush effect to the image
+#         result_image = apply_blush(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
     
-@app.route('/apply_eyeshadow', methods=['POST'])
-def apply_eyeshadow_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # Apply blush effect to the image
-        result_image = apply_eyeshadow(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
+# @app.route('/apply_lipstick', methods=['POST'])
+# def apply_lip_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         # Apply blush effect to the image
+#         result_image = apply_lipstick(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
+# @app.route('/apply_eyeliner', methods=['POST'])
+# def apply_eyeliner_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#          # Apply blush effect to the image
+#         result_image = apply_eyeliner(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
     
-@app.route('/apply_eyebrow', methods=['POST'])
-def apply_eyebrow_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # Apply blush effect to the image
-        result_image = apply_eyebrow(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
+# @app.route('/apply_eyeshadow', methods=['POST'])
+# def apply_eyeshadow_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         # Apply blush effect to the image
+#         result_image = apply_eyeshadow(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
     
-@app.route('/apply_color_lens', methods=['POST'])
-def apply_color_lens_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # Apply blush effect to the image
-        result_image = apply_eyeshadow(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
+# @app.route('/apply_eyebrow', methods=['POST'])
+# def apply_eyebrow_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         # Apply blush effect to the image
+#         result_image = apply_eyebrow(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
+    
+# @app.route('/apply_color_lens', methods=['POST'])
+# def apply_color_lens_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         # Apply blush effect to the image
+#         result_image = apply_eyeshadow(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
 
 if __name__ == '__main__':
     socketio.run(app, port=5000, debug=True, allow_unsafe_werkzeug=True)
