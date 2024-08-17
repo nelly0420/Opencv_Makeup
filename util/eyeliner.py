@@ -14,8 +14,8 @@ EYE_IDXS = {
 }
 
 # 아이라인 색상 및 두께
-eyeline_thickness = 2  # 아이라인의 두께 설정 (픽셀 단위)
-eyeline_alpha = 0.6  # 아이라인의 투명도 (0.0 ~ 1.0)
+eyeline_thickness = 1  # 아이라인의 두께 설정 (픽셀 단위)
+eyeline_alpha = 0.8  # 아이라인의 투명도 (0.0 ~ 1.0)
 eyeline_offset_y = -3  # 아이라인의 y축 위치 조정
 
 def bezier_curve(points, n=100):
@@ -53,6 +53,7 @@ def apply_eyeliner(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     Parameters:
         image (numpy.array): 입력 이미지 (BGR 형식)
         prdCode (str): 색상 정보를 얻기 위한 코드
+        color (str): 아이라이너 색상 (HEX 코드)
     
     Returns:
         numpy.array: 아이라인이 적용된 이미지 (BGR 형식)
@@ -86,7 +87,9 @@ def apply_eyeliner(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
                 # Create a mask for the eyeliner
                 mask = np.zeros((image_rgb.shape[0], image_rgb.shape[1]), dtype=np.uint8)
                 cv2.polylines(mask, [curve], isClosed=False, color=255, thickness=eyeline_thickness)
-                alpha_mask = cv2.GaussianBlur(mask, (15, 15), 0)  # Smooth the mask to create a gradient effect
+                
+                # Apply Gaussian blur to the mask to create a smooth eyeliner effect
+                alpha_mask = cv2.GaussianBlur(mask, (5, 5), 0)  # Smooth the mask to create a gradient effect
                 alpha_mask = alpha_mask / 255.0  # Normalize to [0, 1] range
 
                 # Convert image to float32 for blending
@@ -99,10 +102,7 @@ def apply_eyeliner(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
                 # Convert back to uint8
                 image_rgb = (image_rgb * 255).astype(np.uint8)
 
-    # 가우시안 블러 적용 (최종 이미지를 부드럽게 만듭니다)
-    result_image_rgb = cv2.GaussianBlur(image_rgb, (5, 5), 0)
-
     # Convert the final result back to BGR
-    result_image = cv2.cvtColor(result_image_rgb, cv2.COLOR_RGB2BGR)
+    result_image = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
 
     return result_image
