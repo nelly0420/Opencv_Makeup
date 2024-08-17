@@ -1,309 +1,312 @@
 {% extends "base.html" %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <style>
-        #video {
-            width: 0;
-            height: 0;
-            opacity: 0;
-            position: absolute;
-        }
-        .canvas-container {
-            text-align: center;
-        }
-        #playButton, #likeBtn {
-            display: inline-block;
-            margin: 2px; /* 버튼 사이 간격 제거 */
-        }
-        .btn-container {
-            display: flex;
-            justify-content: center;
-        }
-        .btn-primary, .btn-secondary {
-            border: none; /* 기본 테두리 제거 */
-            border-radius: 4px; /* 모서리 둥글게 */
-            padding: 10px 20px; /* 버튼 내부 여백 */
-            color: white; /* 버튼 텍스트 색상 */
-            font-size: 16px; /* 버튼 폰트 크기 */
-        }
-        .btn-primary {
-            background-color: #007bff ; /* Play 버튼 색상 */
-        }
-        .btn-primary:hover {
-            background-color: #0056b3 !important; /* Play 버튼 호버 색상 */
-        }
-        .btn-secondary {
-            background-color: #007bff !important ; /* 사진저장 버튼 색상 */
-        }
-        .btn-secondary:hover {
-            background-color: #0056b3 !important; /* 사진저장 버튼 호버 색상 */
-        }
-        .card {
-            width: 200px; /* 카드 너비 */
-            height: 350px; /* 카드 높이 */
-            margin: 0 auto; /* 가운데 정렬 */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .card-header {
-            height: 50px; /* 제목 부분의 고정된 높이 */
-            overflow: hidden; /* 넘치는 텍스트는 숨김 */
-            text-overflow: ellipsis; /* 긴 텍스트 생략표시(...) */
-            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-            text-align: center; /* 텍스트 가운데 정렬 */
-        }
-        .card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover; /* 이미지 비율 유지하며 카드에 맞춤 */
-        }
-        .card-body {
-            text-align: center;
-            flex-grow: 1;
-        }
-        .card-body p {
-            margin: 10px 0;
-        }
-        .color-circle {
-            margin-top: auto; /* 버튼을 카드 하단으로 밀기 */
-        }
-        .blush-carousel .slick-slide {
-            display: flex;
-            justify-content: center;
-        }
-        #canvas {
-            width: 600px; /* canvas의 너비 */
-            height: 450px; /* canvas의 높이 */
-            display: block; /* canvas를 보이도록 설정 */
-            margin: 0 auto; /* 가운데 정렬 */
-        }
-        #processedImage {
-            width: 600px; /* processedImage의 너비 */
-            height: 450px; /* processedImage의 높이 */
-            display: block; /* 이미지 보이도록 설정 */
-            margin: 20px auto; /* 가운데 정렬 */
-            object-fit: cover; /* 이미지 비율 유지 */
-        }
-    </style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Capture and WebSocket</title>
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
+<style>
+    #video {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        position: absolute;
+    }
+    .canvas-container {
+        text-align: center;
+    }
+    #playButton, #likeBtn {
+        display: inline-block;
+        margin: 2px; /* 버튼 사이 간격 제거 */
+    }
+    .btn-container {
+        display: flex;
+        justify-content: center;
+    }
+    .btn-primary, .btn-secondary {
+        border: none; /* 기본 테두리 제거 */
+        border-radius: 4px; /* 모서리 둥글게 */
+        padding: 10px 20px; /* 버튼 내부 여백 */
+        color: white; /* 버튼 텍스트 색상 */
+        font-size: 16px; /* 버튼 폰트 크기 */
+    }
+    .btn-primary {
+        background-color: #007bff ; /* Play 버튼 색상 */
+    }
+    .btn-primary:hover {
+        background-color: #0056b3 !important; /* Play 버튼 호버 색상 */
+    }
+    .btn-secondary {
+        background-color: #007bff !important ; /* 사진저장 버튼 색상 */
+    }
+    .btn-secondary:hover {
+        background-color: #0056b3 !important; /* 사진저장 버튼 호버 색상 */
+    }
+    .card {
+        width: 200px; /* 카드 너비 */
+        height: 350px; /* 카드 높이 */
+        margin: 0 auto; /* 가운데 정렬 */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .card-header {
+        height: 50px; /* 제목 부분의 고정된 높이 */
+        overflow: hidden; /* 넘치는 텍스트는 숨김 */
+        text-overflow: ellipsis; /* 긴 텍스트 생략표시(...) */
+        white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover; /* 이미지 비율 유지하며 카드에 맞춤 */
+    }
+    .card-body {
+        text-align: center;
+        flex-grow: 1;
+    }
+    .card-body p {
+        margin: 10px 0;
+    }
+    .color-circle {
+        margin-top: auto; /* 버튼을 카드 하단으로 밀기 */
+    }
+    .blush-carousel .slick-slide {
+        display: flex;
+        justify-content: center;
+    }
+    #canvas {
+        width: 600px; /* canvas의 너비 */
+        height: 450px; /* canvas의 높이 */
+        display: block; /* canvas를 보이도록 설정 */
+        margin: 0 auto; /* 가운데 정렬 */
+    }
+    #processedImage {
+        width: 600px; /* processedImage의 너비 */
+        height: 450px; /* processedImage의 높이 */
+        display: block; /* 이미지 보이도록 설정 */
+        margin: 20px auto; /* 가운데 정렬 */
+        object-fit: cover; /* 이미지 비율 유지 */
+    }
+</style>
+    
+    
+    
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
 
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
-    <script>
-        let streaming = false;
-        let socket;
-        let selectedPrdCode = "EB0001";  // Initial product code
-        let selectedColor = "#ffffff";  // Default color
+<script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
 
-        $(document).ready(function () {
-            // Fetch JSON data and populate carousel
-            $.getJSON('/productJSON?category=eyebrow', function (data) {
-                console.log(data); // Log the data for debugging
-                
-                // Populate the carousel with product information
-                data.forEach(item => {
-                    $('.blush-carousel').append(`
-                        <div class="card border-secondary mb-3" style="max-width: 18rem;">
-                            <div class="card-header">${item.PrdName}</div>
-                            <div class="card-body text-secondary">
-                                <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
-                                <p>${item.price}</p>
-                                <input type="button" class="btn color-circle" style="background-color:${item.color};" value="${item.prdCode}" data-color="${item.color}" data-prdcode="${item.prdCode}"/>
-                            </div>
+<script>
+    let streaming = false;
+    let socket;
+    let selectedPrdCode = "B00001";  // Initial product code
+    let selectedColor = "#FCAAAE";  // Default color
+
+    $(document).ready(function () {
+        // Fetch JSON data and populate carousel
+        $.getJSON('/productJSON?category=eyebrow', function (data) {
+            console.log(data); // Log the data for debugging
+            
+            // Populate the carousel with product information
+            data.forEach(item => {
+                $('.blush-carousel').append(`
+                    <div class="card border-secondary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">${item.PrdName}</div>
+                        <div class="card-body text-secondary">
+                            <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
+                            <p>${item.price}</p>
+                            <input type="button" class="btn color-circle" style="background-color:${item.color};" value="${item.prdCode}" data-color="${item.color}" data-prdcode="${item.prdCode}"/>
                         </div>
-                    `);
-                });
-        
-                // Initialize the Slick carousel
-                $('.blush-carousel').slick({
-                    infinite: true,
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    dots: true,
-                    arrows: true
-                });
-
-                // Color button click event
-                $('.blush-carousel').on('click', '.color-circle', function() {
-                    selectedColor = $(this).data('color');
-                    selectedPrdCode = $(this).data('prdcode');  // Update selected product code
-                    console.log('Selected Color:', selectedColor);
-                    console.log('Selected Product Code:', selectedPrdCode);
-                });
+                    </div>
+                `);
+            });
+    
+            // Initialize the Slick carousel
+            $('.blush-carousel').slick({
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true
             });
 
-            // Color picker change event
-            $('#colorPicker').on('input', function() {
-                selectedColor = $(this).val();
-                console.log('Selected Color from Picker:', selectedColor);
+            // Color button click event
+            $('.blush-carousel').on('click', '.color-circle', function() {
+                selectedColor = $(this).data('color');
+                selectedPrdCode = $(this).data('prdcode');  // Update selected product code
+                console.log('Selected Color:', selectedColor);
+                console.log('Selected Product Code:', selectedPrdCode);
             });
         });
 
+        // Color picker change event
+        $('#colorPicker').on('input', function() {
+            selectedColor = $(this).val();
+            console.log('Selected Color from Picker:', selectedColor);
+        });
+
+    //=======================================================================
+        //찜목록 관련 추가 = choi. 2024.08.12
         //=======================================================================
-            //찜목록 관련 추가 = choi. 2024.08.12
-            //=======================================================================
-            // Queue 인스턴스 생성
-            var prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
-            var colorInfo = selectedColor; // 선택된 컬러
+        // Queue 인스턴스 생성
+        var prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
+        var colorInfo = selectedColor; // 선택된 컬러
 
-            const myQueue = new Queue(3); // 3개의 항목을 저장할 수 있는 큐 생성
+        const myQueue = new Queue(3); // 3개의 항목을 저장할 수 있는 큐 생성
 
-            $('#likeBtn').click(function() {
-                // 현재 <img> 태그에 있는 이미지 데이터를 큐에 저장
-                const imgData = $('#processedImage').attr('src');
+        $('#likeBtn').click(function() {
+            // 현재 <img> 태그에 있는 이미지 데이터를 큐에 저장
+            const imgData = $('#processedImage').attr('src');
 
-                if (!imgData) {
-                    alert('저장할 이미지가 없습니다.');
-                    return false;
-                }
-
-                // 큐에 저장할 객체 생성
-                const item = {
-                    image: imgData,
-                    prdCode: prdCode || '',
-                    color: colorInfo
-                };
-
-                
-                myQueue.enqueue(item); // 큐에 데이터 추가
-
-                // bagde cnt 업데이트
-                updateBadge();
-                // (디버깅용)
-                //updateQueueDisplay();
-
-                // "찜 목록에 추가되었습니다." 메시지 표시
-                const toastElement = new bootstrap.Toast($('#toastMessage'));
-                toastElement.show();
-            });
-
-            // // 초기 큐 상태 표시
-            // function updateQueueDisplay() {
-            //     $('#queueContent').text(JSON.stringify(myQueue.getQueue(), null, 2));
-            // }
-            // updateQueueDisplay();
-            
-            function updateBadge() {
-                // 큐의 아이템 개수를 가져옴
-                const queue = JSON.parse(localStorage.getItem('queue')) || [];
-                const itemCount = queue.length;
-
-                // 배지 업데이트
-                $('#cookie-count').text(itemCount);
+            if (!imgData) {
+                alert('저장할 이미지가 없습니다.');
+                return false;
             }
+
+            // 큐에 저장할 객체 생성
+            const item = {
+                image: imgData,
+                prdCode: prdCode || '',
+                color: colorInfo
+            };
+
+            
+            myQueue.enqueue(item); // 큐에 데이터 추가
+
             // bagde cnt 업데이트
             updateBadge();
-            //=======================================================================
-         //End of ready !!!
+            // (디버깅용)
+            //updateQueueDisplay();
 
-        function startStreaming() {
-            socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
-            socket.on('connect', function() {
-                console.log("Connected...!", socket.connected);
-                alert('WebSocket connection!!!');
-                $('#playButton').text('Stop').removeClass('btn-primary').addClass('btn-danger');
-                streaming = true;
-                sendFrames();
-            });
+            // "찜 목록에 추가되었습니다." 메시지 표시
+            const toastElement = new bootstrap.Toast($('#toastMessage'));
+            toastElement.show();
+        });
 
-            socket.on('processed_image', function(data) {
-                processedImage.src = 'data:image/jpeg;base64,' + data.image;
-            });
+        // // 초기 큐 상태 표시
+        // function updateQueueDisplay() {
+        //     $('#queueContent').text(JSON.stringify(myQueue.getQueue(), null, 2));
+        // }
+        // updateQueueDisplay();
+        
+        function updateBadge() {
+            // 큐의 아이템 개수를 가져옴
+            const queue = JSON.parse(localStorage.getItem('queue')) || [];
+            const itemCount = queue.length;
 
-            socket.on('disconnect', function() {
-                alert('WebSocket disconnect !!!');
-                stopStreaming();
-            });
+            // 배지 업데이트
+            $('#cookie-count').text(itemCount);
         }
+        // bagde cnt 업데이트
+        updateBadge();
+        //=======================================================================
+    });//End of ready !!!
 
-        function stopStreaming() {
-            if (socket) {
-                socket.disconnect();
-            }
-            $('#playButton').text('Play').removeClass('btn-danger').addClass('btn-primary');
-            streaming = false;
-        }
+    function startStreaming() {
+        socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+        socket.on('connect', function() {
+            console.log("Connected...!", socket.connected);
+            alert('WebSocket connection!!!');
+            $('#playButton').text('Stop').removeClass('btn-primary').addClass('btn-danger');
+            streaming = true;
+            sendFrames();
+        });
 
-        function sendFrames() {
-            if (streaming) {
-                canvas.width = video.videoWidth * 0.75;
-                canvas.height = video.videoHeight * 0.75;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                canvas.toBlob(function(blob) {
-                    const data = {
-                        image: blob,
-                        category: "eyebrow",
-                        prdCode: selectedPrdCode,  // Use the selected product code
-                        color: selectedColor        // Use the selected color
-                    };
-                    socket.emit('send_image', data);
-                    setTimeout(sendFrames, 200); // 0.2 seconds interval
-                }, 'image/jpeg');
-            }
+        socket.on('processed_image', function(data) {
+            processedImage.src = 'data:image/jpeg;base64,' + data.image;
+        });
+
+        socket.on('disconnect', function() {
+            alert('WebSocket disconnect !!!');
+            stopStreaming();
+        });
+    }
+
+    function stopStreaming() {
+        if (socket) {
+            socket.disconnect();
         }
-    </script>
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <video id="video" width="400" height="300" autoplay playsinline></video>
-            <div class="col-md-8">
-                <div class="canvas-container">
-                    <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
-                    <img id="processedImage" class="mt-3" />
-                    <div class="btn-container">
-                        <button id="playButton" class="btn btn-primary mt-3">Play</button>
-                        <button class="btn btn-secondary mt-3" id="likeBtn">사진저장</button>
-                    </div>
-                    <pre id="queueContent" style="display:none;"></pre>
+        $('#playButton').text('Play').removeClass('btn-danger').addClass('btn-primary');
+        streaming = false;
+    }
+
+    function sendFrames() {
+        if (streaming) {
+            canvas.width = video.videoWidth * 0.75;
+            canvas.height = video.videoHeight * 0.75;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(function(blob) {
+                const data = {
+                    image: blob,
+                    category: "eyeebrow",
+                    prdCode: selectedPrdCode,  // Use the selected product code
+                    color: selectedColor        // Use the selected color
+                };
+                socket.emit('send_image', data);
+                setTimeout(sendFrames, 200); // 0.2 seconds interval
+            }, 'image/jpeg');
+        }
+    }
+</script>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <video id="video" width="400" height="300" autoplay playsinline></video>
+        <div class="col-md-8">
+            <div class="canvas-container">
+                <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+                <img id="processedImage" class="mt-3" />
+                <div class="btn-container">
+                    <button id="playButton" class="btn btn-primary mt-3">Play</button>
+                    <button class="btn btn-secondary mt-3" id="likeBtn">사진저장</button>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="blush-carousel mt-3"></div>
+                <pre id="queueContent" style="display:none;"></pre>
             </div>
         </div>
-        <!-- Color Picker -->
-        <div class="row mt-3">
-            <div class="col-12">
-                <label for="colorPicker">Pick a color for the lipstick:</label>
-                <input type="color" id="colorPicker" value="#ffffff" />
-            </div>
+        <div class="col-md-4">
+            <div class="blush-carousel mt-3"></div>
         </div>
     </div>
+    <!-- Color Picker -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <label for="colorPicker">Pick a color for the eyebrow:</label>
+            <input type="color" id="colorPicker" value="#ffffff" />
+        </div>
+    </div>
+</div>
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
-        const processedImage = document.getElementById('processedImage');
+    <!-- Product Info List
+    <div class="row">
+        <div class="col-12">
+            <div class="blush-carousel mt-3"></div>
+        </div>
+    </div> -->
 
-        // Get user media
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(error => {
-                console.error('Error accessing media devices.', error);
-            });
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const processedImage = document.getElementById('processedImage');
 
-        $('#playButton').on('click', function() {
-            if (!streaming) {
-                startStreaming();
-            } else {
-                stopStreaming();
-            }
+    // Get user media
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Error accessing media devices.', error);
         });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
-</body>
-</html>
+
+    $('#playButton').on('click', function() {
+        if (!streaming) {
+            startStreaming();
+        } else {
+            stopStreaming();
+        }
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+
 
 {% endblock %}
