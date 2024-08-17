@@ -1,36 +1,46 @@
-// queue.js
 class Queue {
-    constructor(size) {
-        this.size = size;
-        this.key = 'queueData';  // 로컬 스토리지에서 사용할 키
-        this.load();
+    constructor(maxSize, storageKey = 'queue') {
+        this.maxSize = maxSize;
+        this.storageKey = storageKey;
+        this.queue = this.loadQueue();
     }
 
-    load() {
-        let storedQueue = localStorage.getItem(this.key);
-        this.queue = storedQueue ? JSON.parse(storedQueue) : [];
+    // 로컬 스토리지에서 큐를 로드
+    loadQueue() {
+        const storedQueue = JSON.parse(localStorage.getItem(this.storageKey));
+        return storedQueue || []; // 저장된 큐가 없으면 빈 배열로 초기화
     }
 
-    save() {
-        localStorage.setItem(this.key, JSON.stringify(this.queue));
+    // 현재 큐를 로컬 스토리지에 저장
+    saveQueue() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.queue));
     }
 
+    // 큐에 아이템 추가 (enqueue)
     enqueue(item) {
-        if (this.queue.length >= this.size) {
-            this.queue.shift();  // 큐의 크기를 초과하면 첫 번째 요소 제거
+        this.queue.push(item);
+        if (this.queue.length > this.maxSize) {
+            this.queue.shift(); // 큐의 크기를 초과하면 첫 번째 아이템 제거
         }
-        this.queue.push(item);  // 새로운 요소 추가
-        this.save();
+        this.saveQueue(); // 변경된 큐를 로컬 스토리지에 저장
     }
 
+    // 큐에서 아이템 제거 (dequeue) - 개별삭제
     dequeue() {
-        let item = this.queue.shift();  // 가장 오래된 요소 제거 및 반환
-        this.save();
+        const item = this.queue.shift();
+        this.saveQueue(); // 변경된 큐를 로컬 스토리지에 저장
         return item;
     }
 
+    // 큐 상태를 반환
     getQueue() {
         return this.queue;
+    }
+
+    // 큐 비우기 - 전체삭제
+    clear() {
+        this.queue = [];
+        this.saveQueue(); // 로컬 스토리지에서도 큐 삭제
     }
 }
 
