@@ -611,14 +611,14 @@
          "imgsrc": "/static/images/product/미샤 모던 섀도우 105 프롬핑크.jpg"
       },
 
-      {"prdCode": "ES0006", "PrdName": "모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카]", "Manufacturer": "더페이스샵", "category": "eyeshadow", "color": "#9B6C57", "option1": "None", "option2": "#D69086", "price":"6,500", "imgsrc": "/static/images/product/모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카].avif"},
+      {"prdCode": "ES0006", "PrdName": "모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카]", "Manufacturer": "더페이스샵", "category": "eyeshadow", "color": "#916551", "option1": "None", "option2": "#D69086", "price":"6,500", "imgsrc": "/static/images/product/모노 큐브 아이섀도우 듀얼 [BR02 오렌지 모카].avif"},
 
       {
         "prdCode": "ES0007",
         "PrdName": "미네랄 모노 섀도우 듀얼 [16호 데어포유]",
         "Manufacturer": "어퓨",
         "category": "eyeshadow",
-        "color": "#906351",
+        "color": "#825444",
         "option1": "None",
         "option2": "#C6967C",
         "price": "4,000원",
@@ -629,7 +629,7 @@
         "PrdName": "미네랄 모노 섀도우(듀얼) [12호 라일락슈가]",
         "Manufacturer": "어퓨",
         "category": "eyeshadow",
-        "color": "#6E524E",
+        "color": "#6D4E4B",
         "option1": "None",
         "option2": "#ECD1C8",
         "price": "4,000원",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap 5 Main Page</title>
+    <title>Virutal makeup page-화연</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Podkova&family=Noto+Sans+KR:wght@400;700&display=swap">
@@ -19,9 +19,8 @@
     <script src="{{ url_for('static', filename='js/queue.js') }}"></script>
 
     <style>
+        
         body, html {
-            height: 100%;
-            margin: 0;
             background-image: url('/static/images/main/background.jpg'); /* 절대 경로로 이미지 지정 */
             background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
             background-position: center; /* 배경 이미지를 화면 중앙에 배치 */
@@ -29,90 +28,31 @@
             color: #4E2A1E; /* 기본 글씨색을 어두운 갈색으로 설정 */
             
         }
+
         .custom-btn {
             background-color: #a8c0ff; /* 원하는 색상 */
             border-color: #a8c0ff; /* 경계선 색상 */
             color: #4E2A1E; /* 기본 글씨색을 어두운 갈색으로 설정 */
         }
-        .custom-outline-btn {
-            background-color: white; /* 원하는 색상 */
-            border-color: #a8c0ff; /* 경계선 색상 */
-            color: #a8c0ff; /* 버튼 텍스트 색상 */
-        }
-        .custom-btn:hover {
-            background-color: #91a4eb; /* 마우스를 올렸을 때 색상 */
-            border-color: #91a4eb; /* 마우스를 올렸을 때 경계선 색상 */
-        }
-        .navbar {
-            background-color: transparent; /* 네비게이션 바 배경을 투명하게 설정 */
-            border: none; /* 네비게이션 바의 경계선 제거 */
-        }
-        .navbar-nav .nav-link {
-            color: #4E2A1E !important; /* 네비게이션 바의 링크 텍스트 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
-            font-family: 'Noto Sans KR', serif; /* 브랜드 이름에 'Noto Sans KR' 글씨체 적용 */
-            font-size: 1.5rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
+
+        /* Ensure content doesn't get hidden behind the navbar */
+        .container.text-center.mt-5 {
+            margin-top: 100px; /* Add margin to account for the fixed navbar height */
         }
 
-        .navbar-brand {
-            font-family: 'Noto Sans KR', serif; /* 브랜드 이름에 'Noto Sans KR' 글씨체 적용 */
-            color: #4E2A1E !important; /* 브랜드 이름 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
-            font-size: 3rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
-        }
-
-        .navbar-toggler-icon {
-            filter: invert(38%) sepia(17%) saturate(327%) hue-rotate(342deg) brightness(93%) contrast(89%);
-            /* 토글 아이콘 색상을 어두운 갈색으로 변경 */
-        }
-
-        .navbar .fa-search, 
-        .navbar .fa-heart {
-            color: #4E2A1E !important; /* 아이콘 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
-            font-size: 1.5rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
-        }
+        
 
         #btngoMain {
             background-color: rgb(39, 60, 171);
         }
 
-        .badge {
-            position: absolute;
-            top: -2px; /* 상단 간격 조정 */
-            right: -5px; /* 오른쪽 간격 조정 */
-            background-color: rgb(39, 60, 171); /* 배지 색상 */
-            color: #A0522D;
-            padding: 4px 6px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 1; /* 배지의 z-index 설정 */
-        }
-
-        .nav-link .fa-heart {
-            position: relative;
-            z-index: 2; /* 하트 아이콘의 z-index를 배지보다 높게 설정 */
-        }
-
-        /* 아이콘 및 텍스트가 활성화되거나 클릭될 때 색상 변경 */
-        .navbar-nav .nav-link:active,
-        .navbar-nav .nav-link.active,
-        .navbar-brand:active,
-        .navbar .fa-search:active,
-        .navbar .fa-heart:active {
-            color: #A0522D !important; /* 눌렸을 때 연갈색으로 변경 */
-        }
-
-        .navbar-nav .nav-link:hover,
-        .navbar-brand:hover,
-        .navbar .fa-search:hover,
-        .navbar .fa-heart:hover {
-            color: #A0522D !important; /* 마우스 오버 시 연갈색으로 변경 */
-        }
+        
     </style>
-    
+
     <script>
         $(document).ready(function() {
             var currentPageUrl = window.location.pathname;
-        
+
             $('.navbar-nav .nav-link').each(function() {
                 var linkUrl = $(this).attr('href');
                 if (linkUrl === '/' && currentPageUrl === '/') {
@@ -121,12 +61,10 @@
                     $(this).addClass('active');
                 }
             });
-            
-           // 페이지 로드 시 해시 값에 따라 탭 활성화
+
             function activateTabFromHash() {
                 var hash = window.location.hash;
                 if (hash) {
-                    // 해시에서 '#pills-skin' 등만 추출
                     var cleanHash = hash.split('#')[1];
                     var tabToActivate = $('a[href="#' + cleanHash + '"]');
                     if (tabToActivate.length) {
@@ -134,32 +72,26 @@
                     }
                 }
             }
-            
-            // 초기 페이지 로드 시 탭 활성화
+
             activateTabFromHash();
 
-            // 드롭다운 아이템 클릭 시 해당 탭 활성화
             $('.dropdown-item').on('click', function(event) {
-                event.preventDefault();  // 기본 링크 클릭 동작 방지
+                event.preventDefault();
                 var targetHash = $(this).attr('href').split('#')[1];
                 if (targetHash) {
                     var newHash = '#' + targetHash;
-                    // 페이지 URL을 해시로 업데이트
                     if (window.location.hash !== newHash) {
                         window.location.hash = newHash;
                     }
-                    // 해당 탭을 활성화
                     var tabToActivate = $('a[href="' + newHash + '"]');
                     if (tabToActivate.length) {
                         tabToActivate.tab('show');
-                        // 드롭다운 닫기
                         var dropdownToggle = $(this).closest('.dropdown-menu').prev('.dropdown-toggle');
                         dropdownToggle.dropdown('hide');
                     }
                 }
             });
 
-            // 탭 클릭 시 URL 해시값 갱신
             $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
                 var newHash = e.target.hash;
                 if (window.location.hash !== newHash) {
@@ -167,18 +99,12 @@
                 }
             });
 
-            //=======================================================================
-            //찜목록 관련 추가 = choi. 2024.08.12
-            //=======================================================================
-            // Queue 인스턴스 생성
             const myQueue = new Queue(3);
 
-            // 큐 상태를 업데이트하는 함수(테스트용도)
             function updateQueueDisplay() {
                 $('#queueContent').text(JSON.stringify(myQueue.getQueue(), null, 2));
             }
 
-            // Enqueue 버튼 클릭 이벤트
             $('#enqueueBtn').click(function() {
                 const item = prompt('Enter data to enqueue:');
                 if (item) {
@@ -187,7 +113,6 @@
                 }
             });
 
-            // Dequeue 버튼 클릭 이벤트
             $('#dequeueBtn').click(function() {
                 const item = myQueue.dequeue();
                 if (item) {
@@ -198,55 +123,21 @@
                 }
             });
 
-            // 초기 큐 상태 표시
             updateQueueDisplay();
-            //=======================================================================
         });
-        
     </script>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/"> 화연(華焰)</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Products
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="productsDropdown">
-                            <li><a class="dropdown-item" href="/products_skin#pills-skin">SKIN</a></li>
-                            <li><a class="dropdown-item" href="/products_skin#pills-eye">EYE</a></li>
-                            <li><a class="dropdown-item" href="/products_skin#pills-lip">LIP</a></li>
-                            <li><a class="dropdown-item" href="/products_skin#pills-fashion">Fashion</a></li>
-                        </ul>
-                        
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search"><i class="fas fa-search"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link position-relative"  href="/queue_display">    <!-- data-bs-toggle="modal" data-bs-target="#exampleModal"-->
-                            <i class="fas fa-heart"></i>
-                            <span class="badge" id="cookie-count">0</span> <!-- 쿠키 개수를 표시하는 배지 -->
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+       
+    <header>
+        <!-- 메뉴바 영역 -->
+        {% block navbar %}
+            {% include 'navbar.html' %}
+        {% endblock %}
+    </header>
+
+
 
     <!-- Content -->
     <div class="container text-center mt-5">
@@ -254,7 +145,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -262,12 +153,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modal-cart-items">
-                    <!-- Cart items will be dynamically inserted here -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" id="clear-cart">Clear Cart</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Toast 컴포넌트 -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toastMessage" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">알림</strong>
+                <small>방금</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                찜 목록에 추가되었습니다.
             </div>
         </div>
     </div>
