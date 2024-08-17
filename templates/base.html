@@ -21,12 +21,6 @@
     <style>
         
         body, html {
-            background-image: url('{{ url_for('static', filename='images/main/background.jpg') }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100%;
-            margin: 0;
             background-image: url('/static/images/main/background.jpg'); /* 절대 경로로 이미지 지정 */
             background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
             background-position: center; /* 배경 이미지를 화면 중앙에 배치 */
@@ -34,29 +28,18 @@
             color: #4E2A1E; /* 기본 글씨색을 어두운 갈색으로 설정 */
             
         }
-<<<<<<< Updated upstream
+
         .custom-btn {
             background-color: #a8c0ff; /* 원하는 색상 */
             border-color: #a8c0ff; /* 경계선 색상 */
             color: #4E2A1E; /* 기본 글씨색을 어두운 갈색으로 설정 */
-=======
-
-        /* Custom styles for navbar */
-        .navbar {
-            background-color: transparent; /* Make the navbar transparent */
-            position: fixed; /* Fix the navbar at the top of the page */
-            width: 100%; /* Ensure the navbar spans the full width of the page */
-            top: 0; /* Position the navbar at the very top */
-            z-index: 1000; /* Ensure the navbar is on top of other content */
-            border-bottom: none; /* Remove any bottom border */
->>>>>>> Stashed changes
         }
 
         /* Ensure content doesn't get hidden behind the navbar */
         .container.text-center.mt-5 {
             margin-top: 100px; /* Add margin to account for the fixed navbar height */
         }
-<<<<<<< Updated upstream
+
         .navbar {
             background-color: transparent; /* 네비게이션 바 배경을 투명하게 설정 */
             border: none; /* 네비게이션 바의 경계선 제거 */
@@ -70,7 +53,7 @@
         .navbar-brand {
             font-family: 'Noto Sans KR', serif; /* 브랜드 이름에 'Noto Sans KR' 글씨체 적용 */
             color: #4E2A1E !important; /* 브랜드 이름 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
-            font-size: 3rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
+            font-size: 3rem !important; /* 브랜드 이름 폰트 크기를 크게 설정 */
         }
 
         .navbar-toggler-icon {
@@ -82,12 +65,6 @@
         .navbar .fa-heart {
             color: #4E2A1E !important; /* 아이콘 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
             font-size: 1.5rem; /* 브랜드 이름 폰트 크기를 크게 설정 */
-=======
-
-        .navbar-nav .nav-link {
-            color: white; /* Set the text color for the navbar links */
-            position: relative; /* For proper positioning of badge */
->>>>>>> Stashed changes
         }
 
         #btngoMain {
@@ -96,17 +73,10 @@
 
         .badge {
             position: absolute;
-<<<<<<< Updated upstream
             top: -2px; /* 상단 간격 조정 */
             right: -5px; /* 오른쪽 간격 조정 */
             background-color: rgb(39, 60, 171); /* 배지 색상 */
             color: #A0522D;
-=======
-            top: -2px;
-            right: -5px;
-            background-color: rgb(39, 60, 171);
-            color: white;
->>>>>>> Stashed changes
             padding: 4px 6px;
             border-radius: 50%;
             font-size: 12px;
@@ -220,11 +190,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-<<<<<<< Updated upstream
-            <a class="navbar-brand" href="/"> 화연(華焰)</a>
-=======
             <a class="navbar-brand" href="/">화연(花衍)</a>
->>>>>>> Stashed changes
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

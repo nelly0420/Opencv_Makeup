@@ -145,7 +145,6 @@
                 selectedColor = $(this).val();
                 console.log('Selected Color from Picker:', selectedColor);
             });
-        });
 
         //=======================================================================
             //찜목록 관련 추가 = choi. 2024.08.12
@@ -202,7 +201,7 @@
             // bagde cnt 업데이트
             updateBadge();
             //=======================================================================
-         //End of ready !!!
+        });//End of ready !!!
 
         function startStreaming() {
             socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
