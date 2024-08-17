@@ -199,6 +199,10 @@ def products_lens(prdCode):
 def test():
     return render_template("test copy.html")
 
+@app.route("/wish")
+def wish():
+    return render_template("wish.html")
+
 # api 형식임 ---> 소켓통신으로 고칠 것
 @app.route("/productJSON", methods=["GET"])
 def get_products():
