@@ -35,6 +35,10 @@ def handle_connect():
 def handle_disconnect():
     print('Client disconnected')
 
+@app.route("/queue_display")
+def queue_display():
+    return render_template("queue_display.html")
+    
 # @socketio.on('samplelipstick')
 # def handle_image_sample(data):
 #     # byte ->  numpy array
