@@ -8,9 +8,12 @@ def adjust_point(points, target_index, x_index, y_index):
     target_point = points[target_index].copy()
     new_x = points[x_index][0]
     new_y = points[y_index][1]
+
     target_point[0] = new_x
     target_point[1] = new_y
+
     points[target_index] = target_point
+
     return points
 
 def hex_to_bgr(hex_color: str) -> tuple:
@@ -22,13 +25,14 @@ def apply_eyebrow(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     """
     Apply eyebrows to the image using a specified product code and color.
 
-    :param image: Input image (BGR format)
-    :param prdCode: Product code to fetch eyebrow color from JSON
-    :param color: HEX color code for eyebrows
-    :return: Image with applied eyebrows
     """
-    # Convert HEX color to BGR
-    brow_color = hex_to_bgr(color)
+
+    brow_color, _, _ = get_color_from_json(prdCode)
+
+    # 사용자 정의 색상
+    userColor = hex_to_bgr(color)
+    if color != None:
+        brow_color = userColor
 
     # Detect facial landmarks
     landmarks = get_landmarks(image)
@@ -40,13 +44,15 @@ def apply_eyebrow(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     left_eyebrow_points, right_eyebrow_points = get_eyebrows(landmarks)
 
     # Adjust eyebrow points if needed
-    left_eyebrow_points = adjust_point(left_eyebrow_points, 3, 4, 2)
-    right_eyebrow_points = adjust_point(right_eyebrow_points, 1, 0, 2)
+    # left_eyebrow_points = adjust_point(left_eyebrow_points, 3, 4, 2)
+    # right_eyebrow_points = adjust_point(right_eyebrow_points, 1, 0, 2)
 
     # Create a mask for the eyebrows
     mask = np.zeros_like(image, dtype=np.uint8)
-    cv2.fillPoly(mask, [left_eyebrow_points], brow_color)
-    cv2.fillPoly(mask, [right_eyebrow_points], brow_color)
+    #cv2.fillPoly(mask, [left_eyebrow_points], brow_color)
+    cv2.polylines(mask, [left_eyebrow_points], isClosed=False, color = brow_color, thickness=3)
+    #cv2.fillPoly(mask, [right_eyebrow_points], brow_color)
+    cv2.polylines(mask, [right_eyebrow_points], isClosed=False, color=brow_color, thickness=3)
 
      # Create a contour mask and apply Gaussian blur
     contour_mask = np.zeros_like(image, dtype=np.uint8)
