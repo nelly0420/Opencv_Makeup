@@ -4,9 +4,10 @@
 <div class="content-container">
     <h1>Stored Products</h1>
     <div id="product-container"></div>
-    <div class="clear-button-container">
-        <button id="clearQueueBtn" class="btn btn-danger">Clear All</button>
-    </div>
+</div>
+
+<div class="clear-button-container">
+    <button id="clearQueueBtn" class="btn btn-danger">Clear All</button>
 </div>
 
 <style>
@@ -15,13 +16,12 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start; /* 상단 정렬 */
-        height: 100vh; /* 전체 화면 높이 설정 */
+        justify-content: flex-start;
         width: 100%;
         max-width: 1200px;
-        margin: 20px auto; /* 상하 여백을 추가하여 위로 이동 */
+        margin: 20px auto;
         padding: 20px;
-        box-sizing: border-box; /* 패딩과 보더를 포함한 전체 크기 계산 */
+        box-sizing: border-box;
     }
 
     /* 제품 컨테이너 스타일 */
@@ -30,7 +30,7 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 20px;
-        margin-bottom: 20px; /* 버튼과의 간격 추가 */
+        margin-bottom: 20px;
     }
 
     /* 각 제품 카드 스타일 */
@@ -41,10 +41,10 @@
         padding: 15px;
         width: 250px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center; /* 중앙 정렬 */
+        text-align: center;
         display: flex;
         flex-direction: column;
-        align-items: center; /* 이미지와 텍스트를 중앙에 정렬 */
+        align-items: center;
         transition: transform 0.2s ease-in-out;
     }
 
@@ -62,14 +62,14 @@
         font-size: 20px;
         color: #333;
         margin: 10px 0;
-        text-align: center; /* 제목 중앙 정렬 */
+        text-align: center;
     }
 
     .product p {
         color: #666;
         font-size: 14px;
         margin-bottom: 15px;
-        text-align: center; /* 설명 중앙 정렬 */
+        text-align: center;
     }
 
     /* 색상 버튼 스타일 */
@@ -81,15 +81,23 @@
         margin-top: 10px;
     }
 
-    /* Clear All 버튼을 아래로 이동 */
+    /* Clear All 버튼을 화면 하단에 고정 */
     .clear-button-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         display: flex;
         justify-content: center;
-        width: 100%;
+        padding: 10px 0;
+        background-color: transparent; /* 배경색을 투명으로 설정 */
+        border-top: none; /* 상단 경계선 제거 */
+        box-shadow: none; /* 그림자 제거 */
+        z-index: 1000;
     }
-
+    
     #clearQueueBtn {
-        margin-top: 20px;
+        margin-top: 0;
     }
 </style>
 
