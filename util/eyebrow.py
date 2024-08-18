@@ -218,9 +218,12 @@ def apply_eyebrow2(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
 
     # 스케치 결과를 컬러 이미지로 변환
     sketch_colored = cv2.cvtColor(sketch, cv2.COLOR_GRAY2BGR)
+    
+    # 블러 효과 적용
+    blurred_mask = cv2.GaussianBlur(mask, (15, 15), 0)
 
     # 원본 이미지에 스케치 적용된 눈썹 영역 합성
-    image_with_sketch_eyebrows = cv2.bitwise_and(sketch_colored, mask)
+    image_with_sketch_eyebrows = cv2.bitwise_and(sketch_colored, blurred_mask)
     result = cv2.addWeighted(image, 1, image_with_sketch_eyebrows, 0.1, 0)
-
+    
     return result
