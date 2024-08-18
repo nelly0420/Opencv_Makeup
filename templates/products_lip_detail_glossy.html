@@ -133,6 +133,8 @@
             $('.blush-carousel').on('click', '.color-circle', function() {
                 selectedColor = $(this).data('color');
                 selectedPrdCode = $(this).data('prdcode');  // Update selected product code
+                prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
+                colorInfo = selectedColor; // 선택된 컬러
                 console.log('Selected Color:', selectedColor);
                 console.log('Selected Product Code:', selectedPrdCode);
             });
