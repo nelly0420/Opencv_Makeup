@@ -60,7 +60,7 @@ def draw_pupil_borders(image, pupils, color):
         cv2.circle(image, center, radius, color, thickness=1)  # thickness=3으로 테두리 두께 조정
     return image
 
-def main(image_path, prdCode):
+def apply_lens(image_path, prdCode):
     image = cv2.imread(image_path)
     pupils = detect_pupil(image)
     
