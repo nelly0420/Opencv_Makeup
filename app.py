@@ -12,6 +12,7 @@ from util.blush import apply_blush
 from util.eyebrow import apply_eyebrow, apply_eyebrow2
 from util.eyeshadow import apply_eyeshadow
 from util.sunglasses import apply_sunglasses
+from util.colored_lens import apply_lens
 
 # import dlib
 # from datetime import datetime
@@ -89,6 +90,9 @@ def handle_image(data):
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
         img_with_makeup = apply_eyeshadow(img, makeup_prdCode) # 사용자 설정 color 기능 없음
+    # elif makeup_type == 'lens':
+    #     print('Applying lens...')
+    #     img_with_makeup = apply_lens(img, makeup_prdCode) # 사용자 설정 color 기능 없음
     elif makeup_type == "sunglasses":
         img_with_makeup = apply_sunglasses(img, makeup_prdCode) # 사용자 설정 color 기능 없음
     else:
@@ -346,7 +350,9 @@ def get_products():
 #         return buffer.tobytes(), 200
 #     else:
 #         return "Method not allowed", 405
-    
+
+
+# 소켓형식으로 바꾸기 전에 살려두기
 @app.route('/apply_color_lens', methods=['POST'])
 def apply_color_lens_endpoint():
     if request.method == 'POST':
