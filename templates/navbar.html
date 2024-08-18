@@ -10,9 +10,16 @@
     }
 
     .navbar-brand {
-        font-family: 'Noto Sans KR', serif; /* 브랜드 이름에 'Noto Sans KR' 글씨체 적용 */
+       
         color: #4E2A1E !important; /* 브랜드 이름 색상을 어두운 갈색으로 설정하고 우선순위를 높임 */
         font-size: 3rem !important; /* 브랜드 이름 폰트 크기를 크게 설정 */
+        font-family: 'kdg_Medium', sans-serif; /* 커스텀 폰트와 대체 폰트를 설정 */
+    }
+    @font-face {
+        font-family: 'kdg_Medium';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/kdg_Medium.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
     }
 
     .navbar-toggler-icon {
@@ -29,8 +36,8 @@
         position: absolute;
         top: -2px; /* 상단 간격 조정 */
         right: -5px; /* 오른쪽 간격 조정 */
-        background-color: rgb(39, 60, 171); /* 배지 색상 */
-        color: #A0522D;
+        background-color: rgb(170, 128, 108); /* 배지 색상 */
+        color: #4E2A1E;
         padding: 4px 6px;
         border-radius: 50%;
         font-size: 12px;

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
-from detect import get_landmarks, get_eyeCenter_points
+from util.detect import get_landmarks, get_eyeCenter_points
 from PIL import Image
 
 ## image load test
