@@ -9,7 +9,7 @@ import json
 from util.lipstick import apply_lipstick
 from util.eyeliner import apply_eyeliner
 from util.blush import apply_blush
-from util.eyebrow import apply_eyebrow
+from util.eyebrow import apply_eyebrow, apply_eyebrow2
 from util.eyeshadow import apply_eyeshadow
 from util.sunglasses import apply_sunglasses
 
@@ -85,7 +85,7 @@ def handle_image(data):
         img_with_makeup = apply_blush(img, makeup_prdCode, userColor)
     elif makeup_type == 'eyebrow':
         print('Applying eyebrow...')
-        img_with_makeup = apply_eyebrow(img, makeup_prdCode, userColor)
+        img_with_makeup = apply_eyebrow2(img, makeup_prdCode, userColor)
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
         img_with_makeup = apply_eyeshadow(img, makeup_prdCode) # 사용자 설정 color 기능 없음

@@ -20,7 +20,7 @@ def get_landmarks(image):
     landmarks = predictor(gray, faces[0])  # 첫 번째 얼굴만 처리
     return landmarks
 
-def get_eyebrows(landmarks):
+def get_eyebrows(landmarks, scale_factor=1):
     """
     주어진 랜드마크에서 눈썹 포인트를 추출합니다.
     
@@ -29,6 +29,24 @@ def get_eyebrows(landmarks):
     """
     left_eyebrow_points = [ (landmarks.part(i).x, landmarks.part(i).y) for i in range(17, 22) ]
     right_eyebrow_points = [ (landmarks.part(i).x, landmarks.part(i).y) for i in range(22, 27) ]
+
+    y_offset=2
+
+    # 17번 포인트의 y 좌표를 y_offset 만큼 줄임
+    left_eyebrow_points[0] = (left_eyebrow_points[0][0], left_eyebrow_points[0][1] - y_offset)
+
+    # 27번 포인트의 y 좌표를 y_offset 만큼 줄임
+    right_eyebrow_points[-1] = (right_eyebrow_points[-1][0], right_eyebrow_points[-1][1] - y_offset)
+
+
+    # 왼쪽 눈썹의 중앙값 계산
+    left_mean_x = np.mean([point[0] for point in left_eyebrow_points])
+    # 오른쪽 눈썹의 중앙값 계산
+    right_mean_x = np.mean([point[0] for point in right_eyebrow_points])
+
+    # 각 눈썹 포인트의 x 좌표 조정
+    left_eyebrow_points = [(int(left_mean_x + (x - left_mean_x) * scale_factor), y) for x, y in left_eyebrow_points]
+    right_eyebrow_points = [(int(right_mean_x + (x - right_mean_x) * scale_factor), y) for x, y in right_eyebrow_points]
 
     right_eyebrow_points = np.array(right_eyebrow_points)
     left_eyebrow_points = np.array(left_eyebrow_points)
