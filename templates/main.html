@@ -153,6 +153,7 @@
             <div class="cherry-blossom-container"></div>
             <img src="{{ url_for('static', filename='images/main/main1.jpg') }}" alt="Slide 1">
             <div class="carousel-caption d-none d-md-block">
+                <img src="/static/images/main/main1_pic.png" style="width: 30%; height: auto;  margin:50px">
                 <h1 class="title">화연(花衍)</h1>
                 <h5 class="subtitle">"화용월태"(花容月態)</h5>
                 <p style="color: black; font-size:20px">Matte와 Glossy 립스틱을 가상으로 미리 적용해보며, <br/>꽃 같은 입술과 달 같은 자태를 완성해보세요.</p>
@@ -215,7 +216,7 @@
             <div class="carousel-caption d-none d-md-block">
                 <h1 class="title">화연(花衍)</h1>
                 <h5 class="subtitle">“유려미문”(流麗美文)</h5>
-                <p style="color: black; font-size:20px">가상의 환경에서 흐르는 듯 자연스럽고 <br/>아름다운 나만의 스타일을 발견해보세요.</p>
+                <p style="color: black; font-size:20px">가상의 환경에서 흐르는 듯 자연스럽고 아이라이너와  <br/> 아이브로우를 통해 아름다운 나만의 스타일을 발견해보세요.</p>
                 <footer style="background-color: #9C9C9C;">
                 <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
@@ -235,7 +236,7 @@
             <div class="carousel-caption d-none d-md-block">
                 <h1 class="title">화연(花衍)</h1>
                 <h5 class="subtitle">"다채만상" (多彩萬象)</h5>
-                <p style="color: black; font-size:20px">다양한 화장품을 가상의 환경에서 체험하며  <br/>나만의 다채로운 스타일을 발견해보세요.</p>
+                <p style="color: black; font-size:20px">다양한 제품을 가상의 환경에서 체험하며 <br/>나만의 다채로운 스타일을 발견해보세요.</p>
                 <footer style="background-color: #9395B8;">
                 <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
@@ -329,22 +330,32 @@
                 const minSize = 10;
                 const maxSize = 15;
                 const size = Math.random() * (maxSize - minSize) + minSize;
+        
+                // 스타일 설정
                 $petalEl.css({
                     width: `${size}px`,
                     height: `${size}px`,
                     left: `${Math.random() * $(window).width()}px`,
-                    top: `-${size}px` // Start position just above the viewport
+                    top: `-${size}px`, // 뷰포트 위쪽에서 시작
                 });
+        
+                // 애니메이션 추가
+                $petalEl.addClass('animate-petal');
                 $section.append($petalEl);
         
-                // Remove petal after animation
+                // 애니메이션이 끝난 후 꽃잎 제거
                 setTimeout(() => {
                     $petalEl.remove();
-                }, 10000);
-            }
-
-            // Generate petals at intervals
-            setInterval(createPetal, 300);
+                }, 10000); // 애니메이션과 제거 시간 맞추기
+            };
+        
+            // 일정 시간 간격으로 꽃잎 생성
+            setInterval(createPetal, 200);
+        
+            // 캐러셀 슬라이드 변경 시 꽃잎 애니메이션 재시작
+            $('#carouselExampleIndicators').on('slide.bs.carousel', function () {
+                $section.empty(); // 이전 꽃잎 제거
+            });
         });
     </script>
 </body>
