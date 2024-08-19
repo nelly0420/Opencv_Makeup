@@ -1,5 +1,4 @@
 import cv2
-import dlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -143,42 +142,3 @@ def apply_sunglasses(image, prdCode):
     
     return result_image
 
-# -------------> 선글라스 html 수정이 필요해서 test용으로 main code를 만듦.
-# def main():
-#     # 카메라 초기화
-#     cap = cv2.VideoCapture(0)
-    
-#     if not cap.isOpened():
-#         print("카메라를 열 수 없습니다.")
-#         return
-    
-#     # 화면 크기 설정
-#     window_name = 'Face with Sunglasses'
-#     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-#     cv2.resizeWindow(window_name, 600, 450)
-    
-    
-#     while True:
-#         # 프레임 읽기
-#         ret, frame = cap.read()
-#         if not ret:
-#             print("프레임을 읽을 수 없습니다.")
-#             break
-        
-
-#         # 얼굴 랜드마크 및 눈 중앙 표시
-#         processed_frame = apply_sunglasses(frame, 'SUN002')
-        
-#         # 결과 이미지 출력
-#         cv2.imshow(window_name, processed_frame)
-        
-#         # 'q' 키를 누르면 종료
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             break
-    
-#     # 모든 창 닫기 및 카메라 해제
-#     cap.release()
-#     cv2.destroyAllWindows()
-
-# if __name__ == "__main__":
-#     main()

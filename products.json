@@ -650,7 +650,7 @@
     
         {
           "prdCode": "SUN002", 
-          "PrdName": "트리옹프 04 아세테이트", 
+          "PrdName": "트리옹프 04", 
           "Manufacturer": "셀린느", 
           "category": "sunglasses", 
           "color": "None", 
@@ -669,12 +669,12 @@
           "option1": "None", 
           "option2": "None", 
           "price":"368,000", 
-          "imgsrc": "/static/images/product/젠틀몬스터 선글라스.png"
+          "imgsrc": "/static/images/product/젠틀몬스터.png"
         },
 
         {
           "prdCode": "SUN004", 
-          "PrdName": "레이디 95.22 R2F 라운드 블랙", 
+          "PrdName": "디올 레이디R2F 라운드 블랙", 
           "Manufacturer": "디올", 
           "category": "sunglasses", 
           "color": "None", 
