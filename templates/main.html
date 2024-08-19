@@ -19,7 +19,6 @@
             height: 100%;
             margin: 0;
             font-family: 'Podkova', sans-serif;
-           
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,9 +30,10 @@
         }
         
         .title {
-            font-size: 90px;
+            font-size: 100px;
             color: #4F2626;
             font-family: 'kdg_Medium', sans-serif; /* 커스텀 폰트와 대체 폰트를 설정 */
+            
         }
         @font-face {
             font-family: 'kdg_Medium';
@@ -42,40 +42,63 @@
             font-style: normal;
         }
         .subtitle {
-            font-size: 30px;
-            color: #4F2626;
+            font-size: 40px;
+            font-family: 'kdg_Medium', sans-serif; /* 커스텀 폰트와 대체 폰트를 설정 */
+            color: #4F2626; 
+            padding:10px;
         }
+        
         .container {
             max-width: 100%;
         }
-        .navbar-nav .nav-link {
-            color: white;
-            position: relative;
+        .carousel-caption {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: left;
+            display: flex; /* Use flexbox layout */
+            align-items: center; /* Center items vertically */
+            padding: 20px;
+            border-radius: 10px;
         }
+        
+        /* Specific styles for the image with class 'caption-image' */
+        .carousel-caption .caption-image {
+            width: 45%;
+            height: auto;
+            position: relative; /* Ensure positioning works correctly */
+        }
+
+        .carousel-caption p {
+            font-size: 25px;
+            color: #4F2626; /* Set the text color */
+            padding:10px;
+        }
+
+        .carousel-caption .text-content {
+            flex: 1; /* Allow text to take available space */
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+            overflow: visible; /* Allow text to overflow */
+        }
+        
         .btn-go-main {
             background-color: #4F2626;
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 20px;
+            padding:10px;
+            padding-right:15px;
+            padding-left:15px;
             margin-right:10px;
             margin-left:10px;
+            margin-top:30px;
         }
-        .badge {
-            position: absolute;
-            top: -2px;
-            right: -5px;
-            background-color: rgb(39, 60, 171);
-            color: white;
-            padding: 4px 6px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 1;
+
+        .btn-go-main:hover {
+            background-color: #8A605C;
+            cursor: pointer;
         }
-        .nav-link .fa-heart {
-            position: relative;
-            z-index: 2;
-        }
+        
         .cherry-blossom-container {
             position: absolute;
             top: 0;
@@ -85,12 +108,14 @@
             overflow: hidden;
             pointer-events: none;
         }
+
         .petal {
             position: absolute;
             background-color: FFCCC2;
             border-radius: 100% 0 100% 0;
             animation: animate-petal 10s linear;
         }
+
         .petal::after {
             content: "";
             position: absolute;
@@ -103,18 +128,12 @@
             border-radius: 100% 0 100% 0;
             transform: rotate(15deg);
         }
+
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
             background-color: #4F2626; /* Replace with your desired color */
         }
-        footer {
-            
-            padding: 20px;
-            text-align: center; /* 중앙 정렬 */
-            margin: 0 auto; /* 중앙 정렬 */
-            width: 100%;
-            box-sizing: border-box;
-        }
+       
         
         @keyframes animate-petal {
             0% {
@@ -148,106 +167,95 @@
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
     </div>
-    <div class="carousel-inner">
         <div class="carousel-item active">
             <div class="cherry-blossom-container"></div>
             <img src="{{ url_for('static', filename='images/main/main1.jpg') }}" alt="Slide 1">
-            <div class="carousel-caption d-none d-md-block">
-                <img src="/static/images/main/main1_pic.png" style="width: 30%; height: auto;  margin:50px">
-                <h1 class="title">화연(花衍)</h1>
-                <h5 class="subtitle">"화용월태"(花容月態)</h5>
-                <p style="color: black; font-size:20px">Matte와 Glossy 립스틱을 가상으로 미리 적용해보며, <br/>꽃 같은 입술과 달 같은 자태를 완성해보세요.</p>
-                <footer style="background-color: #FCC6C6;">
-                <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-lip">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg> Try Now
-                </button>
-                <button class="btn btn-primary btn-go-main" data-url="/about">
-                 프로젝트 개요
-                </button>
-            </footer>
+            <div class="carousel-caption">
+                <div class="text-content">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">"화용월태"(花容月態)</h5>
+                    <p>Matte와 Glossy 립스틱을 가상으로 미리 적용해보며,<br> 꽃 같은 입술과 달 같은 자태를 완성해보세요.</p>
+                    <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-lip">
+                        Try Now
+                    </button>
+                    <button class="btn btn-primary btn-go-main" data-url="/about">
+                        About
+                    </button>
+                </div>
+                <img src="/static/images/main/main1_pic.png" alt="Main 1 Pic" class="caption-image">
             </div>
         </div>
+    
         <div class="carousel-item">
             <div class="cherry-blossom-container"></div>
             <img src="{{ url_for('static', filename='images/main/main2.jpg') }}" alt="Slide 2">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="title">화연(花衍)</h1>
-                <h5 class="subtitle">“칠색조화”(七色造化)</h5>
-                <p style="color: black; font-size:20px">다양한 색감의 쉐도우를 적용하여 나만의  <br/>독특하고 다채로운 스타일을 발견해보세요.</p>
-                <footer style="background-color: #D4C3B3;">
-                <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg> Try Now
-                </button>
-                <button class="btn btn-primary btn-go-main" data-url="/about">
-                    프로젝트 개요
-                </button>
-            </footer>
+            <div class="carousel-caption">
+                <div class="text-content">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">“칠색조화”(七色造化)</h5>
+                    <p>다양한 색감의 쉐도우를 적용하여 나만의<br> 독특하고 다채로운 스타일을 발견해보세요</p>
+                    <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
+                        Try Now
+                    </button>
+                    <button class="btn btn-primary btn-go-main" data-url="/about">
+                        About
+                    </button>
+                </div>
+                <img src="/static/images/main/main2_pic.png" alt="Main 2 Pic" class="caption-image">
             </div>
         </div>
         <div class="carousel-item">
             <div class="cherry-blossom-container"></div>
             <img src="{{ url_for('static', filename='images/main/main3.jpg') }}" alt="Slide 3">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="title">화연(花衍)</h1>
-                <h5 class="subtitle">“화려강산”(華麗江山)</h5>
-                <p style="color: black; font-size:20px">다양한 블러셔를 체험하며, 화려하고 매혹적인  <br/> 나만의 스타일을 발견해보세요.</p>
-                <footer style="background-color: #ABC39E;">
-                <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-skin">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg> Try Now
-                </button>
-                <button class="btn btn-primary btn-go-main" data-url="/about">
-                    프로젝트 개요
-                </button>
-            </footer>
+            <div class="carousel-caption">
+                <div class="text-content">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">“화려강산”(華麗江山)</h5>
+                    <p>다양한 블러셔를 체험하며, 화려하고 매혹적인<br> 나만의 스타일을 발견해보세요.</p>
+                    <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-skin">
+                        Try Now
+                    </button>
+                    <button class="btn btn-primary btn-go-main" data-url="/about">
+                        About
+                    </button>
+                </div>
+                <img src="/static/images/main/main3_pic.png" alt="Main 3 Pic" class="caption-image">
             </div>
         </div>
         <div class="carousel-item">
             <div class="cherry-blossom-container"></div>
-            <img src="{{ url_for('static', filename='images/main/main4.jpg') }}" alt="Slide 4">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="title">화연(花衍)</h1>
-                <h5 class="subtitle">“유려미문”(流麗美文)</h5>
-                <p style="color: black; font-size:20px">가상의 환경에서 흐르는 듯 자연스럽고 아이라이너와  <br/> 아이브로우를 통해 아름다운 나만의 스타일을 발견해보세요.</p>
-                <footer style="background-color: #9C9C9C;">
-                <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg> Try Now
-                </button>
-                <button class="btn btn-primary btn-go-main" data-url="/about">
-                    프로젝트 개요
-                </button>
-            </footer>
+            <img src="{{ url_for('static', filename='images/main/main4.jpg') }}" alt="Slide 1">
+            <div class="carousel-caption">
+                <div class="text-content">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">“유려미문”(流麗美文)</h5>
+                    <p>가상의 환경에서 흐르는 듯 자연스러운<br> 아이라이너와 아이브로우를 경험해보세요.</p>
+                    <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
+                        Try Now
+                    </button>
+                    <button class="btn btn-primary btn-go-main" data-url="/about">
+                        About
+                    </button>
+                </div>
+                <img src="/static/images/main/main4_pic.png" alt="Main 4 Pic" class="caption-image">
             </div>
         </div>
         <div class="carousel-item">
             <div class="cherry-blossom-container"></div>
             <img src="{{ url_for('static', filename='images/main/main5.jpg') }}" alt="Slide 5">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="title">화연(花衍)</h1>
-                <h5 class="subtitle">"다채만상" (多彩萬象)</h5>
-                <p style="color: black; font-size:20px">다양한 제품을 가상의 환경에서 체험하며 <br/>나만의 다채로운 스타일을 발견해보세요.</p>
-                <footer style="background-color: #9395B8;">
-                <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-eye">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg> Try Now
-                </button>
-                <button class="btn btn-primary btn-go-main" data-url="/about">
-                    프로젝트 개요
-                </button>
-            </footer>
+            <div class="carousel-caption">
+                <div class="text-content">
+                    <h1 class="title">화연(花衍)</h1>
+                    <h5 class="subtitle">"다채만상"(多彩萬象)</h5>
+                    <p>다양한 패션용품을 가상의 환경에서 체험하며 <br> 나만의 다채로운 스타일을 발견해보세요.</p>
+                    <button class="btn btn-primary btn-go-main" data-url="/products_skin/pills-fashion">
+                        Try Now
+                    </button>
+                    <button class="btn btn-primary btn-go-main" data-url="/about">
+                        About
+                    </button>
+                </div>
+                <img src="/static/images/main/main5_pic.png" alt="Main 5 Pic" class="caption-image">
             </div>
         </div>
     </div>
