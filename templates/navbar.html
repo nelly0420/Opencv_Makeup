@@ -85,10 +85,10 @@
                         Products
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="productsDropdown">
-                        <li><a class="dropdown-item" href="/products_skin#pills-skin">SKIN</a></li>
-                        <li><a class="dropdown-item" href="/products_skin#pills-eye">EYE</a></li>
-                        <li><a class="dropdown-item" href="/products_skin#pills-lip">LIP</a></li>
-                        <li><a class="dropdown-item" href="/products_skin#pills-fashion">Fashion</a></li>
+                        <li><a class="dropdown-item" href="/products_skin/pills-skin">SKIN</a></li>
+                        <li><a class="dropdown-item" href="/products_skin/pills-eye">EYE</a></li>
+                        <li><a class="dropdown-item" href="/products_skin/pills-lip">LIP</a></li>
+                        <li><a class="dropdown-item" href="/products_skin/pills-fashion">Fashion</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -111,7 +111,7 @@
 <script>
     $(document).ready(function() {
         var currentPageUrl = window.location.pathname;
-        
+
         $('.navbar-nav .nav-link').each(function() {
                 var linkUrl = $(this).attr('href');
                 if (linkUrl === '/' && currentPageUrl === '/') {
@@ -121,34 +121,37 @@
                 }
             });
 
-            function activateTabFromHash() {
-                var hash = window.location.hash;
-                if (hash) {
-                    var cleanHash = hash.split('#')[1];
-                    var tabToActivate = $('a[href="#' + cleanHash + '"]');
-                    if (tabToActivate.length) {
-                        tabToActivate.tab('show');
-                    }
-                }
-            }
+            // function activateTabFromHash() {
+            //     alert('1111');
+            //     var hash = window.location.hash;
+            //     if (hash) {
+            //         var cleanHash = hash.split('#')[1];
+            //         var tabToActivate = $('a[href="#' + cleanHash + '"]');
+            //         if (tabToActivate.length) {
+            //             tabToActivate.tab('show');
+            //         }
+            //     }
+            // }
 
-            activateTabFromHash();
+            // activateTabFromHash();
 
             $('.dropdown-item').on('click', function(event) {
                 event.preventDefault();
-                var targetHash = $(this).attr('href').split('#')[1];
-                if (targetHash) {
-                    var newHash = '#' + targetHash;
-                    if (window.location.hash !== newHash) {
-                        window.location.hash = newHash;
-                    }
-                    var tabToActivate = $('a[href="' + newHash + '"]');
-                    if (tabToActivate.length) {
-                        tabToActivate.tab('show');
-                        var dropdownToggle = $(this).closest('.dropdown-menu').prev('.dropdown-toggle');
-                        dropdownToggle.dropdown('hide');
-                    }
-                }
+                window.location.href=$(this).attr('href')
+                
+
+                // if (targetHash) {
+                //     var newHash = '#' + targetHash;
+                //     if (window.location.hash !== newHash) {
+                //         window.location.hash = newHash;
+                //     }
+                //     var tabToActivate = $('a[href="' + newHash + '"]');
+                //     if (tabToActivate.length) {
+                //         tabToActivate.tab('show');
+                //         var dropdownToggle = $(this).closest('.dropdown-menu').prev('.dropdown-toggle');
+                //         dropdownToggle.dropdown('hide');
+                //     }
+                // }
             });
 
             $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {

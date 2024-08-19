@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-
+<!-- <h1>{{tabname}}</h1> -->
 
     <!-- 콘텐츠 -->
     <!-- 메인 제목과 설명 -->
@@ -157,4 +157,31 @@
     }
 </style>
 
+<script>
+    $(document).ready(function() {
+        // var currentPageUrl = window.location.hash;
+        // alert(currentPageUrl);
+        // if(currentPageUrl.indexOf('#') > -1 ){
+        //     //1.1 #분리 
+        //     //1.2 #에 해당하는 TAB 이동
+        //     // var cleanHash = currentPageUrl.split('#')[1];
+        //     alert(currentPageUrl);
+        //     var tabToActivate = $('a[href="' + currentPageUrl + '"]');
+        //     if (tabToActivate.length) {
+        //         tabToActivate.tab('show');
+        //     }
+        // }else{ //그냥 넘어왔을 경우,
+        //     alert('그냥 넘어옴');
+        // }
+        var tab_name = '{{tabname}}';
+
+        var tabToActivate = $('a[href="#' + tab_name + '"]');
+        tabToActivate.tab('show');
+    });
+       
+
+</script>
 {% endblock %}
+
+//
+//2. 페이지에 # tag 붙어서 오는 경우.
