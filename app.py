@@ -110,9 +110,9 @@ def handle_image(data):
 def main():
     return render_template("main.html")
 
-@app.route("/products_skin")
-def products_skin():
-    return render_template("products_skin.html")
+@app.route("/products_skin/<tabname>")
+def products_skin(tabname):
+    return render_template("products_skin.html", tabname = tabname)
 
 @app.route("/products")
 def products():
