@@ -140,6 +140,7 @@
     let selectedPrdCode = "B00001";  // Initial product code
     let selectedColor = "#FCAAAE";  // Default color
     let selectedName = "없음"
+    let selectedManufacturer = "없음"
 
     $(document).ready(function () {
         // Fetch JSON data and populate carousel
@@ -154,8 +155,7 @@
                         <div class="card-body text-secondary">
                             <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
                             <p>${item.price}</p>
-                            <input type="button" class="btn color-circle" style="background-color:${item.color}; color: transparent;" value="${item.prdCode}" data-color="${item.color}" data-prdcode="${item.prdCode}"data-prdname="${item.PrdName}"/>
-                        </div>
+                            <input type="button" class="btn color-circle" style="background-color:${item.color}; color: white" value="try now" data-color="${item.color}" data-prdcode="${item.prdCode}" data-prdname="${item.PrdName}" data-manufacturer="${item.Manufacturer}" />                        </div>
                     </div>
                 `);
             });
@@ -174,9 +174,11 @@
                 selectedColor = $(this).data('color');
                 selectedPrdCode = $(this).data('prdcode');  // Update selected product code
                 selectedName = $(this).data('prdname');
+                selectedManufacturer = $(this).data('manufacturer');
                 prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
                 colorInfo = selectedColor; // 선택된 컬러
                 prdName = selectedName;
+                Manufacturer = selectedManufacturer;
                 console.log('Selected Color:', selectedColor);
                 console.log('Selected Product Code:', selectedPrdCode);
             });
@@ -195,6 +197,7 @@
         var prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
         var colorInfo = selectedColor; // 선택된 컬러
         var prdName = selectedName;
+        var Manufacturer = selectedManufacturer;
 
         const myQueue = new Queue(3); // 3개의 항목을 저장할 수 있는 큐 생성
 
@@ -214,7 +217,8 @@
                 color: colorInfo,
                 name : prdName,
                 category : 'lipstick',
-                option : 'glossy'
+                option : 'glossy',
+                manufacturer : Manufacturer
             };
 
             
@@ -253,7 +257,7 @@
         socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
         socket.on('connect', function() {
             console.log("Connected...!", socket.connected);
-            alert('WebSocket connection!!!');
+            // alert('WebSocket connection!!!');
             $('#playButton').text('Stop').removeClass('btn-primary').addClass('btn-danger');
             streaming = true;
             sendFrames();
@@ -264,7 +268,7 @@
         });
 
         socket.on('disconnect', function() {
-            alert('WebSocket disconnect !!!');
+            // alert('WebSocket disconnect !!!');
             stopStreaming();
         });
     }
