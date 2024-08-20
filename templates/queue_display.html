@@ -109,13 +109,22 @@
 
             let html = '';
             myQueue.forEach(item => {
+            html += `
+                <div class="product">
+                    <img src="${item.image}" alt="Item Image" />
+                    <h2>제품 이름: ${item.name}</h2>
+                    <p>카테고리: ${item.category}</p>`;
+
+            if (item.category === 'lipstick') {
                 html += `
-                    <div class="product">
-                        <img src="${item.image}" alt="Item Image" />
-                        <h2>상품코드: ${item.prdCode}</h2>
-                        <p>제품 이름: ${item.name}</p>
-                        <button class="color-circle" style="background-color:${item.color};" aria-label="${item.color}"></button>
-                    </div>`;
+                    <p>옵션: ${item.option}</p>`;
+            }
+            if (item.category !== 'sunglasses') {
+                html += `
+                    <button class="color-circle" style="background-color:${item.color};" aria-label="${item.color}"></button>`;
+            }
+
+            html += `</div>`;
             });
             $('#product-container').html(html);
         }
