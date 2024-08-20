@@ -1,320 +1,433 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Makeup Main Page</title>
-    <!-- Bootstrap CSS -->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Podkova&display=swap">
-    <!-- Font Awesome CSS -->
-    <link href="{{ url_for('static', filename='css/all.css') }}" rel="stylesheet">
-    <!-- jQuery -->
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+{% extends "base.html" %}
+{% block content %}
+<style>
+    #video {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        position: absolute;
+    }
 
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: 'Podkova', sans-serif;
-        }
-        .carousel-item img {
-            width: 100%;
-            height: 100vh;
-            object-fit: cover;
-        }
+    .canvas-container {
+        width: 70%; /* Adjusted to leave space for the right section */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #playButton, #likeBtn {
+        display: inline-block;
+        margin: 2px; /* 버튼 사이 간격 제거 */
         
-        .title {
-            font-size: 90px;
-            color: #4F2626;
-        }
-        .subtitle {
-            font-size: 30px;
-            color: #4F2626;
-        }
-        .container {
-            max-width: 100%;
-        }
-        .navbar-nav .nav-link {
-            color: white;
-            position: relative;
-        }
-        #btngoMain {
-            background-color: rgb(39, 60, 171);
-            border: none;
-            color: white;
-            font-size: 16px;
-        }
-        .badge {
-            position: absolute;
-            top: -2px;
-            right: -5px;
-            background-color: rgb(39, 60, 171);
-            color: white;
-            padding: 4px 6px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 1;
-        }
-        .nav-link .fa-heart {
-            position: relative;
-            z-index: 2;
-        }
-        .cherry-blossom-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        .petal {
-            position: absolute;
-            background-color: FFCCC2;
-            border-radius: 100% 0 100% 0;
-            animation: animate-petal 10s linear;
-        }
-        .petal::after {
-            content: "";
-            position: absolute;
-            top: -14%;
-            left: -10%;
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-color: #F45C5C;
-            border-radius: 100% 0 100% 0;
-            transform: rotate(15deg);
-        }
-        @keyframes animate-petal {
-            0% {
-                top: 0;
-                opacity: 0;
-                transform: rotate(0deg);
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                top: 100vh;
-                transform: rotate(3000deg);
-            }
-        }
-    </style>
-</head>
-<body>
+    }
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        padding:10px;
+        
+    }
+
+    .btn-primary, .btn-secondary {
+        border: 2px solid #89605b; /* 테두리 색상 설정 */
+        border-radius: 4px; /* 모서리 둥글게 */
+        padding: 10px 20px; /* 버튼 내부 여백 */
+        color: white; /* 버튼 텍스트 색상 */
+        font-size: 16px; /* 버튼 폰트 크기 */
+        background-color: #89605b; /* 버튼 배경색 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 기본 그림자 설정 */
+    }
+
+    .btn-primary {
+        background-color: #89605b !important; /* Play 버튼 색상 */
+    }
+
+
+    .btn-primary:hover {
+        background-color: #89605b !important; /* 호버 시 배경색 유지 */
+        border-color: #6e4d49 !important; /* 호버 시 테두리 색상 변경 */
+        box-shadow: 0 4px 6px rgba(110, 77, 73, 0.5) !important; /* 호버 시 그림자 색상 변경 */
+    }
+
+    .btn-primary:active {
+        background-color: #89605b !important; /* 클릭 시 배경색 유지 */
+        border-color: #3c2927 !important; /* 클릭 시 테두리 색상 변경 */
+        box-shadow: 0 2px 4px rgba(60, 41, 39, 0.6) !important; /* 클릭 시 그림자 색상 변경 */
+        transform: translateY(2px); /* 클릭 시 버튼이 눌리는 효과 */
+    }
+
+    .btn-secondary {
+        background-color: #89605b !important; /* 사진저장 버튼 색상 */
+    }
+
+
+    .btn-secondary:hover {
+        background-color: #89605b !important; /* 호버 시 배경색 유지 */
+        border-color: #6e4d49 !important; /* 호버 시 테두리 색상 변경 */
+        box-shadow: 0 4px 6px rgba(110, 77, 73, 0.5) !important; /* 호버 시 그림자 색상 변경 */
+    }
+
+    .btn-secondary:active {
+        background-color: #89605b !important; /* 클릭 시 배경색 유지 */
+        border-color: #3c2927 !important; /* 클릭 시 테두리 색상 변경 */
+        box-shadow: 0 2px 4px rgba(60, 41, 39, 0.6) !important; /* 클릭 시 그림자 색상 변경 */
+        transform: translateY(2px); /* 클릭 시 버튼이 눌리는 효과 */
+    }
+    .card {
+        width: 200px;
+        height: 350px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-header {
+        height: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .card-body p {
+        margin: 10px 0;
+    }
+
+    .color-circle {
+        margin-top: auto;
+    }
+
+    .blush-carousel .slick-slide {
+        display: flex;
+        justify-content: center;
+    }
+
+    .slick-prev:before {
+        content: '←';
+        color: black;
+        background-color: #4F2626;
+        border-radius: 100%;
+    }
+
+    .slick-next:before {
+        content: '→';
+        color: black;
+        background-color: #4F2626;
+        border-radius: 100%;
+    }
+
+    #canvas {
+        width: 1080px;
+        height: 700px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #processedImage {
+        width: 1080px;
+        height: 700px;
+        display: block;
+        margin: 20px auto;
+        object-fit: cover;
+    }
+
+    .right-section {
+        width: 70%; /* Adjusted width */
+        height:auto;
+        padding: 20px; /* Added padding for spacing */
+        margin-left:300px;
+        box-sizing: border-box; /* Ensure padding is included in width calculation */
+    }
+
+    .color-picker-container,
+    .carousel-container {
+        margin-bottom: 20px;
+        text-align: center;
+        background-color: #F8F8F8;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .color-picker-container input[type="color"] {
+        width: 60px;
+        height: 60px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .container-fluid {
+        display: flex;
+        padding: 0 15px;
+    }
+
+    .container-fluid .canvas-container,
+    .container-fluid .right-section {
+        flex: 1; /* Allow sections to grow and shrink as needed */
+    }
+</style>
+
+
+
+<!-- breadcrumb 네비게이션 추가 -->
+<div class="container mt-3"> 
+    <nav style="--bs-breadcrumb-divider: ' > '; font-size: 20px;" aria-label="breadcrumb"> <!-- 글씨 크기와 > 사이 간격 조정 -->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products_skin/pills-skin" style="color:black !important;">SKIN</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">Blush</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
+        </ol>
+    </nav>
+</div>
+
     
-   <!-- Background Image Carousel -->
-    <div id="carouselExampleIndicators" class="carousel slide">
-        
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="cherry-blossom-container"></div>
-                <img src="{{ url_for('static', filename='images/main/main1.jpg') }}" alt="Slide 1">
-                <div class="carousel-caption d-none d-md-block">
-                    <h1 class="title">화연(花衍)</h1>
-                    <h5 class="subtitle">"화용월태"(花容月態)</h5>
-                    <p style="color: black; font-size:20px">Matte와 Glossy 립스틱을 가상으로 미리 적용해보며, <br/>꽃 같은 입술과 달 같은 자태를 완성해보세요.</p>
-                    <button id="btngoMain" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg> Try Now
-                    </button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="cherry-blossom-container"></div>
-                <img src="{{ url_for('static', filename='images/main/main2.jpg') }}" alt="Slide 2">
-                <div class="carousel-caption d-none d-md-block">
-                    <h1 class="title">화연(花衍)</h1>
-                    <h5 class="subtitle">“칠색조화”(七色造化)</h5>
-                    <p style="color: black; font-size:20px">다양한 색감의 쉐도우를 적용하여 나만의  <br/>독특하고 다채로운 스타일을 발견해보세요.</p>
-                    <button id="btngoMain" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg> Try Now
-                    </button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="cherry-blossom-container"></div>
-                <img src="{{ url_for('static', filename='images/main/main3.jpg') }}" alt="Slide 3">
-                <div class="carousel-caption d-none d-md-block">
-                    <h1 class="title">화연(花衍)</h1>
-                    <h5 class="subtitle">“화려강산”(華麗江山)</h5>
-                    <p style="color: black; font-size:20px">다양한 블러셔를 체험하며, 화려하고 매혹적인  <br/> 나만의 스타일을 발견해보세요.</p>
-                    <button id="btngoMain" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg> Try Now
-                    </button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="cherry-blossom-container"></div>
-                <img src="{{ url_for('static', filename='images/main/main4.jpg') }}" alt="Slide 4">
-                <div class="carousel-caption d-none d-md-block">
-                    <h1 class="title">화연(花衍)</h1>
-                    <h5 class="subtitle">“유려미문”(流麗美文)</h5>
-                    <p style="color: black; font-size:20px">가상의 환경에서 흐르는 듯 자연스럽고   <br/>아름다운 나만의 스타일을 발견해보세요</p>
-                    <button id="btngoMain" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg> Try Now
-                    </button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="cherry-blossom-container"></div>
-                <img src="{{ url_for('static', filename='images/main/main5.jpg') }}" alt="Slide 5">
-                <div class="carousel-caption d-none d-md-block">
-                    <h1 class="title">화연(花衍)</h1>
-                    <h5 class="subtitle">"다채만상" (多彩萬象)</h5>
-                    <p style="color: black; font-size:20px">다양한 화장품을 가상의 환경에서 체험하며  <br/> 나만의 다채로운 스타일을 발견해보세요</p>
-                    <button id="btngoMain" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye me-2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg> Try Now
-                    </button>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
+    
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/slick-theme.css') }}" rel="stylesheet">
 
-    <!-- Cart Modal -->
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="cart-items">
-                    <!-- Cart items will be dynamically inserted here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="clear-cart">Clear Cart</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            // Initialize cart count
-            updateCartCount();
+<script>
+    let streaming = false;
+    let socket;
+    let selectedPrdCode = "B00001";  // Initial product code
+    let selectedColor = "#FCAAAE";  // Default color
+    let selectedName = "없음"
+    let selectedManufacturer = "없음"
 
-            // Try Now button click event
-            $('#btngoMain').on('click', function(event) {
-                event.preventDefault();
-                window.location.href = '/products';
+    $(document).ready(function () {
+        // Fetch JSON data and populate carousel
+        $.getJSON('/productJSON?category=blush', function (data) {
+            console.log(data); // Log the data for debugging
+            
+            // Populate the carousel with product information
+            data.forEach(item => {
+                $('.blush-carousel').append(`
+                    <div class="card border-secondary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">${item.PrdName}</div>
+                        <div class="card-body text-secondary">
+                            <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
+                            <p>${item.price}</p>
+                            <input type="button" class="btn color-circle" style="background-color:${item.color}; color: white" value="try now" data-color="${item.color}" data-prdcode="${item.prdCode}" data-prdname="${item.PrdName}" data-manufacturer="${item.Manufacturer}" />
+                        </div>
+                    </div>
+                `);
+            });
+    
+            // Initialize the Slick carousel
+            $('.blush-carousel').slick({
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true
             });
 
-            // Function to update cart count
-            function updateCartCount() {
-                const cartCount = localStorage.getItem('cartCount') || '0';
-                $('#cookie-count').text(cartCount);
-            }
-
-            // Function to get cart items from localStorage
-            function getCartItems() {
-                return JSON.parse(localStorage.getItem('cart')) || [];
-            }
-
-            // Function to show cart items in the modal
-            function showCartItems() {
-                const cartItemsContainer = $('#cart-items');
-                cartItemsContainer.empty();
-                const cartItems = getCartItems();
-
-                if (cartItems.length === 0) {
-                    cartItemsContainer.append('<p>Your cart is empty.</p>');
-                } else {
-                    cartItems.forEach(item => {
-                        cartItemsContainer.append(`
-                            <div class="cart-item mb-2">
-                                <h5>${item.PrdName}</h5>
-                                <p>Color: ${item.color}</p>
-                                <p>Price: ${item.price}</p>
-                                <p>Quantity: ${item.quantity}</p>
-                                <button class="btn btn-danger btn-sm" onclick="removeFromCart('${item.prdCode}')">Remove</button>
-                            </div>
-                        `);
-                    });
-                }
-            }
-
-            // Function to remove an item from the cart
-            window.removeFromCart = function(prdCode) {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                cart = cart.filter(item => item.prdCode !== prdCode);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartCount();
-                showCartItems();
-            }
-
-            // Clear cart button click event
-            $('#clear-cart').on('click', function() {
-                localStorage.removeItem('cart');
-                localStorage.setItem('cartCount', '0');
-                updateCartCount();
-                showCartItems();
+            // Color button click event
+            $('.blush-carousel').on('click', '.color-circle', function() {
+                selectedColor = $(this).data('color');
+                selectedPrdCode = $(this).data('prdcode');  // Update selected product code
+                selectedName = $(this).data('prdname');
+                selectedManufacturer = $(this).data('manufacturer');
+                prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
+                colorInfo = selectedColor; // 선택된 컬러
+                prdName = selectedName;
+                Manufacturer = selectedManufacturer;
+                console.log('Selected Color:', selectedColor);
+                console.log('Selected Product Code:', selectedPrdCode);
             });
-
-            const $section = $('.cherry-blossom-container');
-
-            // Function to create a petal
-            const createPetal = () => {
-                const $petalEl = $('<span class="petal"></span>');
-                const minSize = 10;
-                const maxSize = 15;
-                const size = Math.random() * (maxSize - minSize) + minSize;
-                $petalEl.css({
-                    width: `${size}px`,
-                    height: `${size}px`,
-                    left: `${Math.random() * $(window).width()}px`,
-                    top: `-${size}px` // Start position just above the viewport
-                });
-                $section.append($petalEl);
-        
-                // Remove petal after animation
-                setTimeout(() => {
-                    $petalEl.remove();
-                }, 10000);
-            }
-
-            // Generate petals at intervals
-            setInterval(createPetal, 300);
         });
-    </script>
-</body>
-</html>
+
+        // Color picker change event
+        $('#colorPicker').on('input', function() {
+            selectedColor = $(this).val();
+            console.log('Selected Color from Picker:', selectedColor);
+        });
+
+    //=======================================================================
+        //찜목록 관련 추가 = choi. 2024.08.12
+        //=======================================================================
+        // Queue 인스턴스 생성
+        var prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
+        var colorInfo = selectedColor; // 선택된 컬러
+        var prdName = selectedName;
+        var Manufacturer = selectedManufacturer;
+        console.log('Color:', prdCode);
+        console.log('Product Code:', colorInfo);
+        console.log('Product name:', prdName);
+
+        const myQueue = new Queue(3); // 3개의 항목을 저장할 수 있는 큐 생성
+
+        $('#likeBtn').click(function() {
+            // 현재 <img> 태그에 있는 이미지 데이터를 큐에 저장
+            const imgData = $('#processedImage').attr('src');
+
+            if (!imgData) {
+                alert('저장할 이미지가 없습니다.');
+                return false;
+            }
+
+            // 큐에 저장할 객체 생성
+            const item = {
+                image: imgData,
+                prdCode: prdCode || '',
+                color: colorInfo,
+                name : prdName,
+                category : 'blush',
+                option : ' ',
+                manufacturer : Manufacturer
+            };
+
+            
+            myQueue.enqueue(item); // 큐에 데이터 추가
+
+            // bagde cnt 업데이트
+            updateBadge();
+            // (디버깅용)
+            //updateQueueDisplay();
+
+            // "찜 목록에 추가되었습니다." 메시지 표시
+            const toastElement = new bootstrap.Toast($('#toastMessage'));
+            toastElement.show();
+        });
+
+        // // 초기 큐 상태 표시
+        // function updateQueueDisplay() {
+        //     $('#queueContent').text(JSON.stringify(myQueue.getQueue(), null, 2));
+        // }
+        // updateQueueDisplay();
+        
+        function updateBadge() {
+            // 큐의 아이템 개수를 가져옴
+            const queue = JSON.parse(localStorage.getItem('queue')) || [];
+            const itemCount = queue.length;
+
+            // 배지 업데이트
+            $('#cookie-count').text(itemCount);
+        }
+        // bagde cnt 업데이트
+        updateBadge();
+        //=======================================================================
+    });//End of ready !!!
+
+    function startStreaming() {
+        socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+        socket.on('connect', function() {
+            console.log("Connected...!", socket.connected);
+            // alert('WebSocket connection!!!');
+            $('#playButton').text('Stop').removeClass('btn-primary').addClass('btn-danger');
+            streaming = true;
+            sendFrames();
+        });
+
+        socket.on('processed_image', function(data) {
+            processedImage.src = 'data:image/jpeg;base64,' + data.image;
+        });
+
+        socket.on('disconnect', function() {
+            // alert('WebSocket disconnect !!!');
+            stopStreaming();
+        });
+    }
+
+    function stopStreaming() {
+        if (socket) {
+            socket.disconnect();
+        }
+        $('#playButton').text('Play').removeClass('btn-danger').addClass('btn-primary');
+        streaming = false;
+    }
+
+    function sendFrames() {
+        if (streaming) {
+            canvas.width = video.videoWidth * 0.75;
+            canvas.height = video.videoHeight * 0.75;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(function(blob) {
+                const data = {
+                    image: blob,
+                    category: "blush",
+                    prdCode: selectedPrdCode,  // Use the selected product code
+                    color: selectedColor        // Use the selected color
+                };
+                socket.emit('send_image', data);
+                setTimeout(sendFrames, 200); // 0.2 seconds interval
+            }, 'image/jpeg');
+        }
+    }
+</script>
+
+<!-- Main content -->
+<div class="container-fluid">
+    <div class="canvas-container">
+        <video id="video" width="1080" height="700" autoplay playsinline></video>
+        <canvas id="canvas" width="1080" height="700" style="display:none;"></canvas>
+        <img id="processedImage" class="mt-3" />
+        <div class="btn-container">
+            <button id="playButton" class="btn btn-primary mt-3">Play</button>
+            <button class="btn btn-secondary mt-3" id="likeBtn">Wish</button>
+        </div>
+    </div>
+    <div class="right-section">
+        <div class="color-picker-container">
+            <h4>색상 선택</h4>
+            <input type="color" id="colorPicker">
+        </div>
+        <div class="carousel-container">
+            <h4>상품목록</h4>
+            <div class="blush-carousel">
+                <!-- Products will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Product Info List
+    <div class="row">
+        <div class="col-12">
+            <div class="blush-carousel mt-3"></div>
+        </div>
+    </div> -->
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const processedImage = document.getElementById('processedImage');
+
+    // Get user media
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Error accessing media devices.', error);
+        });
+
+    $('#playButton').on('click', function() {
+        if (!streaming) {
+            startStreaming();
+        } else {
+            stopStreaming();
+        }
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+
+
+{% endblock %}
