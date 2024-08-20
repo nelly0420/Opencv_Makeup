@@ -638,14 +638,14 @@
 
       {
         "prdCode": "SUN001", 
-        "PrdName": "None", 
-        "Manufacturer": "None", 
+        "PrdName": "디올 미드나잇 블랙", 
+        "Manufacturer": "디올", 
         "category": "sunglasses", 
         "color": "None", 
         "option1": "None", 
         "option2": "None", 
-        "price":"None", 
-        "imgsrc": "/static/images/product/선글라스.png"
+        "price":"600,300", 
+        "imgsrc": "/static/images/product/디올 미드나잇 블랙.png"
         },
     
         {
@@ -682,6 +682,42 @@
           "option2": "None", 
           "price":"770,000", 
           "imgsrc": "/static/images/product/디올 선글라스.png"
+        },
+
+        {
+          "prdCode": "SUN005", 
+          "PrdName": "디올 B2U 버터플라이 블루", 
+          "Manufacturer": "디올", 
+          "category": "sunglasses", 
+          "color": "None", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"580,000", 
+          "imgsrc": "/static/images/product/디올 B2U 버터플라이 블루.png"
+        },
+
+        {
+          "prdCode": "SUN006", 
+          "PrdName": "살롱 슈브 드 니니 블랙 그레이", 
+          "Manufacturer": "젠틀몬스터", 
+          "category": "sunglasses", 
+          "color": "None", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"380,000", 
+          "imgsrc": "/static/images/product/젠틀몬스터 제니.png"
+        },
+
+        {
+          "prdCode": "SUN007", 
+          "PrdName": "살롱 슈브 드 니니 블랙 그레이", 
+          "Manufacturer": "아더에러X자라", 
+          "category": "sunglasses", 
+          "color": "None", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"109,000", 
+          "imgsrc": "/static/images/product/아더에라 자라.png"
         },
 
 
