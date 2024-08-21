@@ -65,7 +65,10 @@ def overlay_image(background, overlay, x, y):
         for c in range(0, 3):
             background[y:y+overlay_height, x:x+overlay_width, c] = (
                 alpha_overlay * overlay[:, :, c] +
-                alpha_background * background[y:y+overlay_height, x:x+overlay_width, c]
+                alpha_background * background[y:y+overlay_height, x:x+overlay_width, c] 
+                # ValueError: operands could not be broadcast together with shapes (355,256) (0,256)
+                # Exception in thread Thread-20 (_handle_event_internal):
+                # Traceback (most recent call last):
             )
     else:
         # 오버레이 이미지에 알파 채널이 없는 경우

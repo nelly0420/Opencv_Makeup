@@ -9,7 +9,7 @@ import json
 from util.lipstick import apply_lipstick
 from util.eyeliner import apply_eyeliner
 from util.blush import apply_blush
-from util.eyebrow import apply_eyebrow, apply_eyebrow2
+from util.eyebrow import apply_eyebrow2
 from util.eyeshadow import apply_eyeshadow
 from util.sunglasses import apply_sunglasses
 from util.colored_lens import apply_lens
