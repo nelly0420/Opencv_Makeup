@@ -21,20 +21,20 @@ def apply_lipstick(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
     
     # Extract the predefined lipstick color and other options from the JSON
     lip_color, option, _ = get_color_from_json(prdCode)
-
+    # 사용자 정의 컬러가 있으면 립 색상 변경
+    if user_bgr != None:
+        lip_color = user_bgr
+        
     # Get facial landmarks
     landmarks = get_landmarks(image)
-    
     if landmarks is None:
         print("No faces detected.")
         return image
 
+
     # Get lip points from landmarks
     lip_points = get_lip_points(landmarks)
-    
-    # 사용자 정의 컬러가 있으면 립 색상 변경
-    if user_bgr != None:
-        lip_color = user_bgr
+   
 
     # Create masks
     mask = np.zeros_like(image)
@@ -49,17 +49,28 @@ def apply_lipstick(image: np.ndarray, prdCode: str, color: str) -> np.ndarray:
 
     if option == "Glossy":
         image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.1, 0)
+        image_with_lipstick = cv2.convertScaleAbs(image_with_lipstick, 1.5, beta=0)
         corrected_lips = gamma_correction(image_with_lipstick, 1.2)
         corrected_lips = cv2.GaussianBlur(corrected_lips, (15, 15), 0)
-        lip_liner = gamma_correction(lip_liner, 0.8, 1.5)
+        
         corrected_lips = cv2.addWeighted(corrected_lips, 0.8, lip_liner, 0.2, 0)
-        corrected_lips = cv2.addWeighted(corrected_lips, 1.5, corrected_lips, -0.5, 0)  
-    
+        corrected_lips = cv2.addWeighted(corrected_lips, 1.5, corrected_lips, -0.5, 0)
+
+
+        # 하이라이트를 추가하여 글로시 효과를 강화
+        highlight = np.zeros_like(image)
+        cv2.circle(highlight, (int(lip_points[20][0]), int(lip_points[20][1])), 2, (220, 228, 255), -1) 
+        cv2.circle(highlight, (int(lip_points[21][0]), int(lip_points[21][1])), 2, (220, 228, 255), -1) 
+        cv2.circle(highlight, (int(lip_points[22][0]), int(lip_points[22][1])), 2, (220, 228, 255), -1)
+        highlight = cv2.GaussianBlur(highlight, (17, 17), 30)  # 하이라이트를 부드럽게 블러 처리
+
+        corrected_lips = cv2.addWeighted(corrected_lips, 1.0, highlight, 0.7, 2)  # 하이라이트를 최종 이미지에 합성
+        #corrected_lips = cv2.addWeighted(corrected_lips, 1.5, corrected_lips, -0.5, 0)   
+
     elif option == "Matte":
         image_with_lipstick = cv2.addWeighted(image, 1.0, mask, 0.3, 0)
         corrected_lips = gamma_correction(image_with_lipstick, 1.5)
         corrected_lips = cv2.GaussianBlur(corrected_lips, (5, 5), 0)
-        #lip_liner = gamma_correction(lip_liner, 0.8, 1.0)
         corrected_lips = cv2.addWeighted(corrected_lips, 0.7, lip_liner, 0.3, 0)  
         corrected_lips = cv2.addWeighted(corrected_lips, 1.5, corrected_lips, -0.5, 0)  
 
