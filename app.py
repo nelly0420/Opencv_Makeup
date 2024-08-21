@@ -226,7 +226,12 @@ def get_products():
     if option1:
         filtered_products = [product for product in filtered_products if product['option1'] == option1]
     if query:
-        filtered_products = [product for product in filtered_products if query in product['PrdName'].lower()]
+        # 제품 이름 또는 제조사(브랜드)에서 검색
+        filtered_products = [
+            product for product in filtered_products
+            if query in product['PrdName'].lower() or query in product['Manufacturer'].lower()
+        ]
+
     # else:
     #     # 카테고리가 지정되지 않은 경우 모든 제품 반환
     #     filtered_products = products_data
