@@ -13,21 +13,22 @@
     #playButton, #likeBtn {
         display: inline-block;
         margin: 2px; /* 버튼 사이 간격 제거 */
+        font-size:30px;
     }
     .btn-container {
         display: flex;
         justify-content: center;
-        padding:10px;
+        padding:30px;
     }
 
     .btn-primary, .btn-secondary {
-        border: 2px solid #89605b; /* 테두리 색상 설정 */
-        border-radius: 4px; /* 모서리 둥글게 */
-        padding: 10px 20px; /* 버튼 내부 여백 */
-        color: white; /* 버튼 텍스트 색상 */
-        font-size: 16px; /* 버튼 폰트 크기 */
-        background-color: #89605b; /* 버튼 배경색 */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 기본 그림자 설정 */
+    border: 2px solid #89605b; /* 테두리 색상 설정 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    padding: 10px 20px; /* 버튼 내부 여백 */
+    color: white; /* 버튼 텍스트 색상 */
+    font-size: 16px; /* 버튼 폰트 크기 */
+    background-color: #89605b; /* 버튼 배경색 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 기본 그림자 설정 */
     }
 
     .btn-primary {
@@ -115,6 +116,7 @@
         background-color: #4F2626;
         border-radius: 100%;
     }
+
     #canvas {
         width: 1080px;
         height: 700px;
@@ -129,11 +131,12 @@
         margin: 20px auto;
         object-fit: cover;
     }
+
     .right-section {
         width: 50%; /* Adjusted width */
         height:auto;
-        padding: 50px; /* Added padding for spacing */
-        margin-left:80px;
+        padding: 20px; /* Added padding for spacing */
+        margin-left:50px;
         box-sizing: border-box; /* Ensure padding is included in width calculation */
     }
 
@@ -168,6 +171,7 @@
         flex: 1; /* Allow sections to grow and shrink as needed */
     }
 </style>
+
     
 <!-- breadcrumb 네비게이션 추가 -->
 <div class="container mt-3"> 
@@ -362,6 +366,7 @@
         <video id="video" width="1080" height="700" autoplay playsinline></video>
         <canvas id="canvas" width="1080" height="700" style="display:none;"></canvas>
         <img id="processedImage" class="mt-3" />
+        <p style="font-size:30px; color:#4F2626;"> play 버튼을 누르면, 실시간 카메라를 볼 수 있습니다.</p>
         <div class="btn-container">
             <button id="playButton" class="btn btn-primary mt-3">Play</button>
             <button class="btn btn-secondary mt-3" id="likeBtn">Wish</button>

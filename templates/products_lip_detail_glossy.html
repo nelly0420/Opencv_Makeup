@@ -13,11 +13,12 @@
     #playButton, #likeBtn {
         display: inline-block;
         margin: 2px; /* 버튼 사이 간격 제거 */
+        font-size:30px;
     }
     .btn-container {
         display: flex;
         justify-content: center;
-        padding:10px;
+        padding:30px;
     }
 
     .btn-primary, .btn-secondary {
@@ -179,7 +180,7 @@
             <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">Glossy</a></li>
             <li class="breadcrumb-item active" aria-current="page"><a href="#" style="color:gray !important;">체험</a></li>
         </ol>
-    </nav>
+    </nav>   
 </div>     
     
 <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
@@ -362,6 +363,7 @@
         <video id="video" width="1080" height="700" autoplay playsinline></video>
         <canvas id="canvas" width="1080" height="700" style="display:none;"></canvas>
         <img id="processedImage" class="mt-3" />
+        <p style="font-size:30px; color:#4F2626;"> play 버튼을 누르면, 실시간 카메라를 볼 수 있습니다.</p>
         <div class="btn-container">
             <button id="playButton" class="btn btn-primary mt-3">Play</button>
             <button class="btn btn-secondary mt-3" id="likeBtn">Wish</button>
