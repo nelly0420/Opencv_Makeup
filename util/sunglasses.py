@@ -57,22 +57,19 @@ def overlay_image(background, overlay, x, y):
         overlay_height = bg_height - y
         overlay = overlay[:overlay_height]
 
-    if overlay.shape[2] == 4:
-        # 오버레이 이미지가 알파 채널(투명도)을 가지고 있는 경우
+    if overlay.shape[2] == 4:  # 알파 채널이 있을 때
         alpha_overlay = overlay[:, :, 3] / 255.0
         alpha_background = 1.0 - alpha_overlay
 
+        # Check if overlay dimensions match the background after clipping
         for c in range(0, 3):
             background[y:y+overlay_height, x:x+overlay_width, c] = (
-                alpha_overlay * overlay[:, :, c] +
-                alpha_background * background[y:y+overlay_height, x:x+overlay_width, c] 
-                # ValueError: operands could not be broadcast together with shapes (355,256) (0,256)
-                # Exception in thread Thread-20 (_handle_event_internal):
-                # Traceback (most recent call last):
+                alpha_overlay[:overlay_height, :overlay_width] * overlay[:overlay_height, :overlay_width, c] +
+                alpha_background[:overlay_height, :overlay_width] * background[y:y+overlay_height, x:x+overlay_width, c]
             )
     else:
         # 오버레이 이미지에 알파 채널이 없는 경우
-        background[y:y+overlay_height, x:x+overlay_width] = overlay
+        background[y:y+overlay_height, x:x+overlay_width] = overlay[:overlay_height, :overlay_width]
 
     return background
 
@@ -87,26 +84,17 @@ def load_image(prdCode):
         df = pd.read_json(json_path)
         match_row = df[df['prdCode'] == prdCode]
         
-        if not match_row.empty:
-            # 이미지 경로 추출 (static 이하의 상대 경로 그대로 사용)
-            img_rel_path = match_row.iloc[0]['imgsrc']
-            img_path = img_rel_path.lstrip('/')
-
-            # 파일 존재 여부 확인
-            if not os.path.exists(img_path):
-                print(f"이미지 파일이 존재하지 않습니다: {img_path}")
-                return None
-
-            # PIL을 사용해 이미지 로드
-            image = Image.open(img_path)
-            #print("이미지 로드 성공!")
-
-            # OpenCV에서 사용할 수 있도록 변환
-            image = cv2.cvtColor(np.array(image), cv2.COLOR_RGBA2BGRA)
-            return image
-        else:
+        if match_row.empty:
             print(f"prdCode {prdCode}와 일치하는 행을 찾을 수 없습니다.")
             return None
+
+        img_rel_path = match_row.iloc[0]['imgsrc'].lstrip('/')
+        if not os.path.exists(img_path := img_rel_path):
+            print(f"이미지 파일이 존재하지 않습니다: {img_path}")
+            return None
+
+        image = Image.open(img_path)
+        return cv2.cvtColor(np.array(image), cv2.COLOR_RGBA2BGRA)
     
     except Exception as e:
         print(f"JSON 파일을 읽는 동안 오류가 발생했습니다: {e}")
