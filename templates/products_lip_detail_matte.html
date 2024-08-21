@@ -195,8 +195,9 @@
     let socket;
     let selectedPrdCode = "B00001";  // Initial product code
     let selectedColor = "#FCAAAE";  // Default color
-    let selectedName = "없음"
-    let selectedManufacturer = "없음"
+    let selectedName = "없음";
+    let selectedManufacturer = "없음";
+    let selectedPrice = "0원";
 
     $(document).ready(function () {
         // Fetch JSON data and populate carousel
@@ -211,7 +212,7 @@
                         <div class="card-body text-secondary">
                             <img width="150px" height="150px" src="${item.imgsrc}" alt="${item.PrdName}">
                             <p>${item.price}</p>
-                            <input type="button" class="btn color-circle" style="background-color:${item.color}; color: white" value="try now" data-color="${item.color}" data-prdcode="${item.prdCode}" data-prdname="${item.PrdName}" data-manufacturer="${item.Manufacturer}" />                        </div>
+                            <input type="button" class="btn color-circle" style="background-color:${item.color}; color: white" value="try now" data-color="${item.color}" data-prdcode="${item.prdCode}" data-prdname="${item.PrdName}" data-manufacturer="${item.Manufacturer}" data-price="${item.price}"/>                        </div>
                     </div>
                 `);
             });
@@ -231,9 +232,11 @@
                 selectedPrdCode = $(this).data('prdcode');  // Update selected product code
                 selectedName = $(this).data('prdname');
                 selectedManufacturer = $(this).data('manufacturer');
+                selectedPrice = $(this).data('price');
                 prdCode = selectedPrdCode; // 선택된 상품코드 (* 상품코드가 없는 임의의 색깔을 선택시 상품코드는 없다.)
                 colorInfo = selectedColor; // 선택된 컬러
                 prdName = selectedName;
+                Price = selectedPrice;
                 Manufacturer = selectedManufacturer;
                 console.log('Selected Color:', selectedColor);
                 console.log('Selected Product Code:', selectedPrdCode);
@@ -254,6 +257,7 @@
         var colorInfo = selectedColor; // 선택된 컬러
         var prdName = selectedName;
         var Manufacturer = selectedManufacturer;
+        var Price = selectedPrice;
 
         const myQueue = new Queue(3); // 3개의 항목을 저장할 수 있는 큐 생성
 
@@ -274,7 +278,8 @@
                 name : prdName,
                 category : 'lipstick',
                 option : 'matte',
-                manufacturer : Manufacturer
+                manufacturer : Manufacturer,
+                price : Price
             };
 
             
