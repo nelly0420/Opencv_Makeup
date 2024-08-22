@@ -726,7 +726,7 @@
       "PrdName": "샤인터치 밀키 브라운", 
       "Manufacturer": "오렌즈", 
       "category": "lens", 
-      "color": "#E5CEA2", 
+      "color": "#7F5D41", 
       "option1": "None", 
       "option2": "None", 
       "price":"25,000", 
@@ -744,9 +744,21 @@
         "price":"36,000", 
         "imgsrc": "/static/images/product/미스티_내츄럴초코.png"
         },
+
+        {
+          "prdCode": "LEN004", 
+          "PrdName": "리얼링 그레이", 
+          "Manufacturer": "오렌즈", 
+          "category": "lens", 
+          "color": "#60605D", 
+          "option1": "None", 
+          "option2": "None", 
+          "price":"25,000", 
+          "imgsrc": "/static/images/product/리얼링_그레이.jpg"
+          } ,
         
       {
-        "prdCode": "LEN003", 
+        "prdCode": "LEN004", 
         "PrdName": "러시안벨벳 블루", 
         "Manufacturer": "오렌즈", 
         "category": "lens", 
@@ -755,6 +767,18 @@
         "option2": "None", 
         "price":"20,000", 
         "imgsrc": "/static/images/product/3e8d7cf3-6c20-45e3-b8f9-df8b4592429fM_러시안벨벳_블루.webp"
+        } ,
+
+      {
+        "prdCode": "LEN005", 
+        "PrdName": "루나 3칼라 그린", 
+        "Manufacturer": "오렌즈", 
+        "category": "lens", 
+        "color": "#456453", 
+        "option1": "None", 
+        "option2": "None", 
+        "price":"10,000", 
+        "imgsrc": "/static/images/product/루나_3칼라_그린.jpg"
         }
     
 ]

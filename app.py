@@ -90,9 +90,9 @@ def handle_image(data):
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
         img_with_makeup = apply_eyeshadow(img, makeup_prdCode) # 사용자 설정 color 기능 없음
-    # elif makeup_type == 'lens':
-    #     print('Applying lens...')
-    #     img_with_makeup = apply_lens(img, makeup_prdCode) # 사용자 설정 color 기능 없음
+    elif makeup_type == 'lens':
+        print('Applying lens...')
+        img_with_makeup = apply_lens(img, makeup_prdCode, userColor) # 사용자 설정 color 기능 없음
     elif makeup_type == "sunglasses":
         img_with_makeup = apply_sunglasses(img, makeup_prdCode) # 사용자 설정 color 기능 없음
     else:
@@ -357,26 +357,26 @@ def get_products():
 #         return "Method not allowed", 405
 
 
-# 소켓형식으로 바꾸기 전에 살려두기
-@app.route('/apply_color_lens', methods=['POST'])
-def apply_color_lens_endpoint():
-    if request.method == 'POST':
-        # Get the FormData object from the request
-        data = request.form
-        # Extract prdCode from the FormData
-        prd_code = data.get('prdCode')
-        # Assuming you also want to receive the image data
-        image_data = request.files['image'].read()
-        nparr = np.frombuffer(image_data, np.uint8)
-        image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # Apply blush effect to the image
-        result_image = apply_eyeshadow(image_np, prd_code)
-        # Encode the processed image to JPEG format
-        _, buffer = cv2.imencode('.jpg', result_image)
-        # Return the processed image as bytes with a status code
-        return buffer.tobytes(), 200
-    else:
-        return "Method not allowed", 405
+# # 소켓형식으로 바꾸기 전에 살려두기
+# @app.route('/apply_color_lens', methods=['POST'])
+# def apply_color_lens_endpoint():
+#     if request.method == 'POST':
+#         # Get the FormData object from the request
+#         data = request.form
+#         # Extract prdCode from the FormData
+#         prd_code = data.get('prdCode')
+#         # Assuming you also want to receive the image data
+#         image_data = request.files['image'].read()
+#         nparr = np.frombuffer(image_data, np.uint8)
+#         image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         # Apply blush effect to the image
+#         result_image = apply_eyeshadow(image_np, prd_code)
+#         # Encode the processed image to JPEG format
+#         _, buffer = cv2.imencode('.jpg', result_image)
+#         # Return the processed image as bytes with a status code
+#         return buffer.tobytes(), 200
+#     else:
+#         return "Method not allowed", 405
 
 if __name__ == '__main__':
     socketio.run(app, port=5000, debug=True, allow_unsafe_werkzeug=True)
