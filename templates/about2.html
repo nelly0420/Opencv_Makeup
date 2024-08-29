@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block content %}
+   
+    <p class="lead" style="font-weight: bold;">About</p>
+    <style>
+        
+		.team4 {
+		  font-family: "Montserrat", sans-serif;
+			color: #8d97ad;
+		  font-weight: 300;
+		}
+
+		.team4 h1, .team4 h2, .team4 h3, .team4 h4, .team4 h5, .team4 h6 {
+		  color: #3e4555;
+		}
+
+		.team4 .font-weight-medium {
+			font-weight: 500;
+		}
+
+		.team4 h5 {
+			line-height: 22px;
+			font-size: 18px;
+		}
+
+		.team4 .subtitle {
+			color: #8d97ad;
+			line-height: 24px;
+				font-size: 13px;
+		}
+
+		.team4 ul li a {
+		  color: #8d97ad;
+		  padding-right: 15px;
+		  -webkit-transition: 0.1s ease-in;
+		  -o-transition: 0.1s ease-in;
+		  transition: 0.1s ease-in;
+		}
+
+		.team4 ul li a:hover {
+		  -webkit-transform: translate3d(0px, -5px, 0px);
+		  transform: translate3d(0px, -5px, 0px);
+			color: #316ce8;
+		}
+    </style>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">OpenCV와 dlib를 사용한 가상 메이크업 앱</h2>
+                <p class="text-center">
+                    이 프로젝트는 OpenCV와 Dlib을 활용하여 실시간 영상에서 얼굴 랜드마크를 감지하고, 다양한 메이크업을 자연스럽게 적용할 수 있는 가상 메이크업 애플리케이션입니다. 사용자는 립스틱, 블러쉬, 아이라이너, 아이섀도 등 다양한 색상과 스타일을 선택할 수 있으며, 웹캠을 통해 실시간으로 메이크업을 시도하고 최종 결과물을 이미지로 저장해 원하는 제품 목록과 함께 비교해볼 수 있습니다.
+                </p>
+                <h3 class="text-center mb-3 mt-5">프로젝트 특징</h3>
+                <ul>
+                    <li>립스틱 바르기: 다양한 색상의 립스틱을 바르세요.</li>
+                    <li>블러셔 활용법: 다양한 컬러로 볼에 블러셔를 덧발라줍니다.</li>
+                    <li>아이라이너: 아이라이너의 스타일과 색상을 사용자 정의합니다.</li>
+                    <li>아이섀도: 다양한 색상과 그라데이션 옵션을 활용해 아이섀도를 바릅니다.</li>
+                    <li>실시간 메이크업: 웹캠 피드를 사용하여 실시간으로 메이크업을 적용해 보세요.</li>
+                    <li>결과 저장: 최종 메이크업 이미지를 저장합니다.</li>
+                </ul>
+            </div>
+			
+			<div class="col-md-6">
+				<!-- Team 소개. -->
+		<div class="py-5 team4">
+		  <div class="container">
+			<div class="row justify-content-center mb-4">
+			  <div class="col-md-7 text-center">
+				<h3 class="mb-3">Team 소개</h3>
+				<h6 class="subtitle">우리의 혁신적인 가상 메이크업 AR서비스을 믿고 사용해 보세요! 빠르고 만족스러운 경험을 보장합니다!</h6>
+			  </div>
+			</div>
+			<div class="row">
+			  <!-- column  -->
+			  <div class="col-lg-3 mb-4">
+				<!-- Row -->
+				<div class="row">
+				  <div class="col-md-12">
+					<img src="https://www.wrappixel.com/demos/ui-kit/wrapkit/assets/images/team/t1.jpg" alt="wrapkit" class="img-fluid rounded-circle" />
+				  </div>
+				  <div class="col-md-12 text-center">
+					<div class="pt-2">
+					  <h5 class="mt-4 font-weight-medium mb-0">Michael Doe</h5>
+					  <h6 class="subtitle mb-3">Product Manager</h6>
+					  
+					  <ul class="list-inline">
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-twitter"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-instagram"></i></a></li>
+						
+					  </ul>
+					</div>
+				  </div>
+				</div>
+				<!-- Row -->
+			  </div>
+			  <!-- column  -->
+			  <!-- column  -->
+			  <div class="col-lg-3 mb-4">
+				<!-- Row -->
+				<div class="row">
+				  <div class="col-md-12">
+					<img src="https://www.wrappixel.com/demos/ui-kit/wrapkit/assets/images/team/t2.jpg" alt="wrapkit" class="img-fluid rounded-circle" />
+				  </div>
+				  <div class="col-md-12 text-center">
+					<div class="pt-2">
+					  <h5 class="mt-4 font-weight-medium mb-0">Michael Doe</h5>
+					  <h6 class="subtitle mb-3">Backend Developer</h6>
+					  
+					  <ul class="list-inline">
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-twitter"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-instagram"></i></a></li>
+						
+					  </ul>
+					</div>
+				  </div>
+				</div>
+				<!-- Row -->
+			  </div>
+			  <!-- column  -->
+			  <!-- column  -->
+			  <div class="col-lg-3 mb-4">
+				<!-- Row -->
+				<div class="row">
+				  <div class="col-md-12">
+					<img src="https://www.wrappixel.com/demos/ui-kit/wrapkit/assets/images/team/t3.jpg" alt="wrapkit" class="img-fluid rounded-circle" />
+				  </div>
+				  <div class="col-md-12 text-center">
+					<div class="pt-2">
+					  <h5 class="mt-4 font-weight-medium mb-0">Michael Doe</h5>
+					  <h6 class="subtitle mb-3">Frontend Developer</h6>
+					  
+					  <ul class="list-inline">
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-twitter"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-instagram"></i></a></li>
+						
+					  </ul>
+					</div>
+				  </div>
+				</div>
+				<!-- Row -->
+			  </div>
+			  <!-- column  -->
+			  <!-- column  -->
+			  <div class="col-lg-3 mb-4">
+				<!-- Row -->
+				<div class="row">
+				  <div class="col-md-12">
+					<img src="https://www.wrappixel.com/demos/ui-kit/wrapkit/assets/images/team/t4.jpg" alt="wrapkit" class="img-fluid rounded-circle" />
+				  </div>
+				  <div class="col-md-12 text-center">
+					<div class="pt-2">
+					  <h5 class="mt-4 font-weight-medium mb-0">Michael Doe</h5>
+					  <h6 class="subtitle mb-3">Frontend Developer</h6>
+					  
+					  <ul class="list-inline">
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-twitter"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="fab fa-instagram"></i></a></li>
+						
+					  </ul>
+					</div>
+				  </div>
+				</div>
+				<!-- Row -->
+			  </div>
+			</div>
+		  </div>
+		</div>
+			</div>
+        </div>
+        
+		
+        
+    </div><!-- container -->
+
+    <script>
+        $(document).ready(function() {
+            console.log('준비중');
+            $("#homeMenu").click(function(event) {
+                event.preventDefault();
+                console.log('홈클릭');
+                //alert("준비중입니다.");
+            });
+        });
+    </script>
+{% endblock %}
