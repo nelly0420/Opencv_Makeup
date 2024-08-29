@@ -9,9 +9,10 @@ import json
 from util.lipstick import apply_lipstick
 from util.eyeliner import apply_eyeliner
 from util.blush import apply_blush
-from util.eyebrow import apply_eyebrow
+from util.eyebrow import apply_eyebrow2
 from util.eyeshadow import apply_eyeshadow
 from util.sunglasses import apply_sunglasses
+from util.colored_lens import apply_lens
 
 # import dlib
 # from datetime import datetime
@@ -85,10 +86,13 @@ def handle_image(data):
         img_with_makeup = apply_blush(img, makeup_prdCode, userColor)
     elif makeup_type == 'eyebrow':
         print('Applying eyebrow...')
-        img_with_makeup = apply_eyebrow(img, makeup_prdCode, userColor)
+        img_with_makeup = apply_eyebrow2(img, makeup_prdCode, userColor)
     elif makeup_type == 'eyeshadow':
         print('Applying eyeshadow...')
         img_with_makeup = apply_eyeshadow(img, makeup_prdCode) # 사용자 설정 color 기능 없음
+    elif makeup_type == 'lens':
+        print('Applying lens...')
+        img_with_makeup = apply_lens(img, makeup_prdCode, userColor) # 사용자 설정 color 기능 없음    
     elif makeup_type == "sunglasses":
         img_with_makeup = apply_sunglasses(img, makeup_prdCode) # 사용자 설정 color 기능 없음
     else:
@@ -106,9 +110,9 @@ def handle_image(data):
 def main():
     return render_template("main.html")
 
-@app.route("/products_skin")
-def products_skin():
-    return render_template("products_skin.html")
+@app.route("/products_skin/<tabname>")
+def products_skin(tabname):
+    return render_template("products_skin.html", tabname = tabname)
 
 @app.route("/products")
 def products():
@@ -199,7 +203,10 @@ def products_lens(prdCode):
 def test():
     return render_template("test copy.html")
 
-# api 형식임 ---> 소켓통신으로 고칠 것
+@app.route("/wish")
+def wish():
+    return render_template("wish.html")
+
 @app.route("/productJSON", methods=["GET"])
 def get_products():
     # JSON 파일 경로 설정
