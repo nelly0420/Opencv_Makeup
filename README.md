@@ -21,7 +21,7 @@ This project leverages **OpenCV** and **dlib** to create a virtual makeup applic
 
 ## **Demo**
 
-![Demo GIF](https://via.placeholder.com/800x400.png?text=Demo+GIF)
+![Demo GIF]([https://via.placeholder.com/800x400.png?text=Demo+GIF](https://youtu.be/A2kiUy5IM3U?si=oaJcy18REmKYekDM))
 
 ## **Installation**
 
