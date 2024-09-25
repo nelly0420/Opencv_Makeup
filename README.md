@@ -6,7 +6,7 @@ OpenCV와 dlib을 사용하여 얼굴 메이크업 앱을 개발하는 프로젝
 
 # **Virtual Makeup App using OpenCV and dlib**
 
-![Virtual Makeup Banner]([https://via.placeholder.com/1200x400.png?text=Virtual+Makeup+App+Banner](https://youtu.be/A2kiUy5IM3U?si=oaJcy18REmKYekDM))
+![Virtual Makeup Banner](https://github.com/user-attachments/assets/ae517106-d6b8-47b8-9e03-d652fff9647c)
 
 This project leverages **OpenCV** and **dlib** to create a virtual makeup application that allows users to apply lipstick, blush, eyeliner, and eyeshadow to their photos. The application uses facial landmark detection to accurately place makeup on the appropriate facial regions.
 
